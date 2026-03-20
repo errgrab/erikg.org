@@ -1,18 +1,155 @@
 <!doctype html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>ErikG - Work In Progress</title>
-	<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+	<title>ErikG</title>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
+	<style>
+		:root {
+			--bg:  #0d0d0d;
+			--fg:  #e8e6e1;
+			--dim: #525252;
+			--acc: #c97d2e;
+		}
+
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+
+		body {
+			font-family: 'DM Mono', monospace;
+			font-weight: 300;
+			background: var(--bg);
+			color: var(--fg);
+			min-height: 100svh;
+			display: flex;
+			flex-direction: column;
+			max-width: 640px;
+			margin: 0 auto;
+			padding: 3rem 2rem;
+			gap: 2.5rem;
+		}
+
+		header { display: flex; justify-content: space-between; align-items: baseline; }
+		header h1 { font-size: 0.8rem; letter-spacing: 0.08em; }
+		header span { font-size: 0.7rem; color: var(--dim); font-style: italic; }
+
+		hr { border: none; border-top: 1px solid var(--dim); opacity: 0.2; }
+
+		h2 { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); margin-bottom: 1rem; font-weight: 300; }
+
+		.grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			border-top: 1px solid color-mix(in srgb, var(--dim) 40%, transparent);
+			border-left: 1px solid color-mix(in srgb, var(--dim) 40%, transparent);
+			opacity: 0.9;
+		}
+
+		.tile {
+			border-right: 1px solid color-mix(in srgb, var(--dim) 40%, transparent);
+			border-bottom: 1px solid color-mix(in srgb, var(--dim) 40%, transparent);
+			padding: 1.25rem;
+			display: flex;
+			flex-direction: column;
+			gap: 0.4rem;
+			text-decoration: none;
+			color: inherit;
+			transition: background 0.15s;
+		}
+
+		a.tile { position: relative; overflow: hidden; }
+		a.tile::before {
+			content: '';
+			position: absolute;
+			left: 0; top: 0; bottom: 0;
+			width: 2px;
+			background: var(--acc);
+			transform: scaleY(0);
+			transform-origin: bottom;
+			transition: transform 0.2s ease;
+		}
+		a.tile:hover { background: #141414; }
+		a.tile:hover::before { transform: scaleY(1); }
+
+		.tile .host { font-size: 0.65rem; color: var(--acc); }
+		.tile .name { font-size: 0.85rem; }
+		.tile .desc { font-size: 0.68rem; color: var(--dim); font-style: italic; line-height: 1.5; }
+		.tile .tag  { font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--dim); opacity: 0.6; padding: 0.1rem 0.3rem; width: fit-content; margin-top: 0.25rem; }
+
+		.tile.muted .host { color: var(--dim); opacity: 0.4; }
+		.tile.muted .name { color: var(--dim); }
+		.tile.muted .desc { color: var(--dim); opacity: 0.3; }
+		.tile.muted .tag  { opacity: 0.2; }
+
+		footer { display: flex; justify-content: space-between; margin-top: auto; }
+		footer span, footer a { font-size: 0.65rem; color: var(--dim); text-decoration: none; }
+		footer a:hover { color: var(--acc); }
+		footer nav { display: flex; gap: 1.25rem; }
+	</style>
 </head>
+<body>
 
-<body class="min-h-screen bg-zinc-950 flex items-center justify-center">
-	<main class="text-center">
-		<h1 class="font-mono text-7xl font-light text-zinc-100">ErikG</h1>
-		<p class="font-mono text-sm text-zinc-500 mt-6">work in progress</p>
+	<header>
+		<h1>ErikG.org</h1>
+		<span>work in progress</span>
+	</header>
+
+	<hr />
+
+	<main>
+		<h2>projects</h2>
+		<div class="grid">
+
+			<a class="tile" href="https://ai.erikg.org">
+				<span class="host">ai.erikg.org</span>
+				<span class="name">AI</span>
+				<span class="desc">personal AI API. manages pages, notes, persistent data.</span>
+				<span class="tag">live</span>
+			</a>
+
+			<div class="tile muted">
+				<span class="host">garden.erikg.org</span>
+				<span class="name">Garden</span>
+				<span class="desc">wiki of small interconnected projects and ideas.</span>
+				<span class="tag">in dev</span>
+			</div>
+
+			<div class="tile muted">
+				<span class="host">leaf.erikg.org</span>
+				<span class="name">Leaf</span>
+				<span class="desc">markdown editor. backlinks, sync, collaborative cursors.</span>
+				<span class="tag">in dev</span>
+			</div>
+
+			<div class="tile muted">
+				<span class="host">khem.erikg.org</span>
+				<span class="name">Khem</span>
+				<span class="desc">language & VM. tcl-flavored, everything is a string.</span>
+				<span class="tag">planned</span>
+			</div>
+
+			<div class="tile muted">
+				<span class="host">—</span>
+				<span class="name">···</span>
+				<span class="tag">soon</span>
+			</div>
+
+			<div class="tile muted">
+				<span class="host">—</span>
+				<span class="name">···</span>
+				<span class="tag">soon</span>
+			</div>
+
+		</div>
 	</main>
-</body>
 
+	<footer>
+		<span>ErikG · go slow and fix things</span>
+		<nav>
+			<a href="https://github.com/errgrab/" target="_blank">github</a>
+			<a href="mailto:hi@erikg.org">mail</a>
+		</nav>
+	</footer>
+
+</body>
 </html>
