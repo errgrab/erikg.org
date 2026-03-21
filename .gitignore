@@ -141,7 +141,8 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+# dist is NOT ignored — our main index.html lives there
+# dist
 
 # Gatsby files
 .cache/
