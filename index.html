@@ -1,19 +1,33 @@
 <!doctype html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>ErikG</title>
+
+	<!-- Preconnect to Google Fonts for performance -->
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
+
 	<style>
+		/*
+		  4-token system: bg · sur · fg · acc
+		*/
+
 		:root {
-			--bg:  #0d0d0d;
-			--fg:  #e8e6e1;
-			--dim: #525252;
+			--bg: #0d0d0d;
+			--sur: #141414;
+			--fg: #e8e6e1;
 			--acc: #c97d2e;
 		}
 
-		* { box-sizing: border-box; margin: 0; padding: 0; }
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
 
 		body {
 			font-family: 'DM Mono', monospace;
@@ -23,81 +37,373 @@
 			min-height: 100svh;
 			display: flex;
 			flex-direction: column;
-			max-width: 640px;
+			max-width: 580px;
 			margin: 0 auto;
-			padding: 3rem 2rem;
-			gap: 2.5rem;
+			padding: 4rem 2rem;
+			gap: 3.5rem;
 		}
 
-		header { display: flex; justify-content: space-between; align-items: baseline; }
-		header h1 { font-size: 0.8rem; letter-spacing: 0.08em; }
-		header span { font-size: 0.7rem; color: var(--dim); font-style: italic; }
+		header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
 
-		hr { border: none; border-top: 1px solid var(--dim); opacity: 0.2; }
+		.header-left {
+			display: flex;
+			flex-direction: column;
+			gap: 0.3rem;
+		}
 
-		h2 { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); margin-bottom: 1rem; font-weight: 300; }
+		header h1 {
+			font-size: 0.72rem;
+			letter-spacing: 0.12em;
+		}
+
+		header .subtitle {
+			font-size: 0.6rem;
+			color: var(--fg);
+			opacity: 0.6;
+			/* improved contrast */
+			font-style: italic;
+		}
+
+		.theme-wrapper {
+			position: relative;
+			display: inline-block;
+		}
+
+		.theme-btn {
+			width: 28px;
+			height: 28px;
+			border-radius: 50%;
+			border: 2px solid color-mix(in srgb, var(--fg) 20%, transparent);
+			cursor: pointer;
+			padding: 0;
+			overflow: hidden;
+			display: flex;
+			transition: border-color 0.1s, transform 0.1s;
+			flex-shrink: 0;
+			background: transparent;
+		}
+
+		.theme-btn:hover,
+		.theme-btn.active {
+			border-color: color-mix(in srgb, var(--fg) 50%, transparent);
+			transform: scale(1.08);
+		}
+
+		.theme-btn-half {
+			width: 50%;
+			height: 100%;
+			pointer-events: none;
+		}
+
+		.theme-dropdown {
+			position: absolute;
+			top: calc(100% + 15px);
+			right: 0;
+			background: var(--sur);
+			border: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+			border-radius: 12px;
+			padding: 1rem;
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 0.5rem;
+			z-index: 100;
+			box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8);
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+
+		.theme-dropdown.open {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		/* Arrow tip pointing to button */
+		.theme-dropdown::before {
+			content: '';
+			position: absolute;
+			top: -6px;
+			right: 14px;
+			width: 10px;
+			height: 10px;
+			background: var(--sur);
+			border-top: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+			border-left: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+			transform: rotate(45deg);
+		}
+
+		.swatch {
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+			cursor: pointer;
+			border: 2px solid transparent;
+			background: transparent;
+			transition: transform 0.12s, border-color 0.12s;
+			position: relative;
+			overflow: hidden;
+			flex-shrink: 0;
+		}
+
+		.swatch:hover {
+			transform: scale(1.12);
+			z-index: 10;
+		}
+
+		.swatch.active {
+			border-color: var(--fg);
+		}
+
+		.sh {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 50%;
+			pointer-events: none;
+		}
+
+		.sh.l {
+			left: 0;
+		}
+
+		.sh.r {
+			right: 0;
+		}
+
+		hr {
+			border: none;
+			border-top: 1px solid var(--fg);
+			opacity: 0.15;
+			/* improved contrast */
+			margin: -1.5rem 0 -1.5rem 0;
+		}
+
+		.section-label {
+			font-size: 0.55rem;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			color: var(--fg);
+			opacity: 0.6;
+			/* improved contrast */
+			margin-bottom: 0.85rem;
+		}
 
 		.grid {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
-			border-top: 1px solid color-mix(in srgb, var(--dim) 40%, transparent);
-			border-left: 1px solid color-mix(in srgb, var(--dim) 40%, transparent);
-			opacity: 0.9;
+			gap: 1rem;
+			align-items: stretch;
+		}
+
+		@media (max-width: 480px) {
+			.grid {
+				grid-template-columns: 1fr;
+			}
+
+			.theme-dropdown {
+				right: -1rem;
+				/* push back into screen slightly on mobile */
+			}
+
+			.theme-dropdown::before {
+				right: 1.5rem;
+			}
 		}
 
 		.tile {
-			border-right: 1px solid color-mix(in srgb, var(--dim) 40%, transparent);
-			border-bottom: 1px solid color-mix(in srgb, var(--dim) 40%, transparent);
-			padding: 1.25rem;
+			background: transparent;
+			border: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+			/* boosted slightly */
+			border-radius: 6px;
+			padding: 1.35rem 1.25rem 1.15rem;
 			display: flex;
 			flex-direction: column;
-			gap: 0.4rem;
 			text-decoration: none;
 			color: inherit;
-			transition: background 0.15s;
+			transition: background 0.2s, border-color 0.2s;
+			height: 100%;
+			position: relative;
+			overflow: hidden;
 		}
 
-		a.tile { position: relative; overflow: hidden; }
 		a.tile::before {
 			content: '';
 			position: absolute;
-			left: 0; top: 0; bottom: 0;
-			width: 2px;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 3px;
 			background: var(--acc);
 			transform: scaleY(0);
 			transform-origin: bottom;
 			transition: transform 0.2s ease;
 		}
-		a.tile:hover { background: #141414; }
-		a.tile:hover::before { transform: scaleY(1); }
 
-		.tile .host { font-size: 0.65rem; color: var(--acc); }
-		.tile .name { font-size: 0.85rem; }
-		.tile .desc { font-size: 0.68rem; color: var(--dim); font-style: italic; line-height: 1.5; }
-		.tile .tag  { font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--dim); opacity: 0.6; padding: 0.1rem 0.3rem; width: fit-content; margin-top: 0.25rem; }
+		a.tile:hover {
+			background: color-mix(in srgb, var(--fg) 4%, transparent);
+			border-color: color-mix(in srgb, var(--fg) 30%, transparent);
+			/* stronger border hint */
+		}
 
-		.tile.muted .host { color: var(--dim); opacity: 0.4; }
-		.tile.muted .name { color: var(--dim); }
-		.tile.muted .desc { color: var(--dim); opacity: 0.3; }
-		.tile.muted .tag  { opacity: 0.2; }
+		a.tile:hover::before {
+			transform: scaleY(1);
+		}
 
-		footer { display: flex; justify-content: space-between; margin-top: auto; }
-		footer span, footer a { font-size: 0.65rem; color: var(--dim); text-decoration: none; }
-		footer a:hover { color: var(--acc); }
-		footer nav { display: flex; gap: 1.25rem; }
+		.tile .host {
+			font-size: 0.55rem;
+			color: var(--acc);
+			letter-spacing: 0.06em;
+			margin-bottom: 0.6rem;
+		}
+
+		.tile .name {
+			font-size: 0.88rem;
+			color: var(--fg);
+			margin-bottom: 0.5rem;
+			line-height: 1;
+		}
+
+		.tile .desc {
+			font-size: 0.63rem;
+			color: var(--fg);
+			opacity: 0.8;
+			/* improved contrast - previously 0.65 */
+			font-style: italic;
+			line-height: 1.65;
+		}
+
+		.tile .tag {
+			font-size: 0.5rem;
+			letter-spacing: 0.2em;
+			text-transform: uppercase;
+			margin-top: 1rem;
+			color: var(--fg);
+			opacity: 0.6;
+			/* improved contrast - previously 0.45 */
+			border: 1px solid color-mix(in srgb, var(--fg) 25%, transparent);
+			padding: 0.2rem 0.4rem;
+			width: fit-content;
+			border-radius: 3px;
+		}
+
+		a.tile .tag {
+			color: var(--acc);
+			opacity: 0.9;
+			/* improved contrast */
+			border-color: color-mix(in srgb, var(--acc) 50%, transparent);
+		}
+
+		/* Improved contrast for muted tiles */
+		.tile.muted .host {
+			color: var(--fg);
+			opacity: 0.35;
+		}
+
+		/* prev 0.2 */
+		.tile.muted .name {
+			opacity: 0.5;
+		}
+
+		/* prev 0.3 */
+		.tile.muted .desc {
+			opacity: 0.35;
+		}
+
+		/* prev 0.18 */
+
+		footer {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: auto;
+		}
+
+		footer span,
+		footer a {
+			font-size: 0.6rem;
+			color: var(--fg);
+			opacity: 0.5;
+			/* improved contrast from 0.3 */
+			text-decoration: none;
+		}
+
+		footer a:hover {
+			color: var(--acc);
+			opacity: 1;
+		}
+
+		footer nav {
+			display: flex;
+			gap: 1.5rem;
+		}
 	</style>
+
+	<!-- FOUC Prevention Script -->
+	<script>
+		const themes = {
+			'classic': { bg: '#0d0d0d', sur: '#141414', fg: '#e8e6e1', acc: '#c97d2e' },
+			'moss': { bg: '#080808', sur: '#111111', fg: '#f0f0ee', acc: '#7aaa6a' },
+			'forest': { bg: '#0d0f0e', sur: '#1a1f1d', fg: '#ddd9c8', acc: '#7cfc6e' },
+			'espresso': { bg: '#1c1210', sur: '#2a1c18', fg: '#f0dfc8', acc: '#f59e0b' },
+			'void': { bg: '#080808', sur: '#141414', fg: '#eeeeee', acc: '#ff3c3c' },
+			'midnight': { bg: '#0a0e1a', sur: '#111827', fg: '#e2e8f0', acc: '#38bdf8' },
+			'graphite': { bg: '#1c1c1e', sur: '#2c2c2e', fg: '#f0f0f2', acc: '#ff9f0a' },
+			'dusk': { bg: '#12101a', sur: '#1e1b2e', fg: '#eae8f8', acc: '#d946b4' },
+			'chalk': { bg: '#f2efe6', sur: '#e8e4d8', fg: '#1a1e1c', acc: '#c0392b' },
+			'sage': { bg: '#f0f4f0', sur: '#e2ebe2', fg: '#1a2a1a', acc: '#3a7d44' },
+			'cobalt': { bg: '#eef2f8', sur: '#dce5f0', fg: '#0e1830', acc: '#2563eb' },
+			'paper': { bg: '#f9f6ef', sur: '#eeeadf', fg: '#221e1a', acc: '#7c5c2e' },
+			'vapor': { bg: '#f4f0ff', sur: '#ece6ff', fg: '#120630', acc: '#7c3aed' },
+		};
+
+		// Default set to classic
+		let currentTheme = localStorage.getItem('theme') || 'classic';
+
+		function applyRootTheme(name) {
+			const t = themes[name] || themes['classic'];
+			const r = document.documentElement.style;
+			r.setProperty('--bg', t.bg);
+			r.setProperty('--sur', t.sur);
+			r.setProperty('--fg', t.fg);
+			r.setProperty('--acc', t.acc);
+		}
+
+		applyRootTheme(currentTheme);
+	</script>
 </head>
+
 <body>
 
 	<header>
-		<h1>ErikG.org</h1>
-		<span>work in progress</span>
+		<div class="header-left">
+			<h1>ErikG.org</h1>
+			<span class="subtitle">work in progress</span>
+		</div>
+
+		<!-- Dropdown Picker -->
+		<div class="theme-wrapper" id="themeWrapper">
+			<button class="theme-btn" id="themeBtn" aria-label="Change theme" onclick="togglePicker(event)"
+				title="change theme">
+				<div class="theme-btn-half" id="btnLeft"></div>
+				<div class="theme-btn-half" id="btnRight"></div>
+			</button>
+
+			<div class="theme-dropdown" id="pickerGrid">
+				<!-- swatches will be inserted here -->
+			</div>
+		</div>
 	</header>
 
 	<hr />
 
 	<main>
-		<h2>projects</h2>
+		<h2 class="section-label">projects</h2>
 		<div class="grid">
 
 			<a class="tile" href="https://ai.erikg.org">
@@ -151,5 +457,72 @@
 		</nav>
 	</footer>
 
+	<script>
+		// Theme Logic
+		function updateThemeUI(name) {
+			const t = themes[name] || themes['classic'];
+			currentTheme = name;
+			localStorage.setItem('theme', name);
+
+			document.getElementById('btnLeft').style.background = t.bg;
+			document.getElementById('btnRight').style.background = t.acc;
+
+			document.querySelectorAll('.swatch').forEach(s =>
+				s.classList.toggle('active', s.dataset.theme === name)
+			);
+		}
+
+		function selectTheme(name) {
+			applyRootTheme(name);
+			updateThemeUI(name);
+			document.getElementById('pickerGrid').classList.remove('open');
+			document.getElementById('themeBtn').classList.remove('active');
+		}
+
+		function togglePicker(e) {
+			e.stopPropagation();
+			const dropdown = document.getElementById('pickerGrid');
+			const btn = document.getElementById('themeBtn');
+			dropdown.classList.toggle('open');
+			btn.classList.toggle('active');
+		}
+
+		// Close dropdown when clicking outside
+		document.addEventListener('click', (e) => {
+			const dropdown = document.getElementById('pickerGrid');
+			const btn = document.getElementById('themeBtn');
+			if (dropdown.classList.contains('open') && !e.target.closest('#themeWrapper')) {
+				dropdown.classList.remove('open');
+				btn.classList.remove('active');
+			}
+		});
+
+		// Close on Escape
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				document.getElementById('pickerGrid').classList.remove('open');
+				document.getElementById('themeBtn').classList.remove('active');
+			}
+		});
+
+		function buildPicker() {
+			const grid = document.getElementById('pickerGrid');
+			Object.entries(themes).forEach(([name, t]) => {
+				const el = document.createElement('button');
+				el.type = 'button';
+				el.className = 'swatch' + (name === currentTheme ? ' active' : '');
+				el.dataset.theme = name;
+				el.title = name;
+				el.ariaLabel = `Select ${name} theme`;
+				el.innerHTML = `<div class="sh l" style="background:${t.bg}"></div><div class="sh r" style="background:${t.acc}"></div>`;
+				el.onclick = () => selectTheme(name);
+				grid.appendChild(el);
+			});
+		}
+
+		buildPicker();
+		updateThemeUI(currentTheme);
+	</script>
 </body>
+
 </html>
