@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ai.erikg.org — manager</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#0e0e0e',
+            fg: '#e8e0d0',
+            dim: '#52504a',
+            mid: '#8a8378',
+            acc: '#c8922a',
+            border: '#1c1c1c',
+            surface: '#141414',
+            danger: '#a04040',
+            success: '#5a9a6a'
+          },
+          fontFamily: {
+            mono: ['"DM Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0e0e0e;
+      color: #e8e0d0;
+      font-family: '"DM Mono"', monospace;
+      font-weight: 300;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0e0e0e; }
+    ::-webkit-scrollbar-thumb { background: #52504a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #8a8378; }
+
+    /* Input focus overrides */
+    input:focus, textarea:focus { outline: none; border-color: #52504a; }
+  </style>
+</head>
+<body class="bg-bg text-fg h-screen flex flex-col overflow-hidden text-sm">
+
+  <div id="root" class="h-full flex flex-col"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const HOST = 'https://ai.erikg.org';
+
+    // --- Components ---
+
+    const Button = ({ children, onClick, active, variant = 'default', disabled, className = '' }) => {
+      const base = "font-mono text-xs px-3 py-1.5 border transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
+      const variants = {
+        default: active ? "border-acc text-acc bg-surface" : "border-border text-dim hover:border-acc hover:text-acc",
+        solid: "border-acc bg-acc text-bg hover:bg-yellow-600 hover:border-yellow-600 font-bold",
+        danger: "border-border text-dim hover:border-danger hover:text-danger"
+      };
+      return (
+        <button onClick={onClick} disabled={disabled} className={`${base} ${variants[variant]} ${className}`}>
+          {children}
+        </button>
+      );
+    };
+
+    const Input = ({ value, onChange, placeholder, type = "text", className = "" }) => (
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`bg-surface border border-border text-fg font-mono text-xs px-2 py-1.5 w-full ${className}`}
+      />
+    );
+
+    // --- Main App ---
+
+    const App = () => {
+      const [token, setToken] = useState('');
+      const [activeTab, setActiveTab] = useState('pages');
+      const [status, setStatus] = useState({ text: 'ready', type: 'info' });
+
+      // API Helpers
+      const apiHeaders = () => ({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      });
+
+      const setStatusMsg = (text, type = 'info') => setStatus({ text, type });
+
+      const ping = async () => {
+        setStatusMsg('pinging…', 'busy');
+        try {
+          const r = await fetch(`${HOST}/api/ping`, { headers: apiHeaders() });
+          const j = await r.json();
+          if (r.ok) setStatusMsg(`✓ connected — ${j.timestamp || 'ok'}`, 'success');
+          else setStatusMsg(`✗ ${j.error || 'Connection failed'}`, 'error');
+        } catch (e) {
+          setStatusMsg(`✗ ${e.message}`, 'error');
+        }
+      };
+
+      return (
+        <>
+          {/* Header */}
+          <header className="flex items-center gap-4 px-5 py-3 border-b border-border shrink-0">
+            <h1 className="text-acc text-xs tracking-widest flex-1">ai.erikg.org</h1>
+            <div className="flex gap-2 items-center">
+              <Input type="password" placeholder="erik api token…" value={token} onChange={(e) => setToken(e.target.value)} className="w-40" />
+              <Button onClick={ping}>ping</Button>
+            </div>
+          </header>
+
+          {/* Tabs */}
+          <div className="flex border-b border-border shrink-0">
+            {['pages', 'data'].map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`text-xs px-6 py-3 border-b-2 font-mono tracking-wide transition-colors ${activeTab === tab ? 'text-acc border-acc' : 'text-dim border-transparent hover:text-mid'}`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Main Content Area */}
+          <div className="flex-1 overflow-hidden flex flex-col relative">
+            {activeTab === 'pages' && (
+              <PagesTab setStatusMsg={setStatusMsg} apiHeaders={apiHeaders} />
+            )}
+            {activeTab === 'data' && (
+              <DataTab setStatusMsg={setStatusMsg} apiHeaders={apiHeaders} />
+            )}
+          </div>
+
+          {/* Status Bar */}
+          <div className={`px-5 py-2 text-[10px] tracking-wider border-t border-border shrink-0 uppercase
+            ${status.type === 'error' ? 'text-danger' : status.type === 'success' ? 'text-success' : status.type === 'busy' ? 'text-acc' : 'text-dim'}`}>
+            {status.text}
+          </div>
+        </>
+      );
+    };
+
+    // --- Tabs Implementation ---
+
+    const PagesTab = ({ setStatusMsg, apiHeaders }) => {
+      const [pages, setPages] = useState([]);
+      const [editMode, setEditMode] = useState(false);
+      const [editData, setEditData] = useState({ slug: '', title: '', html: '' });
+
+      const loadPages = async () => {
+        setStatusMsg('loading pages…', 'busy');
+        try {
+          const r = await fetch(`${HOST}/api/pages`, { headers: apiHeaders() });
+          const j = await r.json();
+          if (r.ok) {
+            setPages(j.pages || []);
+            setStatusMsg(`loaded ${(j.pages||[]).length} pages`, 'success');
+          } else throw new Error(j.error || 'Failed');
+        } catch (e) { setStatusMsg(`✗ ${e.message}`, 'error'); }
+      };
+
+      const deletePage = async (slug) => {
+        if (!confirm(`Delete page "${slug}"?`)) return;
+        setStatusMsg(`deleting ${slug}…`, 'busy');
+        try {
+          const r = await fetch(`${HOST}/api/pages/${slug}`, { method: 'DELETE', headers: apiHeaders() });
+          if (r.ok) {
+            setStatusMsg(`deleted ${slug}`, 'success');
+            loadPages();
+          } else throw new Error('Failed to delete');
+        } catch (e) { setStatusMsg(`✗ ${e.message}`, 'error'); }
+      };
+
+      const loadPageForEdit = async (slug) => {
+        setStatusMsg(`loading ${slug}…`, 'busy');
+        try {
+          const r = await fetch(`${HOST}/api/pages/${slug}`, { headers: apiHeaders() });
+          const text = await r.text();
+          // Extract title if possible (crude parsing)
+          const titleMatch = text.match(/<title>([^<]*)<\/title>/);
+          const title = titleMatch ? titleMatch[1] : slug;
+          
+          setEditData({ slug, title, html: text });
+          setEditMode(true);
+          setStatusMsg(`loaded ${slug} for editing`, 'success');
+        } catch(e) { setStatusMsg(`✗ ${e.message}`, 'error'); }
+      };
+
+      const savePage = async () => {
+        const { slug, title, html } = editData;
+        if (!slug || !html) return setStatusMsg('✗ slug and html required', 'error');
+        
+        setStatusMsg(`saving ${slug}…`, 'busy');
+        try {
+          const r = await fetch(`${HOST}/api/pages/${slug}`, {
+            method: 'PUT', headers: apiHeaders(),
+            body: JSON.stringify({ title, html })
+          });
+          if (r.ok) {
+            setStatusMsg(`✓ saved ${slug}`, 'success');
+            setEditMode(false);
+            loadPages();
+          } else throw new Error('Failed to save');
+        } catch (e) { setStatusMsg(`✗ ${e.message}`, 'error'); }
+      };
+
+      useEffect(() => { loadPages(); }, []);
+
+      if (editMode) {
+        return (
+          <div className="flex flex-col h-full p-5 gap-4">
+            <div className="flex gap-2">
+              <Button onClick={() => setEditMode(false)}>← back</Button>
+              <div className="flex-1"></div>
+              <Button active onClick={savePage}>save to site →</Button>
+            </div>
+            <div className="flex gap-4">
+              <Input placeholder="slug (e.g. tools)" value={editData.slug} onChange={e => setEditData({...editData, slug: e.target.value})} />
+              <Input placeholder="title" value={editData.title} onChange={e => setEditData({...editData, title: e.target.value})} />
+            </div>
+            <textarea
+              className="flex-1 bg-surface border border-border text-fg font-mono text-xs p-3 resize-none focus:border-dim outline-none"
+              value={editData.html}
+              onChange={e => setEditData({...editData, html: e.target.value})}
+              placeholder="<!DOCTYPE html>..."
+            />
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex flex-col h-full">
+          <div className="p-4 border-b border-border shrink-0 flex gap-2">
+            <Button onClick={loadPages}>refresh</Button>
+            <Button onClick={() => { setEditData({slug:'', title:'', html:''}); setEditMode(true); }}>+ new page</Button>
+          </div>
+          <div className="flex-1 overflow-y-auto">
+            {pages.length === 0 ? (
+              <div className="p-5 text-dim">No pages found.</div>
+            ) : (
+              pages.map(slug => (
+                <div key={slug} className="flex items-center gap-4 p-4 border-b border-border/50 hover:bg-surface/50 transition-colors">
+                  <span className="flex-1 text-fg">{slug}</span>
+                  <button onClick={() => loadPageForEdit(slug)} className="text-dim hover:text-fg text-xs transition-colors">edit</button>
+                  <a href={`${HOST}/${slug}`} target="_blank" className="text-acc hover:underline text-xs">↗ view</a>
+                  <button onClick={() => deletePage(slug)} className="text-dim hover:text-danger text-xs transition-colors ml-2">✕</button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    const DataTab = ({ setStatusMsg, apiHeaders }) => {
+      const [col, setCol] = useState('');
+      const [dataStr, setDataStr] = useState('');
+
+      const readData = async () => {
+        if (!col) return;
+        setStatusMsg('reading…', 'busy');
+        try {
+          const r = await fetch(`${HOST}/api/data/${col}`, { headers: apiHeaders() });
+          const j = await r.json();
+          setDataStr(JSON.stringify(j.data || j, null, 2));
+          setStatusMsg(`read ${col}`, 'success');
+        } catch (e) { setStatusMsg(`✗ ${e.message}`, 'error'); }
+      };
+
+      const writeData = async () => {
+        if (!col || !dataStr) return;
+        try {
+          const parsed = JSON.parse(dataStr);
+          setStatusMsg('writing…', 'busy');
+          const r = await fetch(`${HOST}/api/data/${col}`, {
+            method: 'POST', headers: apiHeaders(),
+            body: JSON.stringify(parsed)
+          });
+          const j = await r.json();
+          if (r.ok) setStatusMsg(`✓ written ${col}`, 'success');
+          else throw new Error(j.error || 'Failed');
+        } catch (e) { setStatusMsg(`✗ ${e.message}`, 'error'); }
+      };
+
+      const deleteData = async () => {
+        if (!col || !confirm(`Delete collection "${col}"?`)) return;
+        setStatusMsg('deleting…', 'busy');
+        try {
+          const r = await fetch(`${HOST}/api/data/${col}`, { method: 'DELETE', headers: apiHeaders() });
+          if (r.ok) {
+            setStatusMsg(`deleted ${col}`, 'success');
+            setDataStr('');
+          } else throw new Error('Failed to delete');
+        } catch (e) { setStatusMsg(`✗ ${e.message}`, 'error'); }
+      };
+
+      const formatJSON = () => {
+        try {
+          const parsed = JSON.parse(dataStr);
+          setDataStr(JSON.stringify(parsed, null, 2));
+        } catch(e) {
+          setStatusMsg('✗ invalid JSON formatting', 'error');
+        }
+      };
+
+      return (
+        <div className="flex flex-col h-full p-4 gap-4">
+          <div className="flex gap-2">
+            <Input placeholder="collection name (e.g. todos)" value={col} onChange={e => setCol(e.target.value)} className="flex-1" />
+            <Button onClick={readData}>GET</Button>
+            <Button onClick={deleteData} variant="danger">DELETE</Button>
+          </div>
+          <div className="flex-1 flex flex-col gap-2 relative">
+            <textarea
+              className="flex-1 bg-surface border border-border text-fg font-mono text-xs p-3 resize-none focus:border-dim outline-none leading-relaxed"
+              placeholder="JSON data…"
+              value={dataStr}
+              onChange={e => setDataStr(e.target.value)}
+            />
+            <button onClick={formatJSON} className="absolute top-2 right-2 text-[10px] text-dim hover:text-fg bg-bg px-2 py-1 border border-border">
+              {`{ }`} format
+            </button>
+          </div>
+          <div className="flex justify-end">
+            <Button active onClick={writeData}>POST →</Button>
+          </div>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
