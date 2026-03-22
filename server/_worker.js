@@ -23,7 +23,7 @@
  *   DEL  /api/data/:col          → delete collection
  */
 
-const GITHUB_REPO = "errgrab/erikg-cloudflare";
+const GITHUB_REPO = "errgrab/erikg.org";
 const GITHUB_BRANCH = "main";
 const PAGES_DIR = "public/ai";
 
@@ -64,7 +64,7 @@ export default {
       // Create request for assets
       const assetUrl = new URL("/" + filePath, request.url);
       let asset = await env.ASSETS.fetch(new Request(assetUrl, request));
-      
+
       if (asset.status === 404 && url.pathname !== "/") {
         // Try fallback index.html mapping (e.g. /about -> /about/index.html)
         const fallback = await env.ASSETS.fetch(new Request(new URL("/" + dir + "index.html", request.url), request));
@@ -125,9 +125,9 @@ async function handleAPI(request, env, url) {
       } catch {
         return err(400, "Invalid JSON");
       }
-      
+
       if (!body.html) return err(400, "Missing html");
-      
+
       const message = body.message || `ai: update ${slug}`;
       await ghWrite(env, filePath, body.html, message);
 
@@ -222,7 +222,7 @@ async function serveIndex(env, url) {
     @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap');
   `;
 
-  const escapeHtml = (s) => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   const items = pagesList.length === 0
     ? `<p class="empty">No pages yet. Ask your AI to create one (saving to GitHub!).</p>`
@@ -286,7 +286,7 @@ async function ghRead(env, path) {
   if (!r.ok) throw new Error(`GitHub 404: ${path}`);
   const j = await r.json();
   const base64str = j.content.replace(/\n| /g, "");
-  
+
   // Use atob safely for UTF-8 via escape/decodeURIComponent
   const raw = atob(base64str);
   const bytes = new Uint8Array(raw.length);
