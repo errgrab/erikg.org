@@ -5,6 +5,7 @@
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
+		"predeploy": "mkdir -p dist && cp index.html dist/index.html",
 		"deploy": "wrangler deploy"
 	},
 	"devDependencies": {

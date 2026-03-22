@@ -61,13 +61,15 @@ export default {
     filePath = filePath.replace(/\/+/g, "/");
 
     try {
-      // Create request for assets
-      const assetUrl = new URL("/" + filePath, request.url);
-      let asset = await env.ASSETS.fetch(new Request(assetUrl, request));
+      // Use a clean GET request — passing the original request copies the Host
+      // header which confuses the ASSETS binding
+      const assetUrl = new URL("/" + filePath, "http://assets.internal");
+      let asset = await env.ASSETS.fetch(new Request(assetUrl.toString()));
 
       if (asset.status === 404 && url.pathname !== "/") {
         // Try fallback index.html mapping (e.g. /about -> /about/index.html)
-        const fallback = await env.ASSETS.fetch(new Request(new URL("/" + dir + "index.html", request.url), request));
+        const fallbackUrl = new URL("/" + dir + "index.html", "http://assets.internal");
+        const fallback = await env.ASSETS.fetch(new Request(fallbackUrl.toString()));
         if (fallback.status === 200) {
           return fallback;
         }
@@ -76,6 +78,7 @@ export default {
     } catch {
       return new Response("Not found", { status: 404 });
     }
+
   }
 };
 
