@@ -231,7 +231,7 @@ async function serveIndex(env, url) {
     ? `<p class="empty">No pages yet. Ask your AI to create one (saving to GitHub!).</p>`
     : `<ul>${pagesList.map(p => `
         <li>
-          <a href="/${p.slug}.html">
+          <a href="/${p.slug}">
             <span class="arrow">→</span>
             <span class="title">${escapeHtml(p.title)}</span>
             <span class="date">${p.updatedAt ? p.updatedAt.slice(0, 10) : ''}</span>
