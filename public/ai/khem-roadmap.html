@@ -3,164 +3,352 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Khem — Roadmap</title>
+<title>khem — roadmap</title>
 <style>
-  :root {
-    --bg:#0c0c0c;--surface:#141414;--surface2:#1c1c1c;
-    --border:#272727;--border2:#333;--dim:#4a4a4a;
-    --fg:#ccc8c0;--fg2:#777;--fg3:#444;
-    --acc:#c8a84b;--green:#6b9e78;--blue:#7a8fa8;--red:#a86b6b;
-    --font:"DM Mono","Fira Mono",ui-monospace,monospace;
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:12.5px;line-height:1.65;padding:48px 28px 80px;max-width:960px;margin:0 auto}
-  .header{margin-bottom:44px}
-  .header-top{display:flex;align-items:baseline;gap:16px;margin-bottom:10px}
-  .logo{font-size:20px;color:var(--acc);letter-spacing:0.06em}
-  .tagline{font-size:11px;color:var(--fg2);letter-spacing:0.04em}
-  .principle{font-size:11px;color:var(--fg3);padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);line-height:1.7}
-  .principle span{color:var(--fg2)}
-  .principle code{color:var(--acc);font-family:var(--font);font-size:10.5px}
-  .phase{margin-bottom:52px}
-  .phase-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
-  .phase-num{font-size:10px;color:var(--dim);letter-spacing:0.18em}
-  .phase-title{font-size:14px;color:var(--fg)}
-  .phase-est{font-size:10px;color:var(--dim);margin-left:auto}
-  .phase-desc{font-size:11px;color:var(--fg2);margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);line-height:1.65}
-  .phase-desc strong{color:var(--fg);font-weight:400}
-  .tasks{display:flex;flex-direction:column;gap:1px}
-  .task{display:grid;grid-template-columns:6px 60px 1fr auto;align-items:start;gap:0 14px;padding:11px 14px;background:var(--surface);transition:background 0.1s}
-  .task:hover{background:var(--surface2)}
-  .task-dot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0}
-  .todo .task-dot{background:var(--border2)}
-  .active .task-dot{background:var(--acc);box-shadow:0 0 6px var(--acc)}
-  .done .task-dot{background:var(--green)}
-  .blocked .task-dot{background:var(--red)}
-  .task-id{font-size:10px;color:var(--dim);padding-top:1px}
-  .task-title{font-size:12.5px;color:var(--fg);margin-bottom:3px}
-  .task-desc{font-size:11px;color:var(--fg2);line-height:1.55}
-  .task-desc code{font-family:var(--font);color:var(--acc);font-size:10.5px}
-  .done .task-title{opacity:0.4;text-decoration:line-through}
-  .done .task-desc{opacity:0.3}
-  .task-tags{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;padding-top:1px}
-  .tag{font-size:9.5px;padding:1px 6px;letter-spacing:0.04em;border:1px solid;white-space:nowrap}
-  .tag-c{color:#c8a84b;border-color:#3a3210;background:#1a1608}
-  .tag-kh{color:#6b9e78;border-color:#1e3a22;background:#0e1a10}
-  .tag-spec{color:#7a8fa8;border-color:#1e2f3a;background:#0e1218}
-  .tag-wasm{color:#b07848;border-color:#3a2818;background:#181008}
-  .gate{margin:10px 0 4px;padding:10px 14px;background:#0e1218;border:1px solid #1e2f3a;font-size:10.5px;color:var(--blue);line-height:1.6}
-  .gate code{font-family:var(--font);color:#9ab3c8;font-size:10.5px}
-  .milestone{margin:16px 0 6px;font-size:10px;color:var(--acc);letter-spacing:0.12em;display:flex;align-items:center;gap:10px}
-  .milestone::after{content:'';flex:1;height:1px;background:var(--border)}
-  .backlog-item{padding:8px 14px;background:var(--surface);font-size:11px;color:var(--fg3);display:flex;gap:14px;margin-bottom:1px}
-  .backlog-item-id{color:var(--dim);min-width:44px}
-  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:36px;font-size:10.5px;color:var(--fg2);padding:10px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-  .legend-item{display:flex;align-items:center;gap:6px}
-  .ld{width:6px;height:6px;border-radius:50%}
-  .loading{color:var(--dim);font-size:11px;padding:20px 0}
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap');
+
+:root {
+  --bg:      #0c0c0c;
+  --surface: #141414;
+  --s2:      #1c1c1c;
+  --border:  #272727;
+  --b2:      #333;
+  --dim:     #4a4a4a;
+  --fg:      #ccc8c0;
+  --fg2:     #777;
+  --fg3:     #444;
+  --acc:     #c8a84b;
+  --green:   #6b9e78;
+  --blue:    #7a8fa8;
+  --red:     #a86b6b;
+  --amber:   #d4924a;
+  --mono:    'DM Mono', 'Fira Mono', ui-monospace, monospace;
+  --serif:   'Instrument Serif', Georgia, serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--mono); font-size: 12.5px;
+  line-height: 1.65; padding: 48px 28px 80px;
+  max-width: 960px; margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* header */
+.hd { margin-bottom: 44px; }
+.hd-top { display: flex; align-items: baseline; gap: 16px; margin-bottom: 10px; }
+.logo {
+  font-family: var(--serif); font-size: 28px; font-weight: 400;
+  color: var(--acc); letter-spacing: 0.02em; line-height: 1;
+}
+.tagline { font-size: 11px; color: var(--fg2); letter-spacing: 0.04em; }
+.rule {
+  font-size: 11px; color: var(--fg3); padding: 12px 0;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  line-height: 1.7;
+}
+.rule span { color: var(--fg2); }
+.rule code { color: var(--acc); font-family: var(--mono); font-size: 10.5px; }
+
+/* loading state */
+.loading {
+  padding: 60px 0; text-align: center;
+  font-size: 11px; color: var(--fg3); letter-spacing: 0.08em;
+}
+.loading::after {
+  content: ''; display: inline-block; width: 4px; height: 4px;
+  border-radius: 50%; background: var(--fg3); margin-left: 8px;
+  animation: blink 1s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.error-state {
+  padding: 40px 0; font-size: 11px; color: var(--red);
+  border: 1px solid #3a1e1e; padding: 16px; background: #180a0a;
+}
+
+/* progress */
+.progress { display: flex; gap: 3px; margin-bottom: 32px; }
+.prog-phase { flex: 1; }
+.prog-bar { height: 2px; background: var(--border); }
+.prog-fill { height: 100%; background: var(--acc); transition: width 0.4s; }
+.prog-label { font-size: 9.5px; color: var(--fg3); margin-top: 5px; text-align: center; letter-spacing: 0.05em; }
+
+/* legend */
+.legend {
+  display: flex; gap: 18px; flex-wrap: wrap;
+  margin-bottom: 36px; font-size: 10.5px; color: var(--fg2);
+  padding: 10px 0;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.ld { width: 6px; height: 6px; border-radius: 50%; }
+.tag {
+  font-size: 9.5px; padding: 1px 6px; letter-spacing: 0.04em;
+  border: 1px solid; white-space: nowrap;
+}
+.tag-c    { color:#c8a84b;border-color:#3a3210;background:#1a1608; }
+.tag-kh   { color:#6b9e78;border-color:#1e3a22;background:#0e1a10; }
+.tag-spec { color:#7a8fa8;border-color:#1e2f3a;background:#0e1218; }
+.tag-wasm { color:#b07848;border-color:#3a2818;background:#181008; }
+
+/* phase */
+.phase { margin-bottom: 52px; }
+.ph-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+.ph-num   { font-size: 10px; color: var(--dim); letter-spacing: 0.18em; }
+.ph-title { font-size: 14px; color: var(--fg); }
+.ph-est   { font-size: 10px; color: var(--dim); margin-left: auto; }
+.ph-desc  {
+  font-size: 11px; color: var(--fg2); margin-bottom: 18px;
+  padding-bottom: 14px; border-bottom: 1px solid var(--border); line-height: 1.65;
+}
+.ph-desc strong { color: var(--fg); font-weight: 400; }
+
+/* tasks */
+.tasks { display: flex; flex-direction: column; gap: 1px; }
+.task {
+  display: grid;
+  grid-template-columns: 6px 56px 1fr auto;
+  align-items: start; gap: 0 14px;
+  padding: 11px 14px; background: var(--surface);
+  transition: background 0.1s;
+}
+.task:hover { background: var(--s2); }
+
+.dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.todo    .dot { background: var(--b2); }
+.active  .dot { background: var(--acc); box-shadow: 0 0 5px var(--acc); }
+.done    .dot { background: var(--green); }
+.blocked .dot { background: var(--red); }
+
+.task-id    { font-size: 10px; color: var(--dim); padding-top: 1px; }
+.task-title { font-size: 12.5px; color: var(--fg); margin-bottom: 3px; }
+.task-desc  { font-size: 11px; color: var(--fg2); line-height: 1.55; }
+.task-desc code { font-family: var(--mono); color: var(--acc); font-size: 10.5px; }
+.done .task-title { opacity: 0.4; text-decoration: line-through; }
+.done .task-desc  { opacity: 0.3; }
+
+.task-tags { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; padding-top: 1px; }
+
+/* gate */
+.gate {
+  margin: 10px 0 4px; padding: 10px 14px;
+  background: #0e1218; border: 1px solid #1e2f3a;
+  font-size: 10.5px; color: var(--blue); line-height: 1.6;
+}
+.gate code { font-family: var(--mono); color: #9ab3c8; font-size: 10.5px; }
+.gate-acc { background: #140f00; border-color: #3a3210; color: var(--acc); }
+
+/* milestone */
+.milestone {
+  margin: 16px 0 6px; font-size: 10px; color: var(--acc);
+  letter-spacing: 0.12em; display: flex; align-items: center; gap: 10px;
+}
+.milestone::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* backlog */
+.bl-item {
+  padding: 8px 14px; background: var(--surface);
+  font-size: 11px; color: var(--fg3);
+  display: flex; gap: 14px; margin-bottom: 1px;
+}
+.bl-id { color: var(--dim); min-width: 44px; }
+
+/* last updated */
+.last-updated {
+  margin-top: 48px; padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 10px; color: var(--fg3);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.last-updated a {
+  color: var(--fg2); text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px; transition: color 0.1s, border-color 0.1s;
+}
+.last-updated a:hover { color: var(--acc); border-color: var(--acc); }
+
+/* summary strip */
+.summary {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  margin-bottom: 28px; padding: 12px 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 10.5px;
+}
+.summary-stat { display: flex; align-items: center; gap: 6px; color: var(--fg2); }
+.summary-stat strong { font-weight: 400; }
+.summary-stat.green strong { color: var(--green); }
+.summary-stat.amber strong { color: var(--amber); }
+.summary-stat.red   strong { color: var(--red); }
+.summary-stat.acc   strong { color: var(--acc); }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-top">
+<div class="hd">
+  <div class="hd-top">
     <span class="logo">khem</span>
     <span class="tagline">the black land · a string-based command language</span>
   </div>
-  <div class="principle">
+  <div class="rule">
     <span>one rule:</span> everything is a string — everything is a command — the host makes it fertile.<br>
     <span>done means:</span> compiles with <code>gcc -std=c99 -pedantic -Wall -Wextra</code>,
-    zero valgrind leaks, one working example that uses the feature.<br>
-    <span>starting point:</span> nothing exists yet. phase 1 is the first line of code.
+    zero valgrind leaks, one working example.
   </div>
 </div>
 
-<div class="legend">
-  <div class="legend-item"><div class="ld" style="background:var(--border2)"></div> todo</div>
-  <div class="legend-item"><div class="ld" style="background:var(--acc);box-shadow:0 0 6px var(--acc)"></div> next up</div>
-  <div class="legend-item"><div class="ld" style="background:var(--green)"></div> done</div>
-  <div class="legend-item"><div class="ld" style="background:var(--red)"></div> blocked</div>
-</div>
-
-<div id="roadmap"><div class="loading">loading…</div></div>
+<div id="root"><div class="loading">loading roadmap</div></div>
 
 <script>
-const TASKS = [{"phase":"1","phaseTitle":"Parser","id":"1-01","title":"Token types","status":"active"},{"phase":"1","phaseTitle":"Parser","id":"1-02","title":"Brace quoting { }","status":"todo"},{"phase":"1","phaseTitle":"Parser","id":"1-03","title":"Bracket command [ ]","status":"todo"},{"phase":"1","phaseTitle":"Parser","id":"1-04","title":"Double-quoted strings \" \"","status":"todo"},{"phase":"1","phaseTitle":"Parser","id":"1-05","title":"Separators, EOL, comments","status":"todo"},{"phase":"1","phaseTitle":"Parser","id":"1-06","title":"Parser tests","status":"todo"},{"phase":"2","phaseTitle":"Substitution & Eval Loop","id":"2-01","title":"Variable substitution $name","status":"todo"},{"phase":"2","phaseTitle":"Substitution & Eval Loop","id":"2-02","title":"Command substitution [cmd]","status":"todo"},{"phase":"2","phaseTitle":"Substitution & Eval Loop","id":"2-03","title":"Command dispatch","status":"todo"},{"phase":"2","phaseTitle":"Substitution & Eval Loop","id":"2-04","title":"Result codes","status":"todo"},{"phase":"2","phaseTitle":"Substitution & Eval Loop","id":"2-05","title":"Variable scope (single frame)","status":"todo"},{"phase":"2","phaseTitle":"Substitution & Eval Loop","id":"2-06","title":"Four bootstrap commands","status":"todo"},{"phase":"3","phaseTitle":"Procedures & Scopes","id":"3-01","title":"Call frame stack","status":"todo"},{"phase":"3","phaseTitle":"Procedures & Scopes","id":"3-02","title":"proc name {args} {body}","status":"todo"},{"phase":"3","phaseTitle":"Procedures & Scopes","id":"3-03","title":"return ?value?","status":"todo"},{"phase":"3","phaseTitle":"Procedures & Scopes","id":"3-04","title":"upvar and global","status":"todo"},{"phase":"4","phaseTitle":"Core Commands","id":"4-01","title":"Control flow","status":"todo"},{"phase":"4","phaseTitle":"Core Commands","id":"4-02","title":"Arithmetic: prefix + expr","status":"todo"},{"phase":"4","phaseTitle":"Core Commands","id":"4-03","title":"Comparison operators","status":"todo"},{"phase":"4","phaseTitle":"Core Commands","id":"4-04","title":"String commands","status":"todo"},{"phase":"4","phaseTitle":"Core Commands","id":"4-05","title":"List commands","status":"todo"},{"phase":"4","phaseTitle":"Core Commands","id":"4-06","title":"source","status":"todo"},{"phase":"5","phaseTitle":"stdlib.kh","id":"5-01","title":"Boolean and numeric helpers","status":"todo"},{"phase":"5","phaseTitle":"stdlib.kh","id":"5-02","title":"List higher-order","status":"todo"},{"phase":"5","phaseTitle":"stdlib.kh","id":"5-03","title":"String helpers","status":"todo"},{"phase":"5","phaseTitle":"stdlib.kh","id":"5-04","title":"Auto-load on startup","status":"todo"},{"phase":"6","phaseTitle":"Host API","id":"6-01","title":"kh.h public header","status":"todo"},{"phase":"6","phaseTitle":"Host API","id":"6-02","title":"Lifecycle + eval","status":"todo"},{"phase":"6","phaseTitle":"Host API","id":"6-03","title":"Extension API","status":"todo"},{"phase":"6","phaseTitle":"Host API","id":"6-04","title":"Advanced API","status":"todo"},{"phase":"6","phaseTitle":"Host API","id":"6-05","title":"Embedding example","status":"todo"},{"phase":"7","phaseTitle":"Types & Dict","id":"7-01","title":"Val tagged union","status":"todo"},{"phase":"7","phaseTitle":"Types & Dict","id":"7-02","title":"Int and float inference","status":"todo"},{"phase":"7","phaseTitle":"Types & Dict","id":"7-03","title":"Dict type and commands","status":"todo"},{"phase":"7","phaseTitle":"Types & Dict","id":"7-04","title":"List as typed Val","status":"todo"},{"phase":"7","phaseTitle":"Types & Dict","id":"7-05","title":"Canonical string form for all types","status":"todo"},{"phase":"7","phaseTitle":"Types & Dict","id":"7-06","title":"Dict stdlib helpers","status":"todo"},{"phase":"8","phaseTitle":"WASM & First Host","id":"8-01","title":"WASM build","status":"todo"},{"phase":"8","phaseTitle":"WASM & First Host","id":"8-02","title":"JS wrapper (~50 lines)","status":"todo"},{"phase":"8","phaseTitle":"WASM & First Host","id":"8-03","title":"Console device (browser)","status":"todo"},{"phase":"8","phaseTitle":"WASM & First Host","id":"8-04","title":"Subprocess protocol","status":"todo"},{"phase":"8","phaseTitle":"WASM & First Host","id":"8-05","title":"Demo on erikg.org","status":"todo"}];
+const API = 'https://ai.erikg.org/api';
 
-const PHASES = [
-  {num:'1',title:'Parser',est:'~1 evening',desc:'<strong>Goal:</strong> read a string, produce a stream of correctly typed tokens. Nothing evaluates yet. Just the lexer.',gate:'Gate: all token types correct · nested braces depth-balanced · valgrind clean · all tests pass',milestone:null},
-  {num:'2',title:'Substitution &amp; Eval Loop',est:'~1 evening',desc:'<strong>Goal:</strong> expand substitutions and dispatch commands. After this phase <code>puts "hello world"</code> works.',gate:'Gate: <code>set x hello; set y world; puts "$x, $y"; puts [set x changed]</code> runs correctly and cleanly.',milestone:null},
-  {num:'3',title:'Procedures &amp; Scopes',est:'~1 evening',desc:'<strong>Goal:</strong> <code>proc</code> with named arguments, call frames, <code>return</code>, <code>upvar</code>. This is when Khem becomes a language instead of a calculator.',gate:'Gate: recursive fibonacci works · proc with zero args works · upvar mutates caller variable correctly · valgrind clean',milestone:null},
-  {num:'4',title:'Core Commands',est:'~1 afternoon',desc:'<strong>Goal:</strong> everything needed to write real programs. Control flow, arithmetic, strings, lists, file loading.',gate:'Gate: FizzBuzz · GCD · prime sieve · Collatz — all correct, all valgrind clean.',milestone:null},
-  {num:'5',title:'stdlib.kh',est:'~1 evening',desc:'<strong>Goal:</strong> everything that does not need C gets written in Khem. This is the self-hosting seed.',gate:null,milestone:'milestone — kh 0.1 · the language works'},
-  {num:'6',title:'Host API',est:'~1 afternoon',desc:'<strong>Goal:</strong> a clean public header so any C program can embed Khem in an afternoon. Six functions.',gate:null,milestone:'milestone — kh 0.2 · embeddable'},
-  {num:'7',title:'Types &amp; Dict',est:'~1 weekend',desc:'<strong>Goal:</strong> typed values internally (<code>str int float list dict</code>). Dict as a first-class citizen.',gate:null,milestone:'milestone — kh 0.3 · typed'},
-  {num:'8',title:'WASM &amp; First Host',est:'~1 weekend',desc:'<strong>Goal:</strong> Khem running in a browser. The tree-walking interpreter compiled to WASM — same <code>kh.c</code>, different target.',gate:null,milestone:'milestone — kh 0.4 · runs in a browser'},
-];
-
-const BACKLOG = [
-  {id:'B-01',title:'VM bytecode + compiler (khem 1.0)'},
-  {id:'B-02',title:'Device model: console file timer draw input net leaf meta'},
-  {id:'B-03',title:'VM snapshot / restore — serialisable state'},
-  {id:'B-04',title:'Leaf host: leaf device, component system, event system (on/emit)'},
-  {id:'B-05',title:'Tail call optimisation'},
-  {id:'B-06',title:'Coroutines / yield'},
-  {id:'B-07',title:'Package system (Seed)'},
-  {id:'B-08',title:'Sandboxing for untrusted plugins'},
-  {id:'B-09',title:'Self-hosted tools: formatter, linter, test runner'},
-  {id:'B-10',title:'Grove: shared Leaf workspace'},
-];
-
-async function loadAndRender() {
-  let statuses = {};
+async function load(collection) {
   try {
-    const r = await fetch('/api/data/khem-roadmap');
+    const r = await fetch(`${API}/data/${collection}`);
+    if (!r.ok) return null; // Handle 404s gracefully before data is initialized
     const j = await r.json();
-    if (j.data && typeof j.data === 'object') statuses = j.data;
-  } catch(e) {}
-
-  let html = '';
-  for (const ph of PHASES) {
-    const phaseTasks = TASKS.filter(t => t.phase === ph.num);
-    html += `<div class="phase">
-      <div class="phase-head">
-        <span class="phase-num">PHASE ${ph.num}</span>
-        <span class="phase-title">${ph.title}</span>
-        <span class="phase-est">${ph.est}</span>
-      </div>
-      <div class="phase-desc">${ph.desc}</div>
-      <div class="tasks">`;
-    for (const t of phaseTasks) {
-      const st = statuses[t.id] || t.status;
-      html += `<div class="task ${st}">
-        <div class="task-dot"></div>
-        <div class="task-id">${t.id}</div>
-        <div class="task-body"><div class="task-title">${t.title}</div></div>
-      </div>`;
-    }
-    html += '</div>';
-    if (ph.milestone) html += `<div class="milestone">${ph.milestone}</div>`;
-    if (ph.gate) html += `<div class="gate">${ph.gate}</div>`;
-    html += '</div>';
+    return j.data !== undefined ? j.data : j; // Adapt to API's return structure
+  } catch(e) {
+    return null;
   }
-
-  // Backlog
-  html += `<div class="phase">
-    <div class="phase-head">
-      <span class="phase-num">BACKLOG</span>
-      <span class="phase-title">Later — write it down, let it go</span>
-      <span class="phase-est">not now</span>
-    </div>
-    <div class="phase-desc">These are real ideas with a place to live. They are not now. Having them here means they stop occupying mental space.</div>`;
-  for (const b of BACKLOG) {
-    html += `<div class="backlog-item"><span class="backlog-item-id">${b.id}</span>${b.title}</div>`;
-  }
-  html += '</div>';
-
-  document.getElementById('roadmap').innerHTML = html;
 }
 
-loadAndRender();
+function tagHtml(tags) {
+  const map = { c:'tag-c', kh:'tag-kh', spec:'tag-spec', wasm:'tag-wasm' };
+  return (tags||[]).map(t => `<span class="tag ${map[t]||''}">${t}</span>`).join('');
+}
+
+function renderTask(t, st) {
+  const status = st[t.id] || 'todo';
+  return `
+    <div class="task ${status}">
+      <div class="dot"></div>
+      <div class="task-id">${t.id}</div>
+      <div>
+        <div class="task-title">${t.title||''}</div>
+        <div class="task-desc">${t.desc||''}</div>
+      </div>
+      <div class="task-tags">${tagHtml(t.tags)}</div>
+    </div>`;
+}
+
+function renderPhase(p, st) {
+  const tasks  = p.tasks || [];
+  const total  = tasks.length;
+  const done   = tasks.filter(t => (st[t.id]||'todo') === 'done').length;
+  const pct    = total ? Math.round(done/total*100) : 0;
+  return `
+    <div class="phase">
+      <div class="ph-head">
+        <span class="ph-num">${p.num||''}</span>
+        <span class="ph-title">${p.title||''}</span>
+        <span class="ph-est">${p.est||''}</span>
+      </div>
+      <div class="ph-desc">${p.desc||''}</div>
+      <div class="tasks">${tasks.map(t => renderTask(t, st)).join('')}</div>
+      ${p.milestone ? `<div class="milestone">${p.milestone}</div>` : ''}
+      ${p.gate ? `<div class="gate ${p.gateAcc?'gate-acc':''}">${p.gate}</div>` : ''}
+    </div>`;
+}
+
+function renderProgress(phases, st) {
+  return `<div class="progress">
+    ${phases.map(p => {
+      const total = p.tasks.length;
+      const done  = p.tasks.filter(t => (st[t.id]||'todo') === 'done').length;
+      const pct   = total ? Math.round(done/total*100) : 0;
+      return `
+        <div class="prog-phase">
+          <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+          <div class="prog-label">${(p.num||'').replace('PHASE ','P')}</div>
+        </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderSummary(phases, st) {
+  let total=0, done=0, active=0, blocked=0;
+  phases.forEach(p => p.tasks.forEach(t => {
+    total++;
+    const s = st[t.id] || 'todo';
+    if (s==='done')    done++;
+    if (s==='active')  active++;
+    if (s==='blocked') blocked++;
+  }));
+  const pct = total ? Math.round(done/total*100) : 0;
+  return `
+    <div class="summary">
+      <div class="summary-stat acc"><strong>${pct}%</strong> complete</div>
+      <div class="summary-stat green"><strong>${done}</strong> done</div>
+      <div class="summary-stat amber"><strong>${active}</strong> active</div>
+      <div class="summary-stat"><strong>${total - done - active - blocked}</strong> todo</div>
+      <div class="summary-stat red"><strong>${blocked}</strong> blocked</div>
+    </div>`;
+}
+
+function renderLegend() {
+  return `
+    <div class="legend">
+      <div class="legend-item"><div class="ld" style="background:var(--b2)"></div> todo</div>
+      <div class="legend-item"><div class="ld" style="background:var(--acc);box-shadow:0 0 5px var(--acc)"></div> active</div>
+      <div class="legend-item"><div class="ld" style="background:var(--green)"></div> done</div>
+      <div class="legend-item"><div class="ld" style="background:var(--red)"></div> blocked</div>
+      <div class="legend-item"><span class="tag tag-c">C</span> C implementation</div>
+      <div class="legend-item"><span class="tag tag-kh">kh</span> written in kh</div>
+      <div class="legend-item"><span class="tag tag-spec">spec</span> design / doc</div>
+      <div class="legend-item"><span class="tag tag-wasm">wasm</span> host / glue</div>
+    </div>`;
+}
+
+function renderBacklog(backlog) {
+  if (!backlog || !backlog.length) return '';
+  return `
+    <div class="phase">
+      <div class="ph-head">
+        <span class="ph-num">BACKLOG</span>
+        <span class="ph-title">Later — write it down, let it go</span>
+      </div>
+      <div class="ph-desc">Real ideas with a place to live. Not now.</div>
+      ${backlog.map(b => `
+        <div class="bl-item">
+          <span class="bl-id">${b.id}</span>
+          <span>${b.title||''}</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+(async () => {
+  const root = document.getElementById('root');
+  try {
+    const [structure, state] = await Promise.all([
+      load('khem-roadmap-structure'),
+      load('khem-roadmap-state'),
+    ]);
+    const st = state || {};
+
+    if (!structure || !structure.phases) {
+      root.innerHTML = `<div class="error-state">roadmap not yet published — open the manager and hit save first.</div>`;
+      return;
+    }
+
+    const phases  = structure.phases  || [];
+    const backlog = structure.backlog || [];
+
+    root.innerHTML =
+      renderProgress(phases, st) +
+      renderSummary(phases, st) +
+      renderLegend() +
+      phases.map(p => renderPhase(p, st)).join('') +
+      renderBacklog(backlog) +
+      `<div class="last-updated">
+        <span>khem is being built in public</span>
+        <a href="https://ai.erikg.org/khem-manager" target="_blank">manage →</a>
+      </div>`;
+
+  } catch(e) {
+    root.innerHTML = `<div class="error-state">failed to load: ${e.message}</div>`;
+  }
+})();
 </script>
 </body>
 </html>
