@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Todo — erikg.org</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap');
+:root {
+  --bg: #0e0e0c; --fg: #f0ede6; --dim: #4a4a46; --acc: #c07a20;
+  --surface: #1a1a18; --border: rgba(240,237,230,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: 'DM Mono', monospace; font-weight: 300;
+  min-height: 100vh; display: flex; flex-direction: column;
+}
+header {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.25rem 2rem; border-bottom: 1px solid var(--border);
+}
+header a {
+  color: var(--fg); text-decoration: none;
+  font-size: 0.85rem; letter-spacing: 0.04em;
+  transition: color 0.15s ease;
+}
+header a:hover { color: var(--acc); }
+main {
+  flex: 1; max-width: 600px; margin: 0 auto;
+  padding: 3rem 2rem; width: 100%;
+}
+h1 {
+  font-size: 1.5rem; font-weight: 400;
+  letter-spacing: 0.1em; margin-bottom: 2rem;
+  color: var(--fg);
+}
+.input-row {
+  display: flex; gap: 0.5rem; margin-bottom: 2rem;
+}
+input[type="text"] {
+  flex: 1; background: var(--surface); border: 1px solid var(--border);
+  color: var(--fg); font-family: 'DM Mono', monospace; font-weight: 300;
+  padding: 0.75rem 1rem; font-size: 0.9rem; letter-spacing: 0.02em;
+  transition: border-color 0.15s ease;
+}
+input[type="text"]:focus {
+  outline: none; border-color: var(--acc);
+}
+button {
+  background: transparent; border: 1px solid var(--acc);
+  color: var(--acc); font-family: 'DM Mono', monospace;
+  font-weight: 400; padding: 0.75rem 1.5rem;
+  cursor: pointer; letter-spacing: 0.04em; font-size: 0.85rem;
+  transition: all 0.15s ease;
+}
+button:hover {
+  background: var(--acc); color: var(--bg);
+}
+.todo-list {
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.todo-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem; background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s ease;
+}
+.todo-item:hover {
+  border-color: var(--dim);
+}
+.todo-checkbox {
+  appearance: none; width: 18px; height: 18px;
+  border: 1px solid var(--dim); background: transparent;
+  cursor: pointer; flex-shrink: 0; position: relative;
+  transition: all 0.15s ease;
+}
+.todo-checkbox:hover {
+  border-color: var(--acc);
+}
+.todo-checkbox:checked {
+  background: var(--acc); border-color: var(--acc);
+}
+.todo-checkbox:checked::after {
+  content: ''; position: absolute;
+  left: 5px; top: 2px; width: 4px; height: 8px;
+  border: solid var(--bg); border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.todo-text {
+  flex: 1; font-size: 0.9rem; letter-spacing: 0.02em;
+  color: var(--fg); transition: all 0.15s ease;
+}
+.todo-item.completed .todo-text {
+  color: var(--dim); text-decoration: line-through;
+}
+.todo-delete {
+  background: transparent; border: 1px solid var(--dim);
+  color: var(--dim); padding: 0.4rem 0.8rem;
+  font-size: 0.75rem; letter-spacing: 0.04em;
+}
+.todo-delete:hover {
+  border-color: var(--acc); color: var(--acc);
+  background: transparent;
+}
+.empty-state {
+  text-align: center; color: var(--dim);
+  padding: 3rem 0; font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+</style>
+</head>
+<body>
+<header>
+  <svg width="20" height="30" viewBox="-5 -5 110 160" overflow="visible">
+    <polygon points="50,50 100,100 50,150 0,100" fill="var(--fg)"/>
+    <polygon points="50,0 100,50 50,100 0,50" fill="var(--bg)" stroke="var(--fg)" stroke-width="8" stroke-linejoin="round"/>
+  </svg>
+  <a href="https://erikg.org">
+    erikg<span style="color:var(--acc)">.org</span>
+  </a>
+</header>
+
+<main>
+  <h1>TODO</h1>
+  
+  <div class="input-row">
+    <input type="text" id="todo-input" placeholder="add task..." />
+    <button id="add-btn">ADD</button>
+  </div>
+
+  <div class="todo-list" id="todo-list">
+    <div class="empty-state">no tasks yet</div>
+  </div>
+</main>
+
+<script>
+const API = 'https://ai.erikg.org/api';
+const COLLECTION = 'todos';
+
+let todos = [];
+
+const input = document.getElementById('todo-input');
+const addBtn = document.getElementById('add-btn');
+const list = document.getElementById('todo-list');
+
+async function loadTodos() {
+  try {
+    const res = await fetch(`${API}/data/${COLLECTION}`);
+    const { data } = await res.json();
+    todos = data || [];
+  } catch (err) {
+    console.error('Failed to load todos:', err);
+    todos = [];
+  }
+  render();
+}
+
+async function saveTodos() {
+  try {
+    await fetch(`${API}/data/${COLLECTION}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(todos)
+    });
+  } catch (err) {
+    console.error('Failed to save todos:', err);
+  }
+}
+
+function addTodo(text) {
+  if (!text.trim()) return;
+  todos.push({ id: Date.now(), text: text.trim(), done: false });
+  saveTodos();
+  render();
+  input.value = '';
+}
+
+function toggleTodo(id) {
+  const todo = todos.find(t => t.id === id);
+  if (todo) {
+    todo.done = !todo.done;
+    saveTodos();
+    render();
+  }
+}
+
+function deleteTodo(id) {
+  todos = todos.filter(t => t.id !== id);
+  saveTodos();
+  render();
+}
+
+function render() {
+  if (todos.length === 0) {
+    list.innerHTML = '<div class="empty-state">no tasks yet</div>';
+    return;
+  }
+
+  list.innerHTML = todos.map(todo => `
+    <div class="todo-item ${todo.done ? 'completed' : ''}">
+      <input type="checkbox" class="todo-checkbox" 
+             ${todo.done ? 'checked' : ''} 
+             data-id="${todo.id}">
+      <div class="todo-text">${escapeHtml(todo.text)}</div>
+      <button class="todo-delete" data-id="${todo.id}">DEL</button>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.todo-checkbox').forEach(cb => {
+    cb.addEventListener('change', () => toggleTodo(parseInt(cb.dataset.id)));
+  });
+
+  list.querySelectorAll('.todo-delete').forEach(btn => {
+    btn.addEventListener('click', () => deleteTodo(parseInt(btn.dataset.id)));
+  });
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+addBtn.addEventListener('click', () => addTodo(input.value));
+input.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') addTodo(input.value);
+});
+
+loadTodos();
+</script>
+</body>
+</html>
