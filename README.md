@@ -1,4 +1,4 @@
-# erikg-cloudflare
+# erikg.org
 
 Unified Cloudflare Worker powering the entire **erikg.org** domain.
 
@@ -52,7 +52,7 @@ All routes except `/ping` require: `Authorization: Bearer <API_TOKEN>`
 ## Project Structure
 
 ```
-erikg-cloudflare/
+erikg.org/
 ├── dist/               # Main portfolio static site (erikg.org)
 │   └── index.html
 ├── public/

@@ -5,5 +5,5 @@
 API_TOKEN=your-secret-token-here
 
 # Fine-grained GitHub Personal Access Token
-# Permissions needed: Contents (read + write) on errgrab/erikg-cloudflare
+# Permissions needed: Contents (read + write) on errgrab/erikg.org
 GITHUB_TOKEN=github_pat_xxxxxx

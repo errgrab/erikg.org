@@ -1,27 +1,27 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "erikg-cloudflare",
-	"main": "server/_worker.js",
-	"compatibility_date": "2024-11-01",
-	"assets": {
-		"directory": "./dist",
-		"binding": "ASSETS",
-		"run_worker_first": true
-	},
-	"kv_namespaces": [
-		{
-			"binding": "KV",
-			"id": "eeb6dc2f97ac494faf0493ce249f1c8d"
-		}
-	],
-	"routes": [
-		{
-			"pattern": "erikg.org/*",
-			"zone_name": "erikg.org"
-		},
-		{
-			"pattern": "*.erikg.org/*",
-			"zone_name": "erikg.org"
-		}
-	]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "erikg-cloudflare",
+  "main": "server/_worker.js",
+  "compatibility_date": "2024-11-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "eeb6dc2f97ac494faf0493ce249f1c8d"
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "erikg.org/*",
+      "zone_name": "erikg.org"
+    },
+    {
+      "pattern": "*.erikg.org/*",
+      "zone_name": "erikg.org"
+    }
+  ]
 }
