@@ -1,703 +1,956 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ui guidelines — ai.erikg.org</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg:  #0e0e0e;
-      --fg:  #e8e0d0;
-      --dim: #52504a;
-      --acc: #c8922a;
-      --gap: 2.5rem;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--fg);
-      font-family: 'DM Mono', monospace;
-      font-weight: 300;
-      font-size: 14px;
-      line-height: 1.75;
-      min-height: 100vh;
-    }
-
-    /* ── layout ─────────────────────────────────────────────── */
-    .wrap {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 5rem 2rem 8rem;
-    }
-
-    /* ── header ─────────────────────────────────────────────── */
-    header {
-      margin-bottom: 5rem;
-      border-left: 2px solid var(--acc);
-      padding-left: 1.25rem;
-      animation: fadein 0.6s ease both;
-    }
-
-    header .eyebrow {
-      color: var(--dim);
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-
-    header h1 {
-      font-size: clamp(1.4rem, 4vw, 2rem);
-      font-weight: 300;
-      color: var(--fg);
-      letter-spacing: -0.01em;
-    }
-
-    header h1 span { color: var(--acc); }
-
-    header p {
-      margin-top: 0.75rem;
-      color: var(--dim);
-      max-width: 480px;
-      font-size: 13px;
-    }
-
-    /* ── nav sidebar (toc) ───────────────────────────────────── */
-    .toc {
-      position: fixed;
-      top: 5rem;
-      left: calc(50% + 380px);
-      width: 140px;
-      animation: fadein 0.8s ease 0.1s both;
-    }
-
-    @media (max-width: 1120px) {
-      .toc { display: none; }
-    }
-
-    .toc-label {
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--dim);
-      margin-bottom: 0.75rem;
-    }
-
-    .toc a {
-      display: block;
-      font-size: 12px;
-      color: var(--dim);
-      text-decoration: none;
-      padding: 0.2rem 0;
-      border-left: 1px solid transparent;
-      padding-left: 0.75rem;
-      transition: color 0.15s, border-color 0.15s;
-    }
-
-    .toc a:hover {
-      color: var(--fg);
-      border-left-color: var(--acc);
-    }
-
-    /* ── sections ───────────────────────────────────────────── */
-    section {
-      margin-bottom: 4rem;
-      animation: fadein 0.6s ease both;
-    }
-
-    section:nth-child(1) { animation-delay: 0.05s; }
-    section:nth-child(2) { animation-delay: 0.10s; }
-    section:nth-child(3) { animation-delay: 0.15s; }
-    section:nth-child(4) { animation-delay: 0.20s; }
-    section:nth-child(5) { animation-delay: 0.25s; }
-    section:nth-child(6) { animation-delay: 0.30s; }
-    section:nth-child(7) { animation-delay: 0.35s; }
-
-    .section-label {
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--acc);
-      margin-bottom: 0.5rem;
-    }
-
-    h2 {
-      font-size: 1rem;
-      font-weight: 400;
-      color: var(--fg);
-      margin-bottom: 1.25rem;
-      letter-spacing: 0.01em;
-    }
-
-    p { margin-bottom: 1rem; color: var(--fg); }
-    p:last-child { margin-bottom: 0; }
-
-    /* ── rule ───────────────────────────────────────────────── */
-    hr {
-      border: none;
-      border-top: 1px solid #1e1e1e;
-      margin: 2rem 0;
-    }
-
-    /* ── color swatches ─────────────────────────────────────── */
-    .swatches {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .swatch {
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .swatch-block {
-      height: 48px;
-      border: 1px solid #1e1e1e;
-    }
-
-    .swatch-info {
-      padding: 0.4rem 0;
-    }
-
-    .swatch-name {
-      font-size: 11px;
-      color: var(--fg);
-      display: block;
-    }
-
-    .swatch-val {
-      font-size: 11px;
-      color: var(--dim);
-    }
-
-    /* ── type scale ─────────────────────────────────────────── */
-    .type-row {
-      display: flex;
-      align-items: baseline;
-      gap: 1.5rem;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid #1a1a1a;
-    }
-
-    .type-row:last-child { border-bottom: none; }
-
-    .type-label {
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--dim);
-      width: 80px;
-      flex-shrink: 0;
-    }
-
-    .type-sample {
-      color: var(--fg);
-      font-family: 'DM Mono', monospace;
-      font-weight: 300;
-    }
-
-    .type-spec {
-      font-size: 11px;
-      color: var(--dim);
-      margin-left: auto;
-      flex-shrink: 0;
-    }
-
-    /* ── spacing tokens ─────────────────────────────────────── */
-    .space-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #1a1a1a;
-    }
-
-    .space-row:last-child { border-bottom: none; }
-
-    .space-bar {
-      background: var(--dim);
-      height: 2px;
-      flex-shrink: 0;
-    }
-
-    .space-label {
-      font-size: 11px;
-      color: var(--dim);
-      width: 80px;
-      flex-shrink: 0;
-    }
-
-    .space-val {
-      font-size: 11px;
-      color: var(--acc);
-      margin-left: auto;
-    }
-
-    /* ── component examples ─────────────────────────────────── */
-    .example {
-      background: #111;
-      border: 1px solid #1e1e1e;
-      border-radius: 3px;
-      padding: 1.5rem;
-      margin: 1.25rem 0;
-    }
-
-    .example-label {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--dim);
-      margin-bottom: 1rem;
-    }
-
-    /* ── buttons ─────────────────────────────────────────────── */
-    .btn {
-      font-family: 'DM Mono', monospace;
-      font-weight: 300;
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      border: none;
-      cursor: pointer;
-      padding: 0.5rem 1.2rem;
-      border-radius: 2px;
-      transition: opacity 0.15s;
-    }
-
-    .btn:hover { opacity: 0.8; }
-
-    .btn-primary {
-      background: var(--acc);
-      color: var(--bg);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--fg);
-      border: 1px solid var(--dim);
-    }
-
-    .btn-danger {
-      background: transparent;
-      color: #b05040;
-      border: 1px solid #3a2020;
-    }
-
-    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-
-    /* ── inputs ──────────────────────────────────────────────── */
-    .input-demo {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-top: 0.5rem;
-    }
-
-    .field { display: flex; flex-direction: column; gap: 0.3rem; }
-
-    .field label {
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--dim);
-    }
-
-    .field input, .field textarea {
-      background: #0e0e0e;
-      border: 1px solid #2a2a2a;
-      color: var(--fg);
-      font-family: 'DM Mono', monospace;
-      font-weight: 300;
-      font-size: 13px;
-      padding: 0.5rem 0.75rem;
-      border-radius: 2px;
-      outline: none;
-      transition: border-color 0.15s;
-      resize: vertical;
-    }
-
-    .field input:focus, .field textarea:focus {
-      border-color: var(--acc);
-    }
-
-    .field input::placeholder { color: var(--dim); }
-
-    /* ── code ────────────────────────────────────────────────── */
-    code {
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      background: #161616;
-      color: var(--acc);
-      padding: 0.1em 0.35em;
-      border-radius: 2px;
-    }
-
-    pre {
-      background: #111;
-      border: 1px solid #1e1e1e;
-      border-radius: 3px;
-      padding: 1.25rem;
-      overflow-x: auto;
-      margin: 1rem 0;
-    }
-
-    pre code {
-      background: none;
-      padding: 0;
-      color: var(--fg);
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    pre code .kw  { color: var(--acc); }
-    pre code .cm  { color: var(--dim); font-style: italic; }
-    pre code .str { color: #8aab7a; }
-    pre code .num { color: #7aabaa; }
-
-    /* ── nav bar example ─────────────────────────────────────── */
-    .nav-demo {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #1e1e1e;
-      padding-bottom: 0.75rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .nav-brand {
-      font-size: 13px;
-      color: var(--fg);
-    }
-
-    .nav-brand span { color: var(--acc); }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .nav-links a {
-      font-size: 12px;
-      color: var(--dim);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .nav-links a:hover { color: var(--fg); }
-    .nav-links a.active { color: var(--fg); }
-
-    /* ── list ────────────────────────────────────────────────── */
-    ul.guide {
-      list-style: none;
-      padding: 0;
-      margin: 1rem 0;
-    }
-
-    ul.guide li {
-      padding: 0.35rem 0;
-      padding-left: 1.1rem;
-      position: relative;
-      font-size: 13px;
-      color: var(--fg);
-      border-bottom: 1px solid #181818;
-    }
-
-    ul.guide li:last-child { border-bottom: none; }
-
-    ul.guide li::before {
-      content: '·';
-      position: absolute;
-      left: 0;
-      color: var(--acc);
-    }
-
-    ul.guide li.no::before {
-      content: '×';
-      color: #7a3030;
-    }
-
-    ul.guide li.yes::before {
-      content: '✓';
-      color: #4a8a5a;
-    }
-
-    /* ── footer ──────────────────────────────────────────────── */
-    footer {
-      margin-top: 6rem;
-      padding-top: 2rem;
-      border-top: 1px solid #1a1a1a;
-      font-size: 11px;
-      color: var(--dim);
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    footer a { color: var(--dim); text-decoration: none; }
-    footer a:hover { color: var(--acc); }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-  </style>
-</head>
-<body>
-
-<div class="wrap">
-
-  <!-- TOC -->
-  <nav class="toc">
-    <div class="toc-label">contents</div>
-    <a href="#colors">colors</a>
-    <a href="#typography">typography</a>
-    <a href="#spacing">spacing</a>
-    <a href="#components">components</a>
-    <a href="#layout">layout</a>
-    <a href="#voice">voice &amp; tone</a>
-    <a href="#code">code conventions</a>
-  </nav>
-
-  <!-- Header -->
-  <header>
-    <div class="eyebrow">ai.erikg.org / guidelines</div>
-    <h1>ux/ui <span>guidelines</span></h1>
-    <p>Design language and component reference for sites that live inside ai.erikg.org. Every page should feel like it belongs to the same organism.</p>
-  </header>
-
-  <!-- Colors -->
-  <section id="colors">
-    <div class="section-label">01</div>
-    <h2>colors</h2>
-    <p>Four tokens. No more, no less. Every visual decision maps to one of these.</p>
-
-    <div class="swatches">
-      <div class="swatch">
-        <div class="swatch-block" style="background:#0e0e0e;"></div>
-        <div class="swatch-info">
-          <span class="swatch-name">bg</span>
-          <span class="swatch-val">#0e0e0e</span>
-        </div>
-      </div>
-      <div class="swatch">
-        <div class="swatch-block" style="background:#e8e0d0;"></div>
-        <div class="swatch-info">
-          <span class="swatch-name">fg</span>
-          <span class="swatch-val">#e8e0d0</span>
-        </div>
-      </div>
-      <div class="swatch">
-        <div class="swatch-block" style="background:#52504a;"></div>
-        <div class="swatch-info">
-          <span class="swatch-name">dim</span>
-          <span class="swatch-val">#52504a</span>
-        </div>
-      </div>
-      <div class="swatch">
-        <div class="swatch-block" style="background:#c8922a;"></div>
-        <div class="swatch-info">
-          <span class="swatch-name">acc</span>
-          <span class="swatch-val">#c8922a</span>
-        </div>
-      </div>
-    </div>
-
-    <ul class="guide">
-      <li class="yes"><code>bg</code> — page background, card backgrounds</li>
-      <li class="yes"><code>fg</code> — body text, primary labels, headings</li>
-      <li class="yes"><code>dim</code> — secondary text, muted labels, borders, placeholders</li>
-      <li class="yes"><code>acc</code> — emphasis, active states, section labels, key links, the left border motif</li>
-      <li class="no">Introduce no new named colors. Derive variants via opacity only if truly necessary.</li>
-      <li class="no">Never use white (<code>#fff</code>) or black (<code>#000</code>) directly.</li>
-    </ul>
-  </section>
-
-  <!-- Typography -->
-  <section id="typography">
-    <div class="section-label">02</div>
-    <h2>typography</h2>
-    <p>One font: <strong>DM Mono</strong>, weight 300 always. The monospace grid is the aesthetic backbone of every page.</p>
-
-    <div class="type-row">
-      <span class="type-label">display</span>
-      <span class="type-sample" style="font-size:1.8rem;">page title</span>
-      <span class="type-spec">1.6–2rem · wt 300</span>
-    </div>
-    <div class="type-row">
-      <span class="type-label">heading</span>
-      <span class="type-sample" style="font-size:1rem; font-weight:400;">section heading</span>
-      <span class="type-spec">1rem · wt 400</span>
-    </div>
-    <div class="type-row">
-      <span class="type-label">body</span>
-      <span class="type-sample" style="font-size:14px;">the quick brown fox jumps</span>
-      <span class="type-spec">14px · wt 300</span>
-    </div>
-    <div class="type-row">
-      <span class="type-label">small</span>
-      <span class="type-sample" style="font-size:12px;">auxiliary information</span>
-      <span class="type-spec">12–13px · wt 300</span>
-    </div>
-    <div class="type-row">
-      <span class="type-label">label</span>
-      <span class="type-sample" style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--dim);">UPPERCASE LABEL</span>
-      <span class="type-spec">10–11px · 0.14em ls</span>
-    </div>
-
-    <ul class="guide" style="margin-top:1.25rem;">
-      <li>Line height: <code>1.75</code> for body, <code>1.35</code> for headings</li>
-      <li>Letter-spacing: <code>-0.01em</code> on large display, <code>0.14em</code> on uppercase labels</li>
-      <li class="no">No bold (700) text in UI — use <code>400</code> for emphasis only</li>
-      <li class="no">No serif, no system fonts, no fallback slop</li>
-    </ul>
-  </section>
-
-  <!-- Spacing -->
-  <section id="spacing">
-    <div class="section-label">03</div>
-    <h2>spacing</h2>
-    <p>Derived from a loose 4px base. Prefer generous whitespace — emptiness is intentional.</p>
-
-    <div class="space-row">
-      <span class="space-label">xs</span>
-      <div class="space-bar" style="width:4px;"></div>
-      <span class="space-val">0.25rem · 4px</span>
-    </div>
-    <div class="space-row">
-      <span class="space-label">sm</span>
-      <div class="space-bar" style="width:8px;"></div>
-      <span class="space-val">0.5rem · 8px</span>
-    </div>
-    <div class="space-row">
-      <span class="space-label">md</span>
-      <div class="space-bar" style="width:16px;"></div>
-      <span class="space-val">1rem · 16px</span>
-    </div>
-    <div class="space-row">
-      <span class="space-label">lg</span>
-      <div class="space-bar" style="width:40px;"></div>
-      <span class="space-val">2.5rem · 40px</span>
-    </div>
-    <div class="space-row">
-      <span class="space-label">xl</span>
-      <div class="space-bar" style="width:80px;"></div>
-      <span class="space-val">5rem · 80px</span>
-    </div>
-
-    <ul class="guide" style="margin-top:1.25rem;">
-      <li>Section top padding: <code>5rem</code>. Never cram sections.</li>
-      <li>Max content width: <code>720px</code>, centered</li>
-      <li>Page side padding: <code>2rem</code> min on mobile</li>
-      <li class="no">No tight card grids. If elements need breathing room, give it to them.</li>
-    </ul>
-  </section>
-
-  <!-- Components -->
-  <section id="components">
-    <div class="section-label">04</div>
-    <h2>components</h2>
-    <p>Minimal component set. Build only what's needed. Each component must earn its place.</p>
-
-    <!-- Nav bar -->
-    <div class="example">
-      <div class="example-label">nav bar</div>
-      <div class="nav-demo">
-        <div class="nav-brand">ai.<span>erikg</span>.org</div>
-        <div class="nav-links">
-          <a href="#" class="active">index</a>
-          <a href="#">projects</a>
-          <a href="#">about</a>
-        </div>
-      </div>
-      <p style="font-size:11px;color:var(--dim);margin-top:0.5rem;">Bottom border only. Brand left, links right. Active state uses <code>fg</code>, inactive uses <code>dim</code>.</p>
-    </div>
-
-    <!-- Buttons -->
-    <div class="example">
-      <div class="example-label">buttons</div>
-      <div class="btn-row">
-        <button class="btn btn-primary">confirm</button>
-        <button class="btn btn-ghost">cancel</button>
-        <button class="btn btn-danger">delete</button>
-      </div>
-      <p style="font-size:11px;color:var(--dim);margin-top:1rem;">Three variants only. No gradients, no shadows, no rounded corners beyond 2px. Hover is opacity reduction.</p>
-    </div>
-
-    <!-- Inputs -->
-    <div class="example">
-      <div class="example-label">form inputs</div>
-      <div class="input-demo">
-        <div class="field">
-          <label>title</label>
-          <input type="text" placeholder="untitled" />
-        </div>
-        <div class="field">
-          <label>notes</label>
-          <textarea rows="3" placeholder="write something..."></textarea>
-        </div>
-      </div>
-      <p style="font-size:11px;color:var(--dim);margin-top:1rem;">Label is uppercase, 11px, <code>dim</code>. Border is <code>#2a2a2a</code>, focus turns <code>acc</code>. No rounded corners beyond 2px.</p>
-    </div>
-
-    <!-- Section label motif -->
-    <div class="example">
-      <div class="example-label">section label motif</div>
-      <div style="border-left:2px solid var(--acc); padding-left:1.25rem;">
-        <div style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);margin-bottom:0.3rem;">01</div>
-        <div style="font-size:1rem;color:var(--fg);">section title</div>
-        <div style="font-size:13px;color:var(--dim);margin-top:0.3rem;">Supporting copy in dim.</div>
-      </div>
-      <p style="font-size:11px;color:var(--dim);margin-top:1rem;">Accent left-border is the primary visual anchor. Use it on headers, callouts, and featured items. Sparingly.</p>
-    </div>
-  </section>
-
-  <!-- Layout -->
-  <section id="layout">
-    <div class="section-label">05</div>
-    <h2>layout</h2>
-
-    <ul class="guide">
-      <li>Single column, centered, max-width <code>720px</code></li>
-      <li>Sticky right TOC (160px) for long pages, hidden below 680px</li>
-      <li>Use <code>float: right</code> for the TOC to maintain natural document flow</li>
-      <li>Horizontal rules (<code>hr</code>) are <code>1px solid #1e1e1e</code> — structural, not decorative</li>
-      <li>No sidebars, no split-panel layouts, no masonry</li>
-      <li class="no">Never center body text</li>
-      <li class="no">No card grids with images. This is a text-first system.</li>
-    </ul>
-  </section>
-
-  <!-- Voice -->
-  <section id="voice">
-    <div class="section-label">06</div>
-    <h2>voice &amp; tone</h2>
-    <p>Pages generated for this subdomain should write the way the owner thinks: spare, direct, slightly dry.</p>
-
-    <ul class="guide">
-      <li>Lowercase page titles and labels everywhere possible</li>
-      <li>Short sentences. One idea per sentence.</li>
-      <li>No exclamation points. No marketing language.</li>
-      <li>Dates in ISO format: <code>2026-03-20</code></li>
-      <li class="no">No "welcome to", "explore our", "discover the", etc.</li>
-      <li class="no">No emoji in any body content</li>
-      <li class="no">No Lorem Ipsum — write real placeholder text or leave blank</li>
-    </ul>
-  </section>
-
-  <!-- Code conventions -->
-  <section id="code">
-    <div class="section-label">07</div>
-    <h2>code conventions</h2>
-    <p>Every page deployed to <code>ai.erikg.org/:slug</code> is a self-contained HTML file. Keep it that way.</p>
-
-    <pre><code><span class="cm">/* always declare the four tokens at :root */</span>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ui guidelines — ai.erikg.org</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg: #0e0e0e;
+                --fg: #e8e0d0;
+                --dim: #52504a;
+                --acc: #c8922a;
+                --gap: 2.5rem;
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--fg);
+                font-family: "DM Mono", monospace;
+                font-weight: 300;
+                font-size: 14px;
+                line-height: 1.75;
+                min-height: 100vh;
+            }
+
+            /* ── layout ─────────────────────────────────────────────── */
+            .wrap {
+                max-width: 720px;
+                margin: 0 auto;
+                padding: 5rem 2rem 8rem;
+            }
+
+            /* ── header ─────────────────────────────────────────────── */
+            header {
+                margin-bottom: 5rem;
+                border-left: 2px solid var(--acc);
+                padding-left: 1.25rem;
+                animation: fadein 0.6s ease both;
+            }
+
+            header .eyebrow {
+                color: var(--dim);
+                font-size: 11px;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                margin-bottom: 0.4rem;
+            }
+
+            header h1 {
+                font-size: clamp(1.4rem, 4vw, 2rem);
+                font-weight: 300;
+                color: var(--fg);
+                letter-spacing: -0.01em;
+            }
+
+            header h1 span {
+                color: var(--acc);
+            }
+
+            header p {
+                margin-top: 0.75rem;
+                color: var(--dim);
+                max-width: 480px;
+                font-size: 13px;
+            }
+
+            /* ── nav sidebar (toc) ───────────────────────────────────── */
+            .toc {
+                position: fixed;
+                top: 5rem;
+                left: calc(50% + 380px);
+                width: 140px;
+                animation: fadein 0.8s ease 0.1s both;
+            }
+
+            @media (max-width: 1120px) {
+                .toc {
+                    display: none;
+                }
+            }
+
+            .toc-label {
+                font-size: 10px;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--dim);
+                margin-bottom: 0.75rem;
+            }
+
+            .toc a {
+                display: block;
+                font-size: 12px;
+                color: var(--dim);
+                text-decoration: none;
+                padding: 0.2rem 0;
+                border-left: 1px solid transparent;
+                padding-left: 0.75rem;
+                transition:
+                    color 0.15s,
+                    border-color 0.15s;
+            }
+
+            .toc a:hover {
+                color: var(--fg);
+                border-left-color: var(--acc);
+            }
+
+            /* ── sections ───────────────────────────────────────────── */
+            section {
+                margin-bottom: 4rem;
+                animation: fadein 0.6s ease both;
+            }
+
+            section:nth-child(1) {
+                animation-delay: 0.05s;
+            }
+            section:nth-child(2) {
+                animation-delay: 0.1s;
+            }
+            section:nth-child(3) {
+                animation-delay: 0.15s;
+            }
+            section:nth-child(4) {
+                animation-delay: 0.2s;
+            }
+            section:nth-child(5) {
+                animation-delay: 0.25s;
+            }
+            section:nth-child(6) {
+                animation-delay: 0.3s;
+            }
+            section:nth-child(7) {
+                animation-delay: 0.35s;
+            }
+
+            .section-label {
+                font-size: 10px;
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: var(--acc);
+                margin-bottom: 0.5rem;
+            }
+
+            h2 {
+                font-size: 1rem;
+                font-weight: 400;
+                color: var(--fg);
+                margin-bottom: 1.25rem;
+                letter-spacing: 0.01em;
+            }
+
+            p {
+                margin-bottom: 1rem;
+                color: var(--fg);
+            }
+            p:last-child {
+                margin-bottom: 0;
+            }
+
+            /* ── rule ───────────────────────────────────────────────── */
+            hr {
+                border: none;
+                border-top: 1px solid #1e1e1e;
+                margin: 2rem 0;
+            }
+
+            /* ── color swatches ─────────────────────────────────────── */
+            .swatches {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.5rem;
+                margin: 1.5rem 0;
+            }
+
+            .swatch {
+                border-radius: 2px;
+                overflow: hidden;
+            }
+
+            .swatch-block {
+                height: 48px;
+                border: 1px solid #1e1e1e;
+            }
+
+            .swatch-info {
+                padding: 0.4rem 0;
+            }
+
+            .swatch-name {
+                font-size: 11px;
+                color: var(--fg);
+                display: block;
+            }
+
+            .swatch-val {
+                font-size: 11px;
+                color: var(--dim);
+            }
+
+            /* ── type scale ─────────────────────────────────────────── */
+            .type-row {
+                display: flex;
+                align-items: baseline;
+                gap: 1.5rem;
+                padding: 0.6rem 0;
+                border-bottom: 1px solid #1a1a1a;
+            }
+
+            .type-row:last-child {
+                border-bottom: none;
+            }
+
+            .type-label {
+                font-size: 10px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--dim);
+                width: 80px;
+                flex-shrink: 0;
+            }
+
+            .type-sample {
+                color: var(--fg);
+                font-family: "DM Mono", monospace;
+                font-weight: 300;
+            }
+
+            .type-spec {
+                font-size: 11px;
+                color: var(--dim);
+                margin-left: auto;
+                flex-shrink: 0;
+            }
+
+            /* ── spacing tokens ─────────────────────────────────────── */
+            .space-row {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #1a1a1a;
+            }
+
+            .space-row:last-child {
+                border-bottom: none;
+            }
+
+            .space-bar {
+                background: var(--dim);
+                height: 2px;
+                flex-shrink: 0;
+            }
+
+            .space-label {
+                font-size: 11px;
+                color: var(--dim);
+                width: 80px;
+                flex-shrink: 0;
+            }
+
+            .space-val {
+                font-size: 11px;
+                color: var(--acc);
+                margin-left: auto;
+            }
+
+            /* ── component examples ─────────────────────────────────── */
+            .example {
+                background: #111;
+                border: 1px solid #1e1e1e;
+                border-radius: 3px;
+                padding: 1.5rem;
+                margin: 1.25rem 0;
+            }
+
+            .example-label {
+                font-size: 10px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--dim);
+                margin-bottom: 1rem;
+            }
+
+            /* ── buttons ─────────────────────────────────────────────── */
+            .btn {
+                font-family: "DM Mono", monospace;
+                font-weight: 300;
+                font-size: 12px;
+                letter-spacing: 0.06em;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem 1.2rem;
+                border-radius: 2px;
+                transition: opacity 0.15s;
+            }
+
+            .btn:hover {
+                opacity: 0.8;
+            }
+
+            .btn-primary {
+                background: var(--acc);
+                color: var(--bg);
+            }
+
+            .btn-ghost {
+                background: transparent;
+                color: var(--fg);
+                border: 1px solid var(--dim);
+            }
+
+            .btn-danger {
+                background: transparent;
+                color: #b05040;
+                border: 1px solid #3a2020;
+            }
+
+            .btn-row {
+                display: flex;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+            }
+
+            /* ── inputs ──────────────────────────────────────────────── */
+            .input-demo {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-top: 0.5rem;
+            }
+
+            .field {
+                display: flex;
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+
+            .field label {
+                font-size: 11px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--dim);
+            }
+
+            .field input,
+            .field textarea {
+                background: #0e0e0e;
+                border: 1px solid #2a2a2a;
+                color: var(--fg);
+                font-family: "DM Mono", monospace;
+                font-weight: 300;
+                font-size: 13px;
+                padding: 0.5rem 0.75rem;
+                border-radius: 2px;
+                outline: none;
+                transition: border-color 0.15s;
+                resize: vertical;
+            }
+
+            .field input:focus,
+            .field textarea:focus {
+                border-color: var(--acc);
+            }
+
+            .field input::placeholder {
+                color: var(--dim);
+            }
+
+            /* ── code ────────────────────────────────────────────────── */
+            code {
+                font-family: "DM Mono", monospace;
+                font-size: 12px;
+                background: #161616;
+                color: var(--acc);
+                padding: 0.1em 0.35em;
+                border-radius: 2px;
+            }
+
+            pre {
+                background: #111;
+                border: 1px solid #1e1e1e;
+                border-radius: 3px;
+                padding: 1.25rem;
+                overflow-x: auto;
+                margin: 1rem 0;
+            }
+
+            pre code {
+                background: none;
+                padding: 0;
+                color: var(--fg);
+                font-size: 12px;
+                line-height: 1.7;
+            }
+
+            pre code .kw {
+                color: var(--acc);
+            }
+            pre code .cm {
+                color: var(--dim);
+                font-style: italic;
+            }
+            pre code .str {
+                color: #8aab7a;
+            }
+            pre code .num {
+                color: #7aabaa;
+            }
+
+            /* ── nav bar example ─────────────────────────────────────── */
+            .nav-demo {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid #1e1e1e;
+                padding-bottom: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .nav-brand {
+                font-size: 13px;
+                color: var(--fg);
+            }
+
+            .nav-brand span {
+                color: var(--acc);
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 1.5rem;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+                color: var(--dim);
+                text-decoration: none;
+                transition: color 0.15s;
+            }
+
+            .nav-links a:hover {
+                color: var(--fg);
+            }
+            .nav-links a.active {
+                color: var(--fg);
+            }
+
+            /* ── list ────────────────────────────────────────────────── */
+            ul.guide {
+                list-style: none;
+                padding: 0;
+                margin: 1rem 0;
+            }
+
+            ul.guide li {
+                padding: 0.35rem 0;
+                padding-left: 1.1rem;
+                position: relative;
+                font-size: 13px;
+                color: var(--fg);
+                border-bottom: 1px solid #181818;
+            }
+
+            ul.guide li:last-child {
+                border-bottom: none;
+            }
+
+            ul.guide li::before {
+                content: "·";
+                position: absolute;
+                left: 0;
+                color: var(--acc);
+            }
+
+            ul.guide li.no::before {
+                content: "×";
+                color: #7a3030;
+            }
+
+            ul.guide li.yes::before {
+                content: "✓";
+                color: #4a8a5a;
+            }
+
+            /* ── footer ──────────────────────────────────────────────── */
+            footer {
+                margin-top: 6rem;
+                padding-top: 2rem;
+                border-top: 1px solid #1a1a1a;
+                font-size: 11px;
+                color: var(--dim);
+                display: flex;
+                justify-content: space-between;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            footer a {
+                color: var(--dim);
+                text-decoration: none;
+            }
+            footer a:hover {
+                color: var(--acc);
+            }
+
+            @keyframes fadein {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <!-- TOC -->
+            <nav class="toc">
+                <div class="toc-label">contents</div>
+                <a href="#colors">colors</a>
+                <a href="#typography">typography</a>
+                <a href="#spacing">spacing</a>
+                <a href="#components">components</a>
+                <a href="#layout">layout</a>
+                <a href="#voice">voice &amp; tone</a>
+                <a href="#code">code conventions</a>
+            </nav>
+
+            <!-- Header -->
+            <header>
+                <div class="eyebrow">ai.erikg.org / guidelines</div>
+                <h1>ux/ui <span>guidelines</span></h1>
+                <p>
+                    Design language and component reference for sites that live
+                    inside ai.erikg.org. Every page should feel like it belongs
+                    to the same organism.
+                </p>
+            </header>
+
+            <!-- Colors -->
+            <section id="colors">
+                <div class="section-label">01</div>
+                <h2>colors</h2>
+                <p>
+                    Four tokens. No more, no less. Every visual decision maps to
+                    one of these.
+                </p>
+
+                <div class="swatches">
+                    <div class="swatch">
+                        <div
+                            class="swatch-block"
+                            style="background: #0e0e0e"
+                        ></div>
+                        <div class="swatch-info">
+                            <span class="swatch-name">bg</span>
+                            <span class="swatch-val">#0e0e0e</span>
+                        </div>
+                    </div>
+                    <div class="swatch">
+                        <div
+                            class="swatch-block"
+                            style="background: #e8e0d0"
+                        ></div>
+                        <div class="swatch-info">
+                            <span class="swatch-name">fg</span>
+                            <span class="swatch-val">#e8e0d0</span>
+                        </div>
+                    </div>
+                    <div class="swatch">
+                        <div
+                            class="swatch-block"
+                            style="background: #52504a"
+                        ></div>
+                        <div class="swatch-info">
+                            <span class="swatch-name">dim</span>
+                            <span class="swatch-val">#52504a</span>
+                        </div>
+                    </div>
+                    <div class="swatch">
+                        <div
+                            class="swatch-block"
+                            style="background: #c8922a"
+                        ></div>
+                        <div class="swatch-info">
+                            <span class="swatch-name">acc</span>
+                            <span class="swatch-val">#c8922a</span>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="guide">
+                    <li class="yes">
+                        <code>bg</code> — page background, card backgrounds
+                    </li>
+                    <li class="yes">
+                        <code>fg</code> — body text, primary labels, headings
+                    </li>
+                    <li class="yes">
+                        <code>dim</code> — secondary text, muted labels,
+                        borders, placeholders
+                    </li>
+                    <li class="yes">
+                        <code>acc</code> — emphasis, active states, section
+                        labels, key links, the left border motif
+                    </li>
+                    <li class="no">
+                        Introduce no new named colors. Derive variants via
+                        opacity only if truly necessary.
+                    </li>
+                    <li class="no">
+                        Never use white (<code>#fff</code>) or black
+                        (<code>#000</code>) directly.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Typography -->
+            <section id="typography">
+                <div class="section-label">02</div>
+                <h2>typography</h2>
+                <p>
+                    One font: <strong>DM Mono</strong>, weight 300 always. The
+                    monospace grid is the aesthetic backbone of every page.
+                </p>
+
+                <div class="type-row">
+                    <span class="type-label">display</span>
+                    <span class="type-sample" style="font-size: 1.8rem"
+                        >page title</span
+                    >
+                    <span class="type-spec">1.6–2rem · wt 300</span>
+                </div>
+                <div class="type-row">
+                    <span class="type-label">heading</span>
+                    <span
+                        class="type-sample"
+                        style="font-size: 1rem; font-weight: 400"
+                        >section heading</span
+                    >
+                    <span class="type-spec">1rem · wt 400</span>
+                </div>
+                <div class="type-row">
+                    <span class="type-label">body</span>
+                    <span class="type-sample" style="font-size: 14px"
+                        >the quick brown fox jumps</span
+                    >
+                    <span class="type-spec">14px · wt 300</span>
+                </div>
+                <div class="type-row">
+                    <span class="type-label">small</span>
+                    <span class="type-sample" style="font-size: 12px"
+                        >auxiliary information</span
+                    >
+                    <span class="type-spec">12–13px · wt 300</span>
+                </div>
+                <div class="type-row">
+                    <span class="type-label">label</span>
+                    <span
+                        class="type-sample"
+                        style="
+                            font-size: 10px;
+                            letter-spacing: 0.14em;
+                            text-transform: uppercase;
+                            color: var(--dim);
+                        "
+                        >UPPERCASE LABEL</span
+                    >
+                    <span class="type-spec">10–11px · 0.14em ls</span>
+                </div>
+
+                <ul class="guide" style="margin-top: 1.25rem">
+                    <li>
+                        Line height: <code>1.75</code> for body,
+                        <code>1.35</code> for headings
+                    </li>
+                    <li>
+                        Letter-spacing: <code>-0.01em</code> on large display,
+                        <code>0.14em</code> on uppercase labels
+                    </li>
+                    <li class="no">
+                        No bold (700) text in UI — use <code>400</code> for
+                        emphasis only
+                    </li>
+                    <li class="no">
+                        No serif, no system fonts, no fallback slop
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Spacing -->
+            <section id="spacing">
+                <div class="section-label">03</div>
+                <h2>spacing</h2>
+                <p>
+                    Derived from a loose 4px base. Prefer generous whitespace —
+                    emptiness is intentional.
+                </p>
+
+                <div class="space-row">
+                    <span class="space-label">xs</span>
+                    <div class="space-bar" style="width: 4px"></div>
+                    <span class="space-val">0.25rem · 4px</span>
+                </div>
+                <div class="space-row">
+                    <span class="space-label">sm</span>
+                    <div class="space-bar" style="width: 8px"></div>
+                    <span class="space-val">0.5rem · 8px</span>
+                </div>
+                <div class="space-row">
+                    <span class="space-label">md</span>
+                    <div class="space-bar" style="width: 16px"></div>
+                    <span class="space-val">1rem · 16px</span>
+                </div>
+                <div class="space-row">
+                    <span class="space-label">lg</span>
+                    <div class="space-bar" style="width: 40px"></div>
+                    <span class="space-val">2.5rem · 40px</span>
+                </div>
+                <div class="space-row">
+                    <span class="space-label">xl</span>
+                    <div class="space-bar" style="width: 80px"></div>
+                    <span class="space-val">5rem · 80px</span>
+                </div>
+
+                <ul class="guide" style="margin-top: 1.25rem">
+                    <li>
+                        Section top padding: <code>5rem</code>. Never cram
+                        sections.
+                    </li>
+                    <li>Max content width: <code>720px</code>, centered</li>
+                    <li>Page side padding: <code>2rem</code> min on mobile</li>
+                    <li class="no">
+                        No tight card grids. If elements need breathing room,
+                        give it to them.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Components -->
+            <section id="components">
+                <div class="section-label">04</div>
+                <h2>components</h2>
+                <p>
+                    Minimal component set. Build only what's needed. Each
+                    component must earn its place.
+                </p>
+
+                <!-- Nav bar -->
+                <div class="example">
+                    <div class="example-label">nav bar</div>
+                    <div class="nav-demo">
+                        <div class="nav-brand">ai.<span>erikg</span>.org</div>
+                        <div class="nav-links">
+                            <a href="#" class="active">index</a>
+                            <a href="#">projects</a>
+                            <a href="#">about</a>
+                        </div>
+                    </div>
+                    <p
+                        style="
+                            font-size: 11px;
+                            color: var(--dim);
+                            margin-top: 0.5rem;
+                        "
+                    >
+                        Bottom border only. Brand left, links right. Active
+                        state uses <code>fg</code>, inactive uses
+                        <code>dim</code>.
+                    </p>
+                </div>
+
+                <!-- Buttons -->
+                <div class="example">
+                    <div class="example-label">buttons</div>
+                    <div class="btn-row">
+                        <button class="btn btn-primary">confirm</button>
+                        <button class="btn btn-ghost">cancel</button>
+                        <button class="btn btn-danger">delete</button>
+                    </div>
+                    <p
+                        style="
+                            font-size: 11px;
+                            color: var(--dim);
+                            margin-top: 1rem;
+                        "
+                    >
+                        Three variants only. No gradients, no shadows, no
+                        rounded corners beyond 2px. Hover is opacity reduction.
+                    </p>
+                </div>
+
+                <!-- Inputs -->
+                <div class="example">
+                    <div class="example-label">form inputs</div>
+                    <div class="input-demo">
+                        <div class="field">
+                            <label>title</label>
+                            <input type="text" placeholder="untitled" />
+                        </div>
+                        <div class="field">
+                            <label>notes</label>
+                            <textarea
+                                rows="3"
+                                placeholder="write something..."
+                            ></textarea>
+                        </div>
+                    </div>
+                    <p
+                        style="
+                            font-size: 11px;
+                            color: var(--dim);
+                            margin-top: 1rem;
+                        "
+                    >
+                        Label is uppercase, 11px, <code>dim</code>. Border is
+                        <code>#2a2a2a</code>, focus turns <code>acc</code>. No
+                        rounded corners beyond 2px.
+                    </p>
+                </div>
+
+                <!-- Section label motif -->
+                <div class="example">
+                    <div class="example-label">section label motif</div>
+                    <div
+                        style="
+                            border-left: 2px solid var(--acc);
+                            padding-left: 1.25rem;
+                        "
+                    >
+                        <div
+                            style="
+                                font-size: 10px;
+                                letter-spacing: 0.16em;
+                                text-transform: uppercase;
+                                color: var(--acc);
+                                margin-bottom: 0.3rem;
+                            "
+                        >
+                            01
+                        </div>
+                        <div style="font-size: 1rem; color: var(--fg)">
+                            section title
+                        </div>
+                        <div
+                            style="
+                                font-size: 13px;
+                                color: var(--dim);
+                                margin-top: 0.3rem;
+                            "
+                        >
+                            Supporting copy in dim.
+                        </div>
+                    </div>
+                    <p
+                        style="
+                            font-size: 11px;
+                            color: var(--dim);
+                            margin-top: 1rem;
+                        "
+                    >
+                        Accent left-border is the primary visual anchor. Use it
+                        on headers, callouts, and featured items. Sparingly.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Layout -->
+            <section id="layout">
+                <div class="section-label">05</div>
+                <h2>layout</h2>
+
+                <ul class="guide">
+                    <li>
+                        Single column, centered, max-width <code>720px</code>
+                    </li>
+                    <li>
+                        Sticky right TOC (160px) for long pages, hidden below
+                        680px
+                    </li>
+                    <li>
+                        Use <code>float: right</code> for the TOC to maintain
+                        natural document flow
+                    </li>
+                    <li>
+                        Horizontal rules (<code>hr</code>) are
+                        <code>1px solid #1e1e1e</code> — structural, not
+                        decorative
+                    </li>
+                    <li>No sidebars, no split-panel layouts, no masonry</li>
+                    <li class="no">Never center body text</li>
+                    <li class="no">
+                        No card grids with images. This is a text-first system.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Voice -->
+            <section id="voice">
+                <div class="section-label">06</div>
+                <h2>voice &amp; tone</h2>
+                <p>
+                    Pages generated for this subdomain should write the way the
+                    owner thinks: spare, direct, slightly dry.
+                </p>
+
+                <ul class="guide">
+                    <li>
+                        Lowercase page titles and labels everywhere possible
+                    </li>
+                    <li>Short sentences. One idea per sentence.</li>
+                    <li>No exclamation points. No marketing language.</li>
+                    <li>Dates in ISO format: <code>2026-03-20</code></li>
+                    <li class="no">
+                        No "welcome to", "explore our", "discover the", etc.
+                    </li>
+                    <li class="no">No emoji in any body content</li>
+                    <li class="no">
+                        No Lorem Ipsum — write real placeholder text or leave
+                        blank
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Code conventions -->
+            <section id="code">
+                <div class="section-label">07</div>
+                <h2>code conventions</h2>
+                <p>
+                    Every page deployed to <code>ai.erikg.org/:slug</code> is a
+                    self-contained HTML file. Keep it that way.
+                </p>
+
+                <pre><code><span class="cm">/* always declare the four tokens at :root */</span>
 :root {
   <span class="kw">--bg</span>:  <span class="str">#0e0e0e</span>;
   <span class="kw">--fg</span>:  <span class="str">#e8e0d0</span>;
@@ -715,22 +968,34 @@ body {
   color: <span class="kw">var(--fg)</span>;
 }</code></pre>
 
-    <ul class="guide">
-      <li>CSS variables must always use the 4-token names — never raw hex in component styles</li>
-      <li>Inline all styles and scripts in the HTML file</li>
-      <li>No external JS frameworks. Vanilla JS only.</li>
-      <li>Data persistence: <code>GET/POST /api/data/:collection</code> back to <code>ai.erikg.org</code></li>
-      <li>Animations via CSS <code>@keyframes</code>, entry via <code>animation-delay</code> stagger</li>
-      <li class="no">No Tailwind, no Bootstrap, no CSS resets beyond <code>box-sizing: border-box</code></li>
-      <li class="no">No <code>!important</code></li>
-    </ul>
-  </section>
+                <ul class="guide">
+                    <li>
+                        CSS variables must always use the 4-token names — never
+                        raw hex in component styles
+                    </li>
+                    <li>Inline all styles and scripts in the HTML file</li>
+                    <li>No external JS frameworks. Vanilla JS only.</li>
+                    <li>
+                        Data persistence:
+                        <code>GET/POST /api/data/:collection</code> back to
+                        <code>ai.erikg.org</code>
+                    </li>
+                    <li>
+                        Animations via CSS <code>@keyframes</code>, entry via
+                        <code>animation-delay</code> stagger
+                    </li>
+                    <li class="no">
+                        No Tailwind, no Bootstrap, no CSS resets beyond
+                        <code>box-sizing: border-box</code>
+                    </li>
+                    <li class="no">No <code>!important</code></li>
+                </ul>
+            </section>
 
-  <footer>
-    <span>ai.erikg.org · ui guidelines</span>
-    <span><a href="https://erikg.org">erikg.org</a></span>
-  </footer>
-
-</div>
-</body>
+            <footer>
+                <span>ai.erikg.org · ui guidelines</span>
+                <span><a href="https://erikg.org">erikg.org</a></span>
+            </footer>
+        </div>
+    </body>
 </html>

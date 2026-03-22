@@ -1,45 +1,81 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minimal Notes</title>
-<style>
-body { background:#0e0e0e; color:#e8e0d0; font-family:'DM Mono', monospace; padding:2rem; }
-h1 { color:#c8922a; font-weight:300; }
-.note { margin-top:1rem; padding:1rem; border:1px solid #1c1c1c; }
-input { width:100%; background:#141414; border:1px solid #1c1c1c; color:#e8e0d0; padding:0.5rem; margin-top:1rem; }
-button { margin-top:0.5rem; background:none; border:1px solid #52504a; color:#8a8378; padding:0.3rem 0.8rem; }
-button:hover { color:#c8922a; border-color:#c8922a; }
-</style>
-</head>
-<body>
-<h1>notes</h1>
-<div id="notes"></div>
-<input id="input" placeholder="write a note">
-<button onclick="add()">add</button>
-<script>
-const API = '/api/data/notes';
-async function load() {
-  const r = await fetch(API);
-  const j = await r.json();
-  const notes = j.data || [];
-  const el = document.getElementById('notes');
-  el.innerHTML = notes.map(function(n){ return '<div class=\"note\">'+n+'</div>'; }).join('');
-}
-async function add() {
-  const input = document.getElementById('input');
-  const text = input.value.trim();
-  if (!text) return;
-  const r = await fetch(API);
-  const j = await r.json();
-  const notes = j.data || [];
-  notes.push(text);
-  await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(notes) });
-  input.value='';
-  load();
-}
-load();
-</script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Minimal Notes</title>
+        <style>
+            body {
+                background: #0e0e0e;
+                color: #e8e0d0;
+                font-family: "DM Mono", monospace;
+                padding: 2rem;
+            }
+            h1 {
+                color: #c8922a;
+                font-weight: 300;
+            }
+            .note {
+                margin-top: 1rem;
+                padding: 1rem;
+                border: 1px solid #1c1c1c;
+            }
+            input {
+                width: 100%;
+                background: #141414;
+                border: 1px solid #1c1c1c;
+                color: #e8e0d0;
+                padding: 0.5rem;
+                margin-top: 1rem;
+            }
+            button {
+                margin-top: 0.5rem;
+                background: none;
+                border: 1px solid #52504a;
+                color: #8a8378;
+                padding: 0.3rem 0.8rem;
+            }
+            button:hover {
+                color: #c8922a;
+                border-color: #c8922a;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>notes</h1>
+        <div id="notes"></div>
+        <input id="input" placeholder="write a note" />
+        <button onclick="add()">add</button>
+        <script>
+            const API = "/api/data/notes";
+            async function load() {
+                const r = await fetch(API);
+                const j = await r.json();
+                const notes = j.data || [];
+                const el = document.getElementById("notes");
+                el.innerHTML = notes
+                    .map(function (n) {
+                        return '<div class=\"note\">' + n + "</div>";
+                    })
+                    .join("");
+            }
+            async function add() {
+                const input = document.getElementById("input");
+                const text = input.value.trim();
+                if (!text) return;
+                const r = await fetch(API);
+                const j = await r.json();
+                const notes = j.data || [];
+                notes.push(text);
+                await fetch(API, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(notes),
+                });
+                input.value = "";
+                load();
+            }
+            load();
+        </script>
+    </body>
 </html>

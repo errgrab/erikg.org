@@ -1,333 +1,373 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>pomodoro — erikg.org</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap');
-:root {
-  --bg:  #0e0e0e;
-  --fg:  #e8e0d0;
-  --dim: #52504a;
-  --acc: #c8922a;
-  --border: #1e1e1e;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg); color: var(--fg);
-  font-family: 'DM Mono', monospace; font-weight: 300;
-  font-size: 14px; line-height: 1.75;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 2rem;
-  border-bottom: 1px solid var(--border);
-}
-header a {
-  color: var(--fg);
-  text-decoration: none;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-}
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-}
-.timer-container {
-  text-align: center;
-  max-width: 500px;
-}
-.label {
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--acc);
-  margin-bottom: 1rem;
-}
-.display {
-  font-size: 96px;
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  color: var(--fg);
-  margin-bottom: 2rem;
-  font-variant-numeric: tabular-nums;
-}
-.controls {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  margin-bottom: 3rem;
-}
-button {
-  font-family: 'DM Mono', monospace;
-  font-weight: 300;
-  font-size: 12px;
-  padding: 0.5rem 1.2rem;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-  border: none;
-}
-button:hover {
-  opacity: 0.8;
-}
-.btn-primary {
-  background: var(--acc);
-  color: var(--bg);
-}
-.btn-ghost {
-  background: transparent;
-  color: var(--fg);
-  border: 1px solid var(--dim);
-}
-.presets {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.preset {
-  background: transparent;
-  color: var(--dim);
-  border: 1px solid #2a2a2a;
-  font-size: 11px;
-  padding: 0.4rem 0.9rem;
-}
-.preset.active {
-  border-color: var(--acc);
-  color: var(--acc);
-}
-.session-info {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--dim);
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-}
-</style>
-</head>
-<body>
-<header>
-  <svg width="20" height="30" viewBox="-5 -5 110 160" overflow="visible">
-    <polygon points="50,50 100,100 50,150 0,100" fill="var(--fg)"/>
-    <polygon points="50,0 100,50 50,100 0,50" fill="var(--bg)" stroke="var(--fg)" stroke-width="8" stroke-linejoin="round"/>
-  </svg>
-  <a href="/">
-    erikg<span style="color:var(--acc)">.org</span>
-  </a>
-</header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>pomodoro — erikg.org</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap");
+            :root {
+                --bg: #0e0e0e;
+                --fg: #e8e0d0;
+                --dim: #52504a;
+                --acc: #c8922a;
+                --border: #1e1e1e;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: var(--bg);
+                color: var(--fg);
+                font-family: "DM Mono", monospace;
+                font-weight: 300;
+                font-size: 14px;
+                line-height: 1.75;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            header {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 1.25rem 2rem;
+                border-bottom: 1px solid var(--border);
+            }
+            header a {
+                color: var(--fg);
+                text-decoration: none;
+                font-size: 0.85rem;
+                letter-spacing: 0.04em;
+            }
+            main {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+            }
+            .timer-container {
+                text-align: center;
+                max-width: 500px;
+            }
+            .label {
+                font-size: 10px;
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: var(--acc);
+                margin-bottom: 1rem;
+            }
+            .display {
+                font-size: 96px;
+                font-weight: 300;
+                letter-spacing: -0.02em;
+                color: var(--fg);
+                margin-bottom: 2rem;
+                font-variant-numeric: tabular-nums;
+            }
+            .controls {
+                display: flex;
+                gap: 0.75rem;
+                justify-content: center;
+                margin-bottom: 3rem;
+            }
+            button {
+                font-family: "DM Mono", monospace;
+                font-weight: 300;
+                font-size: 12px;
+                padding: 0.5rem 1.2rem;
+                border-radius: 2px;
+                cursor: pointer;
+                transition: opacity 0.15s ease;
+                border: none;
+            }
+            button:hover {
+                opacity: 0.8;
+            }
+            .btn-primary {
+                background: var(--acc);
+                color: var(--bg);
+            }
+            .btn-ghost {
+                background: transparent;
+                color: var(--fg);
+                border: 1px solid var(--dim);
+            }
+            .presets {
+                display: flex;
+                gap: 0.5rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .preset {
+                background: transparent;
+                color: var(--dim);
+                border: 1px solid #2a2a2a;
+                font-size: 11px;
+                padding: 0.4rem 0.9rem;
+            }
+            .preset.active {
+                border-color: var(--acc);
+                color: var(--acc);
+            }
+            .session-info {
+                margin-top: 2rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid var(--border);
+                font-size: 12px;
+                color: var(--dim);
+                display: flex;
+                gap: 2rem;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <svg
+                width="20"
+                height="30"
+                viewBox="-5 -5 110 160"
+                overflow="visible"
+            >
+                <polygon points="50,50 100,100 50,150 0,100" fill="var(--fg)" />
+                <polygon
+                    points="50,0 100,50 50,100 0,50"
+                    fill="var(--bg)"
+                    stroke="var(--fg)"
+                    stroke-width="8"
+                    stroke-linejoin="round"
+                />
+            </svg>
+            <a href="/"> erikg<span style="color: var(--acc)">.org</span> </a>
+        </header>
 
-<main>
-  <div class="timer-container">
-    <div class="label" id="mode-label">work</div>
-    <div class="display" id="display">25:00</div>
-    
-    <div class="controls">
-      <button class="btn-primary" id="start-btn">start</button>
-      <button class="btn-ghost" id="reset-btn">reset</button>
-    </div>
+        <main>
+            <div class="timer-container">
+                <div class="label" id="mode-label">work</div>
+                <div class="display" id="display">25:00</div>
 
-    <div class="presets">
-      <button class="preset active" data-minutes="25" data-mode="work">25 min work</button>
-      <button class="preset" data-minutes="5" data-mode="break">5 min break</button>
-      <button class="preset" data-minutes="15" data-mode="break">15 min break</button>
-      <button class="preset" data-minutes="50" data-mode="work">50 min work</button>
-    </div>
+                <div class="controls">
+                    <button class="btn-primary" id="start-btn">start</button>
+                    <button class="btn-ghost" id="reset-btn">reset</button>
+                </div>
 
-    <div class="session-info">
-      <div>sessions today: <span id="sessions-count">0</span></div>
-      <div>total time: <span id="total-time">0m</span></div>
-    </div>
-  </div>
-</main>
+                <div class="presets">
+                    <button
+                        class="preset active"
+                        data-minutes="25"
+                        data-mode="work"
+                    >
+                        25 min work
+                    </button>
+                    <button class="preset" data-minutes="5" data-mode="break">
+                        5 min break
+                    </button>
+                    <button class="preset" data-minutes="15" data-mode="break">
+                        15 min break
+                    </button>
+                    <button class="preset" data-minutes="50" data-mode="work">
+                        50 min work
+                    </button>
+                </div>
 
-<script>
-const API = 'https://ai.erikg.org/api';
+                <div class="session-info">
+                    <div>
+                        sessions today: <span id="sessions-count">0</span>
+                    </div>
+                    <div>total time: <span id="total-time">0m</span></div>
+                </div>
+            </div>
+        </main>
 
-let totalSeconds = 25 * 60;
-let remainingSeconds = totalSeconds;
-let isRunning = false;
-let interval = null;
-let currentMode = 'work';
-let stats = { sessionsToday: 0, totalMinutes: 0, lastDate: null };
+        <script>
+            const API = "https://ai.erikg.org/api";
 
-const display = document.getElementById('display');
-const startBtn = document.getElementById('start-btn');
-const resetBtn = document.getElementById('reset-btn');
-const modeLabel = document.getElementById('mode-label');
-const presets = document.querySelectorAll('.preset');
-const sessionsCount = document.getElementById('sessions-count');
-const totalTime = document.getElementById('total-time');
+            let totalSeconds = 25 * 60;
+            let remainingSeconds = totalSeconds;
+            let isRunning = false;
+            let interval = null;
+            let currentMode = "work";
+            let stats = { sessionsToday: 0, totalMinutes: 0, lastDate: null };
 
-async function loadStats() {
-  try {
-    const res = await fetch(`${API}/data/pomodoro-stats`);
-    const { data } = await res.json();
-    if (data) {
-      const today = new Date().toISOString().split('T')[0];
-      if (data.lastDate === today) {
-        stats = data;
-      } else {
-        stats.sessionsToday = 0;
-        stats.totalMinutes = data.totalMinutes || 0;
-        stats.lastDate = today;
-      }
-    }
-  } catch (e) {
-    console.log('no stats yet');
-  }
-  updateStatsDisplay();
-}
+            const display = document.getElementById("display");
+            const startBtn = document.getElementById("start-btn");
+            const resetBtn = document.getElementById("reset-btn");
+            const modeLabel = document.getElementById("mode-label");
+            const presets = document.querySelectorAll(".preset");
+            const sessionsCount = document.getElementById("sessions-count");
+            const totalTime = document.getElementById("total-time");
 
-async function saveStats() {
-  const today = new Date().toISOString().split('T')[0];
-  stats.lastDate = today;
-  try {
-    await fetch(`${API}/data/pomodoro-stats`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(stats)
-    });
-  } catch (e) {
-    console.error('failed to save stats');
-  }
-}
+            async function loadStats() {
+                try {
+                    const res = await fetch(`${API}/data/pomodoro-stats`);
+                    const { data } = await res.json();
+                    if (data) {
+                        const today = new Date().toISOString().split("T")[0];
+                        if (data.lastDate === today) {
+                            stats = data;
+                        } else {
+                            stats.sessionsToday = 0;
+                            stats.totalMinutes = data.totalMinutes || 0;
+                            stats.lastDate = today;
+                        }
+                    }
+                } catch (e) {
+                    console.log("no stats yet");
+                }
+                updateStatsDisplay();
+            }
 
-function updateStatsDisplay() {
-  sessionsCount.textContent = stats.sessionsToday;
-  totalTime.textContent = stats.totalMinutes + 'm';
-}
+            async function saveStats() {
+                const today = new Date().toISOString().split("T")[0];
+                stats.lastDate = today;
+                try {
+                    await fetch(`${API}/data/pomodoro-stats`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(stats),
+                    });
+                } catch (e) {
+                    console.error("failed to save stats");
+                }
+            }
 
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
+            function updateStatsDisplay() {
+                sessionsCount.textContent = stats.sessionsToday;
+                totalTime.textContent = stats.totalMinutes + "m";
+            }
 
-function updateDisplay() {
-  display.textContent = formatTime(remainingSeconds);
-}
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins}:${secs.toString().padStart(2, "0")}`;
+            }
 
-function tick() {
-  remainingSeconds--;
-  updateDisplay();
-  
-  if (remainingSeconds <= 0) {
-    complete();
-  }
-}
+            function updateDisplay() {
+                display.textContent = formatTime(remainingSeconds);
+            }
 
-function complete() {
-  stop();
-  
-  const minutes = Math.floor(totalSeconds / 60);
-  stats.totalMinutes += minutes;
-  
-  if (currentMode === 'work') {
-    stats.sessionsToday++;
-  }
-  
-  updateStatsDisplay();
-  saveStats();
-  
-  if ('Notification' in window && Notification.permission === 'granted') {
-    new Notification('pomodoro complete', {
-      body: `${currentMode} session finished`,
-      silent: false
-    });
-  }
-  
-  playSound();
-}
+            function tick() {
+                remainingSeconds--;
+                updateDisplay();
 
-function playSound() {
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const oscillator = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
-  
-  oscillator.connect(gainNode);
-  gainNode.connect(audioContext.destination);
-  
-  oscillator.frequency.value = 800;
-  oscillator.type = 'sine';
-  
-  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-  
-  oscillator.start(audioContext.currentTime);
-  oscillator.stop(audioContext.currentTime + 0.5);
-}
+                if (remainingSeconds <= 0) {
+                    complete();
+                }
+            }
 
-function start() {
-  if (isRunning) return;
-  isRunning = true;
-  startBtn.textContent = 'pause';
-  interval = setInterval(tick, 1000);
-}
+            function complete() {
+                stop();
 
-function stop() {
-  isRunning = false;
-  startBtn.textContent = 'start';
-  clearInterval(interval);
-  interval = null;
-}
+                const minutes = Math.floor(totalSeconds / 60);
+                stats.totalMinutes += minutes;
 
-function reset() {
-  stop();
-  remainingSeconds = totalSeconds;
-  updateDisplay();
-}
+                if (currentMode === "work") {
+                    stats.sessionsToday++;
+                }
 
-function setPreset(minutes, mode) {
-  stop();
-  totalSeconds = minutes * 60;
-  remainingSeconds = totalSeconds;
-  currentMode = mode;
-  modeLabel.textContent = mode;
-  updateDisplay();
-  
-  presets.forEach(p => p.classList.remove('active'));
-  event.target.classList.add('active');
-}
+                updateStatsDisplay();
+                saveStats();
 
-startBtn.addEventListener('click', () => {
-  if (isRunning) {
-    stop();
-  } else {
-    start();
-  }
-});
+                if (
+                    "Notification" in window &&
+                    Notification.permission === "granted"
+                ) {
+                    new Notification("pomodoro complete", {
+                        body: `${currentMode} session finished`,
+                        silent: false,
+                    });
+                }
 
-resetBtn.addEventListener('click', reset);
+                playSound();
+            }
 
-presets.forEach(preset => {
-  preset.addEventListener('click', (e) => {
-    const minutes = parseInt(e.target.dataset.minutes);
-    const mode = e.target.dataset.mode;
-    setPreset(minutes, mode);
-  });
-});
+            function playSound() {
+                const audioContext = new (
+                    window.AudioContext || window.webkitAudioContext
+                )();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
 
-if ('Notification' in window && Notification.permission === 'default') {
-  Notification.requestPermission();
-}
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
 
-loadStats();
-updateDisplay();
-</script>
-</body>
+                oscillator.frequency.value = 800;
+                oscillator.type = "sine";
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(
+                    0.01,
+                    audioContext.currentTime + 0.5,
+                );
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+
+            function start() {
+                if (isRunning) return;
+                isRunning = true;
+                startBtn.textContent = "pause";
+                interval = setInterval(tick, 1000);
+            }
+
+            function stop() {
+                isRunning = false;
+                startBtn.textContent = "start";
+                clearInterval(interval);
+                interval = null;
+            }
+
+            function reset() {
+                stop();
+                remainingSeconds = totalSeconds;
+                updateDisplay();
+            }
+
+            function setPreset(minutes, mode) {
+                stop();
+                totalSeconds = minutes * 60;
+                remainingSeconds = totalSeconds;
+                currentMode = mode;
+                modeLabel.textContent = mode;
+                updateDisplay();
+
+                presets.forEach((p) => p.classList.remove("active"));
+                event.target.classList.add("active");
+            }
+
+            startBtn.addEventListener("click", () => {
+                if (isRunning) {
+                    stop();
+                } else {
+                    start();
+                }
+            });
+
+            resetBtn.addEventListener("click", reset);
+
+            presets.forEach((preset) => {
+                preset.addEventListener("click", (e) => {
+                    const minutes = parseInt(e.target.dataset.minutes);
+                    const mode = e.target.dataset.mode;
+                    setPreset(minutes, mode);
+                });
+            });
+
+            if (
+                "Notification" in window &&
+                Notification.permission === "default"
+            ) {
+                Notification.requestPermission();
+            }
+
+            loadStats();
+            updateDisplay();
+        </script>
+    </body>
 </html>

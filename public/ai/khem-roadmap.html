@@ -1,282 +1,542 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>khem — roadmap</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap');
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>khem — roadmap</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap");
 
-:root {
-  --bg:      #0c0c0c;
-  --surface: #141414;
-  --s2:      #1c1c1c;
-  --border:  #272727;
-  --b2:      #333;
-  --dim:     #4a4a4a;
-  --fg:      #ccc8c0;
-  --fg2:     #777;
-  --fg3:     #444;
-  --acc:     #c8a84b;
-  --green:   #6b9e78;
-  --blue:    #7a8fa8;
-  --red:     #a86b6b;
-  --amber:   #d4924a;
-  --mono:    'DM Mono', 'Fira Mono', ui-monospace, monospace;
-  --serif:   'Instrument Serif', Georgia, serif;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg); color: var(--fg);
-  font-family: var(--mono); font-size: 12.5px;
-  line-height: 1.65; padding: 48px 28px 80px;
-  max-width: 960px; margin: 0 auto;
-  -webkit-font-smoothing: antialiased;
-}
+            :root {
+                --bg: #0c0c0c;
+                --surface: #141414;
+                --s2: #1c1c1c;
+                --border: #272727;
+                --b2: #333;
+                --dim: #4a4a4a;
+                --fg: #ccc8c0;
+                --fg2: #777;
+                --fg3: #444;
+                --acc: #c8a84b;
+                --green: #6b9e78;
+                --blue: #7a8fa8;
+                --red: #a86b6b;
+                --amber: #d4924a;
+                --mono: "DM Mono", "Fira Mono", ui-monospace, monospace;
+                --serif: "Instrument Serif", Georgia, serif;
+            }
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: var(--bg);
+                color: var(--fg);
+                font-family: var(--mono);
+                font-size: 12.5px;
+                line-height: 1.65;
+                padding: 48px 28px 80px;
+                max-width: 960px;
+                margin: 0 auto;
+                -webkit-font-smoothing: antialiased;
+            }
 
-/* header */
-.hd { margin-bottom: 44px; }
-.hd-top { display: flex; align-items: baseline; gap: 16px; margin-bottom: 10px; }
-.logo {
-  font-family: var(--serif); font-size: 28px; font-weight: 400;
-  color: var(--acc); letter-spacing: 0.02em; line-height: 1;
-}
-.tagline { font-size: 11px; color: var(--fg2); letter-spacing: 0.04em; }
-.rule {
-  font-size: 11px; color: var(--fg3); padding: 12px 0;
-  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-  line-height: 1.7;
-}
-.rule span { color: var(--fg2); }
-.rule code { color: var(--acc); font-family: var(--mono); font-size: 10.5px; }
+            /* header */
+            .hd {
+                margin-bottom: 44px;
+            }
+            .hd-top {
+                display: flex;
+                align-items: baseline;
+                gap: 16px;
+                margin-bottom: 10px;
+            }
+            .logo {
+                font-family: var(--serif);
+                font-size: 28px;
+                font-weight: 400;
+                color: var(--acc);
+                letter-spacing: 0.02em;
+                line-height: 1;
+            }
+            .tagline {
+                font-size: 11px;
+                color: var(--fg2);
+                letter-spacing: 0.04em;
+            }
+            .rule {
+                font-size: 11px;
+                color: var(--fg3);
+                padding: 12px 0;
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+                line-height: 1.7;
+            }
+            .rule span {
+                color: var(--fg2);
+            }
+            .rule code {
+                color: var(--acc);
+                font-family: var(--mono);
+                font-size: 10.5px;
+            }
 
-/* loading state */
-.loading {
-  padding: 60px 0; text-align: center;
-  font-size: 11px; color: var(--fg3); letter-spacing: 0.08em;
-}
-.loading::after {
-  content: ''; display: inline-block; width: 4px; height: 4px;
-  border-radius: 50%; background: var(--fg3); margin-left: 8px;
-  animation: blink 1s infinite;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+            /* loading state */
+            .loading {
+                padding: 60px 0;
+                text-align: center;
+                font-size: 11px;
+                color: var(--fg3);
+                letter-spacing: 0.08em;
+            }
+            .loading::after {
+                content: "";
+                display: inline-block;
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                background: var(--fg3);
+                margin-left: 8px;
+                animation: blink 1s infinite;
+            }
+            @keyframes blink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
 
-.error-state {
-  padding: 40px 0; font-size: 11px; color: var(--red);
-  border: 1px solid #3a1e1e; padding: 16px; background: #180a0a;
-}
+            .error-state {
+                padding: 40px 0;
+                font-size: 11px;
+                color: var(--red);
+                border: 1px solid #3a1e1e;
+                padding: 16px;
+                background: #180a0a;
+            }
 
-/* progress */
-.progress { display: flex; gap: 3px; margin-bottom: 32px; }
-.prog-phase { flex: 1; }
-.prog-bar { height: 2px; background: var(--border); }
-.prog-fill { height: 100%; background: var(--acc); transition: width 0.4s; }
-.prog-label { font-size: 9.5px; color: var(--fg3); margin-top: 5px; text-align: center; letter-spacing: 0.05em; }
+            /* progress */
+            .progress {
+                display: flex;
+                gap: 3px;
+                margin-bottom: 32px;
+            }
+            .prog-phase {
+                flex: 1;
+            }
+            .prog-bar {
+                height: 2px;
+                background: var(--border);
+            }
+            .prog-fill {
+                height: 100%;
+                background: var(--acc);
+                transition: width 0.4s;
+            }
+            .prog-label {
+                font-size: 9.5px;
+                color: var(--fg3);
+                margin-top: 5px;
+                text-align: center;
+                letter-spacing: 0.05em;
+            }
 
-/* legend */
-.legend {
-  display: flex; gap: 18px; flex-wrap: wrap;
-  margin-bottom: 36px; font-size: 10.5px; color: var(--fg2);
-  padding: 10px 0;
-  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-}
-.legend-item { display: flex; align-items: center; gap: 6px; }
-.ld { width: 6px; height: 6px; border-radius: 50%; }
-.tag {
-  font-size: 9.5px; padding: 1px 6px; letter-spacing: 0.04em;
-  border: 1px solid; white-space: nowrap;
-}
-.tag-c    { color:#c8a84b;border-color:#3a3210;background:#1a1608; }
-.tag-kh   { color:#6b9e78;border-color:#1e3a22;background:#0e1a10; }
-.tag-spec { color:#7a8fa8;border-color:#1e2f3a;background:#0e1218; }
-.tag-wasm { color:#b07848;border-color:#3a2818;background:#181008; }
+            /* legend */
+            .legend {
+                display: flex;
+                gap: 18px;
+                flex-wrap: wrap;
+                margin-bottom: 36px;
+                font-size: 10.5px;
+                color: var(--fg2);
+                padding: 10px 0;
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+            }
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .ld {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+            }
+            .tag {
+                font-size: 9.5px;
+                padding: 1px 6px;
+                letter-spacing: 0.04em;
+                border: 1px solid;
+                white-space: nowrap;
+            }
+            .tag-c {
+                color: #c8a84b;
+                border-color: #3a3210;
+                background: #1a1608;
+            }
+            .tag-kh {
+                color: #6b9e78;
+                border-color: #1e3a22;
+                background: #0e1a10;
+            }
+            .tag-spec {
+                color: #7a8fa8;
+                border-color: #1e2f3a;
+                background: #0e1218;
+            }
+            .tag-wasm {
+                color: #b07848;
+                border-color: #3a2818;
+                background: #181008;
+            }
 
-/* phase */
-.phase { margin-bottom: 52px; }
-.ph-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
-.ph-num   { font-size: 10px; color: var(--dim); letter-spacing: 0.18em; }
-.ph-title { font-size: 14px; color: var(--fg); }
-.ph-est   { font-size: 10px; color: var(--dim); margin-left: auto; }
-.ph-desc  {
-  font-size: 11px; color: var(--fg2); margin-bottom: 18px;
-  padding-bottom: 14px; border-bottom: 1px solid var(--border); line-height: 1.65;
-}
-.ph-desc strong { color: var(--fg); font-weight: 400; }
+            /* phase */
+            .phase {
+                margin-bottom: 52px;
+            }
+            .ph-head {
+                display: flex;
+                align-items: baseline;
+                gap: 12px;
+                margin-bottom: 6px;
+            }
+            .ph-num {
+                font-size: 10px;
+                color: var(--dim);
+                letter-spacing: 0.18em;
+            }
+            .ph-title {
+                font-size: 14px;
+                color: var(--fg);
+            }
+            .ph-est {
+                font-size: 10px;
+                color: var(--dim);
+                margin-left: auto;
+            }
+            .ph-desc {
+                font-size: 11px;
+                color: var(--fg2);
+                margin-bottom: 18px;
+                padding-bottom: 14px;
+                border-bottom: 1px solid var(--border);
+                line-height: 1.65;
+            }
+            .ph-desc strong {
+                color: var(--fg);
+                font-weight: 400;
+            }
 
-/* tasks */
-.tasks { display: flex; flex-direction: column; gap: 1px; }
-.task {
-  display: grid;
-  grid-template-columns: 6px 56px 1fr auto;
-  align-items: start; gap: 0 14px;
-  padding: 11px 14px; background: var(--surface);
-  transition: background 0.1s;
-}
-.task:hover { background: var(--s2); }
+            /* tasks */
+            .tasks {
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+            }
+            .task {
+                display: grid;
+                grid-template-columns: 6px 56px 1fr auto;
+                align-items: start;
+                gap: 0 14px;
+                padding: 11px 14px;
+                background: var(--surface);
+                transition: background 0.1s;
+            }
+            .task:hover {
+                background: var(--s2);
+            }
 
-.dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-.todo    .dot { background: var(--b2); }
-.active  .dot { background: var(--acc); box-shadow: 0 0 5px var(--acc); }
-.done    .dot { background: var(--green); }
-.blocked .dot { background: var(--red); }
+            .dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                margin-top: 4px;
+                flex-shrink: 0;
+            }
+            .todo .dot {
+                background: var(--b2);
+            }
+            .active .dot {
+                background: var(--acc);
+                box-shadow: 0 0 5px var(--acc);
+            }
+            .done .dot {
+                background: var(--green);
+            }
+            .blocked .dot {
+                background: var(--red);
+            }
 
-.task-id    { font-size: 10px; color: var(--dim); padding-top: 1px; }
-.task-title { font-size: 12.5px; color: var(--fg); margin-bottom: 3px; }
-.task-desc  { font-size: 11px; color: var(--fg2); line-height: 1.55; }
-.task-desc code { font-family: var(--mono); color: var(--acc); font-size: 10.5px; }
-.done .task-title { opacity: 0.4; text-decoration: line-through; }
-.done .task-desc  { opacity: 0.3; }
+            .task-id {
+                font-size: 10px;
+                color: var(--dim);
+                padding-top: 1px;
+            }
+            .task-title {
+                font-size: 12.5px;
+                color: var(--fg);
+                margin-bottom: 3px;
+            }
+            .task-desc {
+                font-size: 11px;
+                color: var(--fg2);
+                line-height: 1.55;
+            }
+            .task-desc code {
+                font-family: var(--mono);
+                color: var(--acc);
+                font-size: 10.5px;
+            }
+            .done .task-title {
+                opacity: 0.4;
+                text-decoration: line-through;
+            }
+            .done .task-desc {
+                opacity: 0.3;
+            }
 
-.task-tags { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; padding-top: 1px; }
+            .task-tags {
+                display: flex;
+                gap: 4px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                padding-top: 1px;
+            }
 
-/* gate */
-.gate {
-  margin: 10px 0 4px; padding: 10px 14px;
-  background: #0e1218; border: 1px solid #1e2f3a;
-  font-size: 10.5px; color: var(--blue); line-height: 1.6;
-}
-.gate code { font-family: var(--mono); color: #9ab3c8; font-size: 10.5px; }
-.gate-acc { background: #140f00; border-color: #3a3210; color: var(--acc); }
+            /* gate */
+            .gate {
+                margin: 10px 0 4px;
+                padding: 10px 14px;
+                background: #0e1218;
+                border: 1px solid #1e2f3a;
+                font-size: 10.5px;
+                color: var(--blue);
+                line-height: 1.6;
+            }
+            .gate code {
+                font-family: var(--mono);
+                color: #9ab3c8;
+                font-size: 10.5px;
+            }
+            .gate-acc {
+                background: #140f00;
+                border-color: #3a3210;
+                color: var(--acc);
+            }
 
-/* milestone */
-.milestone {
-  margin: 16px 0 6px; font-size: 10px; color: var(--acc);
-  letter-spacing: 0.12em; display: flex; align-items: center; gap: 10px;
-}
-.milestone::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+            /* milestone */
+            .milestone {
+                margin: 16px 0 6px;
+                font-size: 10px;
+                color: var(--acc);
+                letter-spacing: 0.12em;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .milestone::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: var(--border);
+            }
 
-/* backlog */
-.bl-item {
-  padding: 8px 14px; background: var(--surface);
-  font-size: 11px; color: var(--fg3);
-  display: flex; gap: 14px; margin-bottom: 1px;
-}
-.bl-id { color: var(--dim); min-width: 44px; }
+            /* backlog */
+            .bl-item {
+                padding: 8px 14px;
+                background: var(--surface);
+                font-size: 11px;
+                color: var(--fg3);
+                display: flex;
+                gap: 14px;
+                margin-bottom: 1px;
+            }
+            .bl-id {
+                color: var(--dim);
+                min-width: 44px;
+            }
 
-/* last updated */
-.last-updated {
-  margin-top: 48px; padding-top: 16px;
-  border-top: 1px solid var(--border);
-  font-size: 10px; color: var(--fg3);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.last-updated a {
-  color: var(--fg2); text-decoration: none;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 1px; transition: color 0.1s, border-color 0.1s;
-}
-.last-updated a:hover { color: var(--acc); border-color: var(--acc); }
+            /* last updated */
+            .last-updated {
+                margin-top: 48px;
+                padding-top: 16px;
+                border-top: 1px solid var(--border);
+                font-size: 10px;
+                color: var(--fg3);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .last-updated a {
+                color: var(--fg2);
+                text-decoration: none;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 1px;
+                transition:
+                    color 0.1s,
+                    border-color 0.1s;
+            }
+            .last-updated a:hover {
+                color: var(--acc);
+                border-color: var(--acc);
+            }
 
-/* summary strip */
-.summary {
-  display: flex; gap: 20px; flex-wrap: wrap;
-  margin-bottom: 28px; padding: 12px 14px;
-  background: var(--surface); border: 1px solid var(--border);
-  font-size: 10.5px;
-}
-.summary-stat { display: flex; align-items: center; gap: 6px; color: var(--fg2); }
-.summary-stat strong { font-weight: 400; }
-.summary-stat.green strong { color: var(--green); }
-.summary-stat.amber strong { color: var(--amber); }
-.summary-stat.red   strong { color: var(--red); }
-.summary-stat.acc   strong { color: var(--acc); }
-</style>
-</head>
-<body>
+            /* summary strip */
+            .summary {
+                display: flex;
+                gap: 20px;
+                flex-wrap: wrap;
+                margin-bottom: 28px;
+                padding: 12px 14px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                font-size: 10.5px;
+            }
+            .summary-stat {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                color: var(--fg2);
+            }
+            .summary-stat strong {
+                font-weight: 400;
+            }
+            .summary-stat.green strong {
+                color: var(--green);
+            }
+            .summary-stat.amber strong {
+                color: var(--amber);
+            }
+            .summary-stat.red strong {
+                color: var(--red);
+            }
+            .summary-stat.acc strong {
+                color: var(--acc);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="hd">
+            <div class="hd-top">
+                <span class="logo">khem</span>
+                <span class="tagline"
+                    >the black land · a string-based command language</span
+                >
+            </div>
+            <div class="rule">
+                <span>one rule:</span> everything is a string — everything is a
+                command — the host makes it fertile.<br />
+                <span>done means:</span> compiles with
+                <code>gcc -std=c99 -pedantic -Wall -Wextra</code>, zero valgrind
+                leaks, one working example.
+            </div>
+        </div>
 
-<div class="hd">
-  <div class="hd-top">
-    <span class="logo">khem</span>
-    <span class="tagline">the black land · a string-based command language</span>
-  </div>
-  <div class="rule">
-    <span>one rule:</span> everything is a string — everything is a command — the host makes it fertile.<br>
-    <span>done means:</span> compiles with <code>gcc -std=c99 -pedantic -Wall -Wextra</code>,
-    zero valgrind leaks, one working example.
-  </div>
-</div>
+        <div id="root"><div class="loading">loading roadmap</div></div>
 
-<div id="root"><div class="loading">loading roadmap</div></div>
+        <script>
+            const API = "https://ai.erikg.org/api";
 
-<script>
-const API = 'https://ai.erikg.org/api';
+            async function load(collection) {
+                try {
+                    const r = await fetch(`${API}/data/${collection}`);
+                    if (!r.ok) return null; // Handle 404s gracefully before data is initialized
+                    const j = await r.json();
+                    return j.data !== undefined ? j.data : j; // Adapt to API's return structure
+                } catch (e) {
+                    return null;
+                }
+            }
 
-async function load(collection) {
-  try {
-    const r = await fetch(`${API}/data/${collection}`);
-    if (!r.ok) return null; // Handle 404s gracefully before data is initialized
-    const j = await r.json();
-    return j.data !== undefined ? j.data : j; // Adapt to API's return structure
-  } catch(e) {
-    return null;
-  }
-}
+            function tagHtml(tags) {
+                const map = {
+                    c: "tag-c",
+                    kh: "tag-kh",
+                    spec: "tag-spec",
+                    wasm: "tag-wasm",
+                };
+                return (tags || [])
+                    .map((t) => `<span class="tag ${map[t] || ""}">${t}</span>`)
+                    .join("");
+            }
 
-function tagHtml(tags) {
-  const map = { c:'tag-c', kh:'tag-kh', spec:'tag-spec', wasm:'tag-wasm' };
-  return (tags||[]).map(t => `<span class="tag ${map[t]||''}">${t}</span>`).join('');
-}
-
-function renderTask(t, st) {
-  const status = st[t.id] || 'todo';
-  return `
+            function renderTask(t, st) {
+                const status = st[t.id] || "todo";
+                return `
     <div class="task ${status}">
       <div class="dot"></div>
       <div class="task-id">${t.id}</div>
       <div>
-        <div class="task-title">${t.title||''}</div>
-        <div class="task-desc">${t.desc||''}</div>
+        <div class="task-title">${t.title || ""}</div>
+        <div class="task-desc">${t.desc || ""}</div>
       </div>
       <div class="task-tags">${tagHtml(t.tags)}</div>
     </div>`;
-}
+            }
 
-function renderPhase(p, st) {
-  const tasks  = p.tasks || [];
-  const total  = tasks.length;
-  const done   = tasks.filter(t => (st[t.id]||'todo') === 'done').length;
-  const pct    = total ? Math.round(done/total*100) : 0;
-  return `
+            function renderPhase(p, st) {
+                const tasks = p.tasks || [];
+                const total = tasks.length;
+                const done = tasks.filter(
+                    (t) => (st[t.id] || "todo") === "done",
+                ).length;
+                const pct = total ? Math.round((done / total) * 100) : 0;
+                return `
     <div class="phase">
       <div class="ph-head">
-        <span class="ph-num">${p.num||''}</span>
-        <span class="ph-title">${p.title||''}</span>
-        <span class="ph-est">${p.est||''}</span>
+        <span class="ph-num">${p.num || ""}</span>
+        <span class="ph-title">${p.title || ""}</span>
+        <span class="ph-est">${p.est || ""}</span>
       </div>
-      <div class="ph-desc">${p.desc||''}</div>
-      <div class="tasks">${tasks.map(t => renderTask(t, st)).join('')}</div>
-      ${p.milestone ? `<div class="milestone">${p.milestone}</div>` : ''}
-      ${p.gate ? `<div class="gate ${p.gateAcc?'gate-acc':''}">${p.gate}</div>` : ''}
+      <div class="ph-desc">${p.desc || ""}</div>
+      <div class="tasks">${tasks.map((t) => renderTask(t, st)).join("")}</div>
+      ${p.milestone ? `<div class="milestone">${p.milestone}</div>` : ""}
+      ${p.gate ? `<div class="gate ${p.gateAcc ? "gate-acc" : ""}">${p.gate}</div>` : ""}
     </div>`;
-}
+            }
 
-function renderProgress(phases, st) {
-  return `<div class="progress">
-    ${phases.map(p => {
-      const total = p.tasks.length;
-      const done  = p.tasks.filter(t => (st[t.id]||'todo') === 'done').length;
-      const pct   = total ? Math.round(done/total*100) : 0;
-      return `
+            function renderProgress(phases, st) {
+                return `<div class="progress">
+    ${phases
+        .map((p) => {
+            const total = p.tasks.length;
+            const done = p.tasks.filter(
+                (t) => (st[t.id] || "todo") === "done",
+            ).length;
+            const pct = total ? Math.round((done / total) * 100) : 0;
+            return `
         <div class="prog-phase">
           <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
-          <div class="prog-label">${(p.num||'').replace('PHASE ','P')}</div>
+          <div class="prog-label">${(p.num || "").replace("PHASE ", "P")}</div>
         </div>`;
-    }).join('')}
+        })
+        .join("")}
   </div>`;
-}
+            }
 
-function renderSummary(phases, st) {
-  let total=0, done=0, active=0, blocked=0;
-  phases.forEach(p => p.tasks.forEach(t => {
-    total++;
-    const s = st[t.id] || 'todo';
-    if (s==='done')    done++;
-    if (s==='active')  active++;
-    if (s==='blocked') blocked++;
-  }));
-  const pct = total ? Math.round(done/total*100) : 0;
-  return `
+            function renderSummary(phases, st) {
+                let total = 0,
+                    done = 0,
+                    active = 0,
+                    blocked = 0;
+                phases.forEach((p) =>
+                    p.tasks.forEach((t) => {
+                        total++;
+                        const s = st[t.id] || "todo";
+                        if (s === "done") done++;
+                        if (s === "active") active++;
+                        if (s === "blocked") blocked++;
+                    }),
+                );
+                const pct = total ? Math.round((done / total) * 100) : 0;
+                return `
     <div class="summary">
       <div class="summary-stat acc"><strong>${pct}%</strong> complete</div>
       <div class="summary-stat green"><strong>${done}</strong> done</div>
@@ -284,10 +544,10 @@ function renderSummary(phases, st) {
       <div class="summary-stat"><strong>${total - done - active - blocked}</strong> todo</div>
       <div class="summary-stat red"><strong>${blocked}</strong> blocked</div>
     </div>`;
-}
+            }
 
-function renderLegend() {
-  return `
+            function renderLegend() {
+                return `
     <div class="legend">
       <div class="legend-item"><div class="ld" style="background:var(--b2)"></div> todo</div>
       <div class="legend-item"><div class="ld" style="background:var(--acc);box-shadow:0 0 5px var(--acc)"></div> active</div>
@@ -298,57 +558,60 @@ function renderLegend() {
       <div class="legend-item"><span class="tag tag-spec">spec</span> design / doc</div>
       <div class="legend-item"><span class="tag tag-wasm">wasm</span> host / glue</div>
     </div>`;
-}
+            }
 
-function renderBacklog(backlog) {
-  if (!backlog || !backlog.length) return '';
-  return `
+            function renderBacklog(backlog) {
+                if (!backlog || !backlog.length) return "";
+                return `
     <div class="phase">
       <div class="ph-head">
         <span class="ph-num">BACKLOG</span>
         <span class="ph-title">Later — write it down, let it go</span>
       </div>
       <div class="ph-desc">Real ideas with a place to live. Not now.</div>
-      ${backlog.map(b => `
+      ${backlog
+          .map(
+              (b) => `
         <div class="bl-item">
           <span class="bl-id">${b.id}</span>
-          <span>${b.title||''}</span>
-        </div>`).join('')}
+          <span>${b.title || ""}</span>
+        </div>`,
+          )
+          .join("")}
     </div>`;
-}
+            }
 
-(async () => {
-  const root = document.getElementById('root');
-  try {
-    const [structure, state] = await Promise.all([
-      load('khem-roadmap-structure'),
-      load('khem-roadmap-state'),
-    ]);
-    const st = state || {};
+            (async () => {
+                const root = document.getElementById("root");
+                try {
+                    const [structure, state] = await Promise.all([
+                        load("khem-roadmap-structure"),
+                        load("khem-roadmap-state"),
+                    ]);
+                    const st = state || {};
 
-    if (!structure || !structure.phases) {
-      root.innerHTML = `<div class="error-state">roadmap not yet published — open the manager and hit save first.</div>`;
-      return;
-    }
+                    if (!structure || !structure.phases) {
+                        root.innerHTML = `<div class="error-state">roadmap not yet published — open the manager and hit save first.</div>`;
+                        return;
+                    }
 
-    const phases  = structure.phases  || [];
-    const backlog = structure.backlog || [];
+                    const phases = structure.phases || [];
+                    const backlog = structure.backlog || [];
 
-    root.innerHTML =
-      renderProgress(phases, st) +
-      renderSummary(phases, st) +
-      renderLegend() +
-      phases.map(p => renderPhase(p, st)).join('') +
-      renderBacklog(backlog) +
-      `<div class="last-updated">
+                    root.innerHTML =
+                        renderProgress(phases, st) +
+                        renderSummary(phases, st) +
+                        renderLegend() +
+                        phases.map((p) => renderPhase(p, st)).join("") +
+                        renderBacklog(backlog) +
+                        `<div class="last-updated">
         <span>khem is being built in public</span>
         <a href="https://ai.erikg.org/khem-manager" target="_blank">manage →</a>
       </div>`;
-
-  } catch(e) {
-    root.innerHTML = `<div class="error-state">failed to load: ${e.message}</div>`;
-  }
-})();
-</script>
-</body>
+                } catch (e) {
+                    root.innerHTML = `<div class="error-state">failed to load: ${e.message}</div>`;
+                }
+            })();
+        </script>
+    </body>
 </html>

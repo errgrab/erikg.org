@@ -2,7 +2,7 @@
  * _worker.js — erikg.org unified Worker
  *
  * Routing by hostname:
- *   erikg.org, www.erikg.org   → serve /public/
+ *   erikg.org, www.erikg.org    → serve /public/
  *   ai.erikg.org                → serve /public/ai/ + handle /api/*
  *   *.erikg.org                 → serve /<subdomain>/
  *
@@ -55,7 +55,9 @@ export default {
     // Static file serving via env.ASSETS (Cloudflare Pages/Workers)
     // Map subdomain → directory prefix
     const dir = isRoot ? "" : subdomain + "/";
-    let filePath = dir + (url.pathname === "/" ? "index.html" : url.pathname.replace(/^\//, ""));
+    let filePath =
+      dir +
+      (url.pathname === "/" ? "index.html" : url.pathname.replace(/^\//, ""));
 
     // Prevent double slashing
     filePath = filePath.replace(/\/+/g, "/");
@@ -68,8 +70,13 @@ export default {
 
       if (asset.status === 404 && url.pathname !== "/") {
         // Try fallback index.html mapping (e.g. /about -> /about/index.html)
-        const fallbackUrl = new URL("/" + dir + "index.html", "http://assets.internal");
-        const fallback = await env.ASSETS.fetch(new Request(fallbackUrl.toString()));
+        const fallbackUrl = new URL(
+          "/" + dir + "index.html",
+          "http://assets.internal",
+        );
+        const fallback = await env.ASSETS.fetch(
+          new Request(fallbackUrl.toString()),
+        );
         if (fallback.status === 200) {
           return fallback;
         }
@@ -78,8 +85,7 @@ export default {
     } catch {
       return new Response("Not found", { status: 404 });
     }
-
-  }
+  },
 };
 
 // ── API ────────────────────────────────────────────────────────────────────
@@ -93,17 +99,21 @@ async function handleAPI(request, env, url) {
     return json({ ok: true, ts: new Date().toISOString() });
   }
 
-  // Auth required for everything else
-  const token = (request.headers.get("Authorization") || "").replace("Bearer ", "").trim();
-  if (token !== env.API_TOKEN) return err(401, "Unauthorized");
+  // Auth required for write endpoints
+  if (method !== "GET") {
+    const token = (request.headers.get("Authorization") || "")
+      .replace("Bearer ", "")
+      .trim();
+    if (token !== env.API_TOKEN) return err(401, "Unauthorized");
+  }
 
   // ── Pages (GitHub-backed) ───────────────────────────────────────────────
 
   if (path === "/pages" && method === "GET") {
     const files = await ghList(env, PAGES_DIR);
     const pages = files
-      .filter(f => f.name.endsWith(".html") && f.name !== "index.html")
-      .map(f => f.name.replace(".html", ""));
+      .filter((f) => f.name.endsWith(".html") && f.name !== "index.html")
+      .map((f) => f.name.replace(".html", ""));
     return json({ pages });
   }
 
@@ -136,10 +146,13 @@ async function handleAPI(request, env, url) {
 
       // Keep pagemeta for the index page speed
       if (env.KV) {
-        await env.KV.put(`pagemeta:${slug}`, JSON.stringify({
-          title: body.title || slug,
-          updatedAt: new Date().toISOString(),
-        }));
+        await env.KV.put(
+          `pagemeta:${slug}`,
+          JSON.stringify({
+            title: body.title || slug,
+            updatedAt: new Date().toISOString(),
+          }),
+        );
       }
 
       return json({ ok: true, slug, action: "committed" });
@@ -186,13 +199,17 @@ async function serveIndex(env, url) {
   // We recreate the old index view fetching metadata from KV
   let pagesList = [];
   if (env.KV) {
-    const list = await env.KV.list({ prefix: 'pagemeta:' });
+    const list = await env.KV.list({ prefix: "pagemeta:" });
     pagesList = await Promise.all(
-      list.keys.map(async k => {
-        const slug = k.name.replace('pagemeta:', '');
-        const meta = await env.KV.get(`pagemeta:${slug}`, 'json') || {};
-        return { slug, title: meta.title || slug, updatedAt: meta.updatedAt || '' };
-      })
+      list.keys.map(async (k) => {
+        const slug = k.name.replace("pagemeta:", "");
+        const meta = (await env.KV.get(`pagemeta:${slug}`, "json")) || {};
+        return {
+          slug,
+          title: meta.title || slug,
+          updatedAt: meta.updatedAt || "",
+        };
+      }),
     );
   }
 
@@ -225,18 +242,24 @@ async function serveIndex(env, url) {
     @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap');
   `;
 
-  const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const escapeHtml = (s) =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-  const items = pagesList.length === 0
-    ? `<p class="empty">No pages yet. Ask your AI to create one (saving to GitHub!).</p>`
-    : `<ul>${pagesList.map(p => `
+  const items =
+    pagesList.length === 0
+      ? `<p class="empty">No pages yet. Ask your AI to create one (saving to GitHub!).</p>`
+      : `<ul>${pagesList
+          .map(
+            (p) => `
         <li>
           <a href="/${p.slug}">
             <span class="arrow">→</span>
             <span class="title">${escapeHtml(p.title)}</span>
-            <span class="date">${p.updatedAt ? p.updatedAt.slice(0, 10) : ''}</span>
+            <span class="date">${p.updatedAt ? p.updatedAt.slice(0, 10) : ""}</span>
           </a>
-        </li>`).join('')}
+        </li>`,
+          )
+          .join("")}
       </ul>`;
 
   const html = `<!DOCTYPE html>
@@ -257,7 +280,7 @@ async function serveIndex(env, url) {
 </html>`;
 
   return new Response(html, {
-    headers: { 'Content-Type': 'text/html;charset=UTF-8' },
+    headers: { "Content-Type": "text/html;charset=UTF-8" },
   });
 }
 
@@ -307,10 +330,12 @@ async function ghWrite(env, path, content, message) {
   try {
     const existing = await ghRead(env, path);
     sha = existing.sha;
-  } catch { /* new file */ }
+  } catch {
+    /* new file */
+  }
 
   const bytes = new TextEncoder().encode(content);
-  let binary = '';
+  let binary = "";
   for (let i = 0; i < bytes.byteLength; i++) {
     binary += String.fromCharCode(bytes[i]);
   }

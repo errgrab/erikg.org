@@ -1,305 +1,392 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>todos — erikg.org</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap');
-:root {
-  --bg:  #0e0e0e;
-  --fg:  #e8e0d0;
-  --dim: #52504a;
-  --acc: #c8922a;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg); color: var(--fg);
-  font-family: 'DM Mono', monospace; font-weight: 300;
-  font-size: 14px; line-height: 1.75;
-  min-height: 100vh;
-}
-header {
-  display: flex; align-items: center; gap: 1rem;
-  padding: 1.25rem 2rem;
-  border-bottom: 1px solid #1e1e1e;
-}
-header a {
-  color: var(--fg); text-decoration: none;
-  font-size: 0.85rem; letter-spacing: 0.04em;
-}
-main {
-  max-width: 42rem; margin: 0 auto; padding: 2rem;
-  display: flex; flex-direction: column; gap: 2.5rem;
-}
-.section {
-  border-left: 2px solid var(--acc);
-  padding-left: 1.25rem;
-}
-.section-label {
-  font-size: 10px; text-transform: uppercase;
-  letter-spacing: 0.16em; color: var(--acc);
-  margin-bottom: 1rem;
-}
-input[type="text"], input[type="password"] {
-  background: var(--bg); color: var(--fg);
-  border: 1px solid #2a2a2a; border-radius: 2px;
-  padding: 0.5rem 0.75rem; font: inherit;
-  width: 100%;
-}
-input:focus {
-  outline: none; border-color: var(--acc);
-}
-input::placeholder { color: var(--dim); }
-button {
-  background: transparent; color: var(--fg);
-  border: 1px solid var(--dim); border-radius: 2px;
-  padding: 0.5rem 1.2rem; font: inherit; font-size: 12px;
-  cursor: pointer; transition: opacity 0.15s ease;
-}
-button:hover { opacity: 0.8; }
-button.primary {
-  background: var(--acc); color: var(--bg); border: none;
-}
-button.danger {
-  color: #b05040; border-color: #3a2020;
-}
-.form-row {
-  display: flex; gap: 0.75rem;
-}
-.todo-item {
-  display: flex; gap: 0.75rem; align-items: center;
-  background: #111; padding: 0.75rem; border-radius: 2px;
-  animation: fadein 0.3s ease;
-}
-.todo-item.done {
-  opacity: 0.4;
-}
-.todo-item.done span {
-  text-decoration: line-through;
-}
-.todo-item input[type="checkbox"] {
-  width: auto; margin: 0;
-  accent-color: var(--acc);
-}
-.todo-item button {
-  margin-left: auto;
-}
-@keyframes fadein {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.auth-section {
-  background: #111; padding: 1.5rem; border-radius: 2px;
-}
-.status {
-  font-size: 12px; margin-top: 0.5rem;
-}
-.status.error { color: #b05040; }
-.status.success { color: var(--acc); }
-</style>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>todos — erikg.org</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap");
+            :root {
+                --bg: #0e0e0e;
+                --fg: #e8e0d0;
+                --dim: #52504a;
+                --acc: #c8922a;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: var(--bg);
+                color: var(--fg);
+                font-family: "DM Mono", monospace;
+                font-weight: 300;
+                font-size: 14px;
+                line-height: 1.75;
+                min-height: 100vh;
+            }
+            header {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 1.25rem 2rem;
+                border-bottom: 1px solid #1e1e1e;
+            }
+            header a {
+                color: var(--fg);
+                text-decoration: none;
+                font-size: 0.85rem;
+                letter-spacing: 0.04em;
+            }
+            main {
+                max-width: 42rem;
+                margin: 0 auto;
+                padding: 2rem;
+                display: flex;
+                flex-direction: column;
+                gap: 2.5rem;
+            }
+            .section {
+                border-left: 2px solid var(--acc);
+                padding-left: 1.25rem;
+            }
+            .section-label {
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.16em;
+                color: var(--acc);
+                margin-bottom: 1rem;
+            }
+            input[type="text"],
+            input[type="password"] {
+                background: var(--bg);
+                color: var(--fg);
+                border: 1px solid #2a2a2a;
+                border-radius: 2px;
+                padding: 0.5rem 0.75rem;
+                font: inherit;
+                width: 100%;
+            }
+            input:focus {
+                outline: none;
+                border-color: var(--acc);
+            }
+            input::placeholder {
+                color: var(--dim);
+            }
+            button {
+                background: transparent;
+                color: var(--fg);
+                border: 1px solid var(--dim);
+                border-radius: 2px;
+                padding: 0.5rem 1.2rem;
+                font: inherit;
+                font-size: 12px;
+                cursor: pointer;
+                transition: opacity 0.15s ease;
+            }
+            button:hover {
+                opacity: 0.8;
+            }
+            button.primary {
+                background: var(--acc);
+                color: var(--bg);
+                border: none;
+            }
+            button.danger {
+                color: #b05040;
+                border-color: #3a2020;
+            }
+            .form-row {
+                display: flex;
+                gap: 0.75rem;
+            }
+            .todo-item {
+                display: flex;
+                gap: 0.75rem;
+                align-items: center;
+                background: #111;
+                padding: 0.75rem;
+                border-radius: 2px;
+                animation: fadein 0.3s ease;
+            }
+            .todo-item.done {
+                opacity: 0.4;
+            }
+            .todo-item.done span {
+                text-decoration: line-through;
+            }
+            .todo-item input[type="checkbox"] {
+                width: auto;
+                margin: 0;
+                accent-color: var(--acc);
+            }
+            .todo-item button {
+                margin-left: auto;
+            }
+            @keyframes fadein {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .auth-section {
+                background: #111;
+                padding: 1.5rem;
+                border-radius: 2px;
+            }
+            .status {
+                font-size: 12px;
+                margin-top: 0.5rem;
+            }
+            .status.error {
+                color: #b05040;
+            }
+            .status.success {
+                color: var(--acc);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <svg
+                width="20"
+                height="30"
+                viewBox="-5 -5 110 160"
+                overflow="visible"
+            >
+                <polygon points="50,50 100,100 50,150 0,100" fill="var(--fg)" />
+                <polygon
+                    points="50,0 100,50 50,100 0,50"
+                    fill="var(--bg)"
+                    stroke="var(--fg)"
+                    stroke-width="8"
+                    stroke-linejoin="round"
+                />
+            </svg>
+            <a href="/">erikg<span style="color: var(--acc)">.org</span></a>
+        </header>
 
-<header>
-  <svg width="20" height="30" viewBox="-5 -5 110 160" overflow="visible">
-    <polygon points="50,50 100,100 50,150 0,100" fill="var(--fg)"/>
-    <polygon points="50,0 100,50 50,100 0,50" fill="var(--bg)" stroke="var(--fg)" stroke-width="8" stroke-linejoin="round"/>
-  </svg>
-  <a href="/">erikg<span style="color:var(--acc)">.org</span></a>
-</header>
+        <main>
+            <section class="section" id="auth-section">
+                <div class="section-label">authentication</div>
+                <div class="auth-section">
+                    <div class="form-row">
+                        <input
+                            type="password"
+                            id="token-input"
+                            placeholder="enter api token"
+                        />
+                        <button class="primary" onclick="saveToken()">
+                            verify & save
+                        </button>
+                    </div>
+                    <div class="status" id="auth-status"></div>
+                </div>
+            </section>
 
-<main>
+            <section class="section" id="todos-section" style="display: none">
+                <div class="section-label">add task</div>
+                <div class="form-row">
+                    <input
+                        type="text"
+                        id="new-todo"
+                        placeholder="what needs to be done?"
+                    />
+                    <button onclick="addTodo()">add</button>
+                </div>
+            </section>
 
-  <section class="section" id="auth-section">
-    <div class="section-label">authentication</div>
-    <div class="auth-section">
-      <div class="form-row">
-        <input type="password" id="token-input" placeholder="enter api token">
-        <button class="primary" onclick="saveToken()">verify & save</button>
-      </div>
-      <div class="status" id="auth-status"></div>
-    </div>
-  </section>
+            <section class="section" id="list-section" style="display: none">
+                <div class="section-label">active tasks</div>
+                <div
+                    id="todo-list"
+                    style="display: flex; flex-direction: column; gap: 0.75rem"
+                ></div>
+            </section>
+        </main>
 
-  <section class="section" id="todos-section" style="display:none;">
-    <div class="section-label">add task</div>
-    <div class="form-row">
-      <input type="text" id="new-todo" placeholder="what needs to be done?">
-      <button onclick="addTodo()">add</button>
-    </div>
-  </section>
+        <script>
+            const API = "https://ai.erikg.org/api";
+            let TOKEN = localStorage.getItem("ai_token");
 
-  <section class="section" id="list-section" style="display:none;">
-    <div class="section-label">active tasks</div>
-    <div id="todo-list" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
-  </section>
+            async function saveToken() {
+                const input = document.getElementById("token-input");
+                const status = document.getElementById("auth-status");
+                const token = input.value.trim();
 
-</main>
+                if (!token) {
+                    status.textContent = "token required";
+                    status.className = "status error";
+                    return;
+                }
 
-<script>
-const API = 'https://ai.erikg.org/api';
-let TOKEN = localStorage.getItem('ai_token');
+                status.textContent = "verifying...";
+                status.className = "status";
 
-async function saveToken() {
-  const input = document.getElementById('token-input');
-  const status = document.getElementById('auth-status');
-  const token = input.value.trim();
-  
-  if (!token) {
-    status.textContent = 'token required';
-    status.className = 'status error';
-    return;
-  }
+                try {
+                    const res = await fetch(`${API}/data/todos`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
 
-  status.textContent = 'verifying...';
-  status.className = 'status';
+                    if (res.ok) {
+                        localStorage.setItem("ai_token", token);
+                        TOKEN = token;
+                        status.textContent = "token verified and saved";
+                        status.className = "status success";
+                        input.value = "";
 
-  try {
-    const res = await fetch(`${API}/data/todos`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+                        setTimeout(() => {
+                            document.getElementById(
+                                "auth-section",
+                            ).style.display = "none";
+                            document.getElementById(
+                                "todos-section",
+                            ).style.display = "block";
+                            document.getElementById(
+                                "list-section",
+                            ).style.display = "block";
+                            loadTodos();
+                        }, 800);
+                    } else {
+                        status.textContent = "invalid token";
+                        status.className = "status error";
+                    }
+                } catch (e) {
+                    status.textContent = "connection failed";
+                    status.className = "status error";
+                }
+            }
 
-    if (res.ok) {
-      localStorage.setItem('ai_token', token);
-      TOKEN = token;
-      status.textContent = 'token verified and saved';
-      status.className = 'status success';
-      input.value = '';
-      
-      setTimeout(() => {
-        document.getElementById('auth-section').style.display = 'none';
-        document.getElementById('todos-section').style.display = 'block';
-        document.getElementById('list-section').style.display = 'block';
-        loadTodos();
-      }, 800);
-    } else {
-      status.textContent = 'invalid token';
-      status.className = 'status error';
-    }
-  } catch (e) {
-    status.textContent = 'connection failed';
-    status.className = 'status error';
-  }
-}
+            async function loadTodos() {
+                if (!TOKEN) return;
 
-async function loadTodos() {
-  if (!TOKEN) return;
+                try {
+                    const res = await fetch(`${API}/data/todos`, {
+                        headers: { Authorization: `Bearer ${TOKEN}` },
+                    });
+                    const { data } = await res.json();
+                    const todos = data || [];
+                    renderTodos(todos);
+                } catch (e) {
+                    console.error("failed to load todos:", e);
+                }
+            }
 
-  try {
-    const res = await fetch(`${API}/data/todos`, {
-      headers: { 'Authorization': `Bearer ${TOKEN}` }
-    });
-    const { data } = await res.json();
-    const todos = data || [];
-    renderTodos(todos);
-  } catch (e) {
-    console.error('failed to load todos:', e);
-  }
-}
-
-function renderTodos(todos) {
-  const list = document.getElementById('todo-list');
-  list.innerHTML = todos.map((todo, i) => `
-    <div class="todo-item ${todo.done ? 'done' : ''}" style="animation-delay:${i * 0.05}s">
-      <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo('${todo.id}')">
+            function renderTodos(todos) {
+                const list = document.getElementById("todo-list");
+                list.innerHTML = todos
+                    .map(
+                        (todo, i) => `
+    <div class="todo-item ${todo.done ? "done" : ""}" style="animation-delay:${i * 0.05}s">
+      <input type="checkbox" ${todo.done ? "checked" : ""} onchange="toggleTodo('${todo.id}')">
       <span>${todo.text}</span>
       <button class="danger" onclick="deleteTodo('${todo.id}')">delete</button>
     </div>
-  `).join('');
-}
+  `,
+                    )
+                    .join("");
+            }
 
-async function addTodo() {
-  const input = document.getElementById('new-todo');
-  const text = input.value.trim();
-  if (!text) return;
+            async function addTodo() {
+                const input = document.getElementById("new-todo");
+                const text = input.value.trim();
+                if (!text) return;
 
-  try {
-    const res = await fetch(`${API}/data/todos`, {
-      headers: { 'Authorization': `Bearer ${TOKEN}` }
-    });
-    const { data } = await res.json();
-    const todos = data || [];
+                try {
+                    const res = await fetch(`${API}/data/todos`, {
+                        headers: { Authorization: `Bearer ${TOKEN}` },
+                    });
+                    const { data } = await res.json();
+                    const todos = data || [];
 
-    const newTodo = { id: Date.now().toString(), text, done: false };
-    todos.push(newTodo);
+                    const newTodo = {
+                        id: Date.now().toString(),
+                        text,
+                        done: false,
+                    };
+                    todos.push(newTodo);
 
-    await fetch(`${API}/data/todos`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(todos)
-    });
+                    await fetch(`${API}/data/todos`, {
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${TOKEN}`,
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(todos),
+                    });
 
-    input.value = '';
-    renderTodos(todos);
-  } catch (e) {
-    console.error('failed to add todo:', e);
-  }
-}
+                    input.value = "";
+                    renderTodos(todos);
+                } catch (e) {
+                    console.error("failed to add todo:", e);
+                }
+            }
 
-async function toggleTodo(id) {
-  try {
-    const res = await fetch(`${API}/data/todos`, {
-      headers: { 'Authorization': `Bearer ${TOKEN}` }
-    });
-    const { data } = await res.json();
-    const todos = data || [];
+            async function toggleTodo(id) {
+                try {
+                    const res = await fetch(`${API}/data/todos`, {
+                        headers: { Authorization: `Bearer ${TOKEN}` },
+                    });
+                    const { data } = await res.json();
+                    const todos = data || [];
 
-    const todo = todos.find(t => t.id === id);
-    if (todo) todo.done = !todo.done;
+                    const todo = todos.find((t) => t.id === id);
+                    if (todo) todo.done = !todo.done;
 
-    await fetch(`${API}/data/todos`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(todos)
-    });
+                    await fetch(`${API}/data/todos`, {
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${TOKEN}`,
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(todos),
+                    });
 
-    renderTodos(todos);
-  } catch (e) {
-    console.error('failed to toggle todo:', e);
-  }
-}
+                    renderTodos(todos);
+                } catch (e) {
+                    console.error("failed to toggle todo:", e);
+                }
+            }
 
-async function deleteTodo(id) {
-  try {
-    const res = await fetch(`${API}/data/todos`, {
-      headers: { 'Authorization': `Bearer ${TOKEN}` }
-    });
-    const { data } = await res.json();
-    const todos = data || [];
+            async function deleteTodo(id) {
+                try {
+                    const res = await fetch(`${API}/data/todos`, {
+                        headers: { Authorization: `Bearer ${TOKEN}` },
+                    });
+                    const { data } = await res.json();
+                    const todos = data || [];
 
-    const filtered = todos.filter(t => t.id !== id);
+                    const filtered = todos.filter((t) => t.id !== id);
 
-    await fetch(`${API}/data/todos`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(filtered)
-    });
+                    await fetch(`${API}/data/todos`, {
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${TOKEN}`,
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(filtered),
+                    });
 
-    renderTodos(filtered);
-  } catch (e) {
-    console.error('failed to delete todo:', e);
-  }
-}
+                    renderTodos(filtered);
+                } catch (e) {
+                    console.error("failed to delete todo:", e);
+                }
+            }
 
-// Initialize
-if (TOKEN) {
-  document.getElementById('auth-section').style.display = 'none';
-  document.getElementById('todos-section').style.display = 'block';
-  document.getElementById('list-section').style.display = 'block';
-  loadTodos();
-}
-</script>
-
-</body>
+            // Initialize
+            if (TOKEN) {
+                document.getElementById("auth-section").style.display = "none";
+                document.getElementById("todos-section").style.display =
+                    "block";
+                document.getElementById("list-section").style.display = "block";
+                loadTodos();
+            }
+        </script>
+    </body>
 </html>

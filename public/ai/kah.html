@@ -1,535 +1,1018 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Ka'h</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap');
-:root{--bg:#0e0e0e;--fg:#e8e0d0;--dim:#52504a;--acc:#c8922a;--border:#1c1c1c;}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);color:var(--fg);font-family:'DM Mono',monospace;font-weight:300;display:flex;flex-direction:column;align-items:center;min-height:100svh;padding:10px 8px;}
-h1{font-size:10px;letter-spacing:0.2em;color:var(--acc);font-weight:300;margin-bottom:8px;}
-#sb{font-size:10px;color:var(--dim);margin-bottom:5px;min-height:1.2em;text-align:center;letter-spacing:0.04em;}
-#scores{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:6px;}
-.sp{padding:1px 9px;border-radius:20px;font-size:10px;border:1px solid;}
-canvas{display:block;touch-action:none;border-radius:6px;cursor:pointer;}
-#msg{font-size:10px;color:var(--dim);margin-top:5px;min-height:1.2em;text-align:center;}
-#cds{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px;justify-content:center;}
-.cd{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;}
-.cdbg{width:36px;height:3px;background:#1c1c1c;border-radius:2px;overflow:hidden;}
-.cdbar{height:3px;border-radius:2px;}
-#qbar{font-size:9px;color:var(--dim);margin-top:5px;text-align:center;min-height:1em;}
-#specbadge{display:none;font-size:9px;color:var(--dim);border:1px solid var(--border);padding:2px 9px;border-radius:20px;margin-bottom:5px;}
-#roomlink{font-size:9px;color:var(--dim);margin-top:10px;cursor:pointer;border-bottom:1px solid transparent;transition:0.2s;}
-#roomlink:hover{color:var(--acc);border-bottom:1px solid var(--acc);}
-</style>
-</head>
-<body>
-<h1>KA'H</h1>
-<div id="specbadge">spectating — queue: <span id="qpos">?</span></div>
-<div id="sb">loading…</div>
-<div id="scores"></div>
-<canvas id="c"></canvas>
-<div id="msg"></div>
-<div id="cds"></div>
-<div id="qbar"></div>
-<div id="roomlink" onclick="copyLink()"></div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no"
+        />
+        <title>Ka'h</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap");
+            :root {
+                --bg: #0e0e0e;
+                --fg: #e8e0d0;
+                --dim: #52504a;
+                --acc: #c8922a;
+                --border: #1c1c1c;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                -webkit-tap-highlight-color: transparent;
+            }
+            body {
+                background: var(--bg);
+                color: var(--fg);
+                font-family: "DM Mono", monospace;
+                font-weight: 300;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 100svh;
+                padding: 10px 8px;
+            }
+            h1 {
+                font-size: 10px;
+                letter-spacing: 0.2em;
+                color: var(--acc);
+                font-weight: 300;
+                margin-bottom: 8px;
+            }
+            #sb {
+                font-size: 10px;
+                color: var(--dim);
+                margin-bottom: 5px;
+                min-height: 1.2em;
+                text-align: center;
+                letter-spacing: 0.04em;
+            }
+            #scores {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                justify-content: center;
+                margin-bottom: 6px;
+            }
+            .sp {
+                padding: 1px 9px;
+                border-radius: 20px;
+                font-size: 10px;
+                border: 1px solid;
+            }
+            canvas {
+                display: block;
+                touch-action: none;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+            #msg {
+                font-size: 10px;
+                color: var(--dim);
+                margin-top: 5px;
+                min-height: 1.2em;
+                text-align: center;
+            }
+            #cds {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 7px;
+                margin-top: 5px;
+                justify-content: center;
+            }
+            .cd {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+                font-size: 9px;
+            }
+            .cdbg {
+                width: 36px;
+                height: 3px;
+                background: #1c1c1c;
+                border-radius: 2px;
+                overflow: hidden;
+            }
+            .cdbar {
+                height: 3px;
+                border-radius: 2px;
+            }
+            #qbar {
+                font-size: 9px;
+                color: var(--dim);
+                margin-top: 5px;
+                text-align: center;
+                min-height: 1em;
+            }
+            #specbadge {
+                display: none;
+                font-size: 9px;
+                color: var(--dim);
+                border: 1px solid var(--border);
+                padding: 2px 9px;
+                border-radius: 20px;
+                margin-bottom: 5px;
+            }
+            #roomlink {
+                font-size: 9px;
+                color: var(--dim);
+                margin-top: 10px;
+                cursor: pointer;
+                border-bottom: 1px solid transparent;
+                transition: 0.2s;
+            }
+            #roomlink:hover {
+                color: var(--acc);
+                border-bottom: 1px solid var(--acc);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>KA'H</h1>
+        <div id="specbadge">spectating — queue: <span id="qpos">?</span></div>
+        <div id="sb">loading…</div>
+        <div id="scores"></div>
+        <canvas id="c"></canvas>
+        <div id="msg"></div>
+        <div id="cds"></div>
+        <div id="qbar"></div>
+        <div id="roomlink" onclick="copyLink()"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"></script>
-<script>
-// ── Constants ─────────────────────────────────────────────────────────────
-const GRID_R=5, COOLDOWN=1300, BALL_CD=900, MAX_PLAYERS=6;
-const PDEFS=[
-  {label:'P1',color:'#e05a2b'},{label:'P2',color:'#3a8fd4'},
-  {label:'P3',color:'#4caf50'},{label:'P4',color:'#c8922a'},
-  {label:'P5',color:'#b06ec7'},{label:'P6',color:'#e8488a'}
-];
-const HEX_DIRS=[[1,0],[1,-1],[0,-1],[-1,0],[-1,1],[0,1]];
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"></script>
+        <script>
+            // ── Constants ─────────────────────────────────────────────────────────────
+            const GRID_R = 5,
+                COOLDOWN = 1300,
+                BALL_CD = 900,
+                MAX_PLAYERS = 6;
+            const PDEFS = [
+                { label: "P1", color: "#e05a2b" },
+                { label: "P2", color: "#3a8fd4" },
+                { label: "P3", color: "#4caf50" },
+                { label: "P4", color: "#c8922a" },
+                { label: "P5", color: "#b06ec7" },
+                { label: "P6", color: "#e8488a" },
+            ];
+            const HEX_DIRS = [
+                [1, 0],
+                [1, -1],
+                [0, -1],
+                [-1, 0],
+                [-1, 1],
+                [0, 1],
+            ];
 
-// ── Hex math ──────────────────────────────────────────────────────────────
-const aAdd=([q,r],[dq,dr])=>[q+dq,r+dr];
-const aEq=([q1,r1],[q2,r2])=>q1===q2&&r1===r2;
-const aKey=([q,r])=>q+','+r;
-const aDist=([q1,r1],[q2,r2])=>(Math.abs(q1-q2)+Math.abs(q1+r1-q2-r2)+Math.abs(r1-r2))/2;
+            // ── Hex math ──────────────────────────────────────────────────────────────
+            const aAdd = ([q, r], [dq, dr]) => [q + dq, r + dr];
+            const aEq = ([q1, r1], [q2, r2]) => q1 === q2 && r1 === r2;
+            const aKey = ([q, r]) => q + "," + r;
+            const aDist = ([q1, r1], [q2, r2]) =>
+                (Math.abs(q1 - q2) +
+                    Math.abs(q1 + r1 - q2 - r2) +
+                    Math.abs(r1 - r2)) /
+                2;
 
-function genBoard(rad){
-  const c=[];
-  for(let q=-rad;q<=rad;q++)
-    for(let r=Math.max(-rad,-q-rad);r<=Math.min(rad,-q+rad);r++)
-      c.push([q,r]);
-  return c;
-}
-const BOARD=genBoard(GRID_R);
-const BSET=new Set(BOARD.map(aKey));
-const EDGE=BOARD.filter(([q,r])=>Math.max(Math.abs(q),Math.abs(r),Math.abs(-q-r))===GRID_R);
+            function genBoard(rad) {
+                const c = [];
+                for (let q = -rad; q <= rad; q++)
+                    for (
+                        let r = Math.max(-rad, -q - rad);
+                        r <= Math.min(rad, -q + rad);
+                        r++
+                    )
+                        c.push([q, r]);
+                return c;
+            }
+            const BOARD = genBoard(GRID_R);
+            const BSET = new Set(BOARD.map(aKey));
+            const EDGE = BOARD.filter(
+                ([q, r]) =>
+                    Math.max(Math.abs(q), Math.abs(r), Math.abs(-q - r)) ===
+                    GRID_R,
+            );
 
-function goalSlice(pi,n){
-  const ang=(2*Math.PI/n)*pi-Math.PI/2;
-  return [...EDGE].sort((a,b)=>{
-    let da=Math.abs(Math.atan2(a[1],a[0])-ang);
-    let db=Math.abs(Math.atan2(b[1],b[0])-ang);
-    if(da>Math.PI)da=2*Math.PI-da;
-    if(db>Math.PI)db=2*Math.PI-db;
-    return da-db;
-  }).slice(0,3);
-}
-function buildGoalMap(n){const m={};for(let i=0;i<n;i++)goalSlice(i,n).forEach(h=>{m[aKey(h)]=i;});return m;}
-function mkPieces(pi,n){return goalSlice(pi,n).map(pos=>({pos:[...pos],cd:0}));}
-function hexRound([q,r]){
-  const s=-q-r;
-  let rq=Math.round(q),rr=Math.round(r),rs=Math.round(s);
-  const dq=Math.abs(rq-q),dr=Math.abs(rr-r),ds=Math.abs(rs-s);
-  if(dq>dr&&dq>ds)rq=-rr-rs; else if(dr>ds)rr=-rq-rs;
-  return[rq,rr];
-}
+            function goalSlice(pi, n) {
+                const ang = ((2 * Math.PI) / n) * pi - Math.PI / 2;
+                return [...EDGE]
+                    .sort((a, b) => {
+                        let da = Math.abs(Math.atan2(a[1], a[0]) - ang);
+                        let db = Math.abs(Math.atan2(b[1], b[0]) - ang);
+                        if (da > Math.PI) da = 2 * Math.PI - da;
+                        if (db > Math.PI) db = 2 * Math.PI - db;
+                        return da - db;
+                    })
+                    .slice(0, 3);
+            }
+            function buildGoalMap(n) {
+                const m = {};
+                for (let i = 0; i < n; i++)
+                    goalSlice(i, n).forEach((h) => {
+                        m[aKey(h)] = i;
+                    });
+                return m;
+            }
+            function mkPieces(pi, n) {
+                return goalSlice(pi, n).map((pos) => ({
+                    pos: [...pos],
+                    cd: 0,
+                }));
+            }
+            function hexRound([q, r]) {
+                const s = -q - r;
+                let rq = Math.round(q),
+                    rr = Math.round(r),
+                    rs = Math.round(s);
+                const dq = Math.abs(rq - q),
+                    dr = Math.abs(rr - r),
+                    ds = Math.abs(rs - s);
+                if (dq > dr && dq > ds) rq = -rr - rs;
+                else if (dr > ds) rr = -rq - rs;
+                return [rq, rr];
+            }
 
-// ── Canvas ────────────────────────────────────────────────────────────────
-const cv=document.getElementById('c');
-const cx=cv.getContext('2d');
-let CW,CH,R;
-function resize(){
-  const w=Math.min(window.innerWidth-16,500);
-  CW=CH=w; R=Math.max(14,Math.floor(w/26));
-  cv.width=CW; cv.height=CH;
-}
-resize();
-window.addEventListener('resize',resize);
-const HW=()=>R*Math.sqrt(3), HH=()=>R*1.5, OX=()=>CW/2, OY=()=>CH/2;
-function hcen([q,r]){return[OX()+q*HW()+r*HW()/2, OY()+r*HH()];}
-function hcorn(x,y,r){return Array.from({length:6},(_,i)=>{const a=Math.PI/3*i+Math.PI/6;return[x+r*Math.cos(a),y+r*Math.sin(a)];});}
-function p2h(px,py){const x=px-OX(),y=py-OY();return hexRound([(x*Math.sqrt(3)/3-y/3)/R,y*2/3/R]);}
-function dHex(x,y,r,fill,stroke,sw=1){
-  const c=hcorn(x,y,r-1);
-  cx.beginPath();cx.moveTo(...c[0]);c.slice(1).forEach(p=>cx.lineTo(...p));cx.closePath();
-  cx.fillStyle=fill;cx.fill();
-  if(stroke){cx.strokeStyle=stroke;cx.lineWidth=sw;cx.stroke();}
-}
+            // ── Canvas ────────────────────────────────────────────────────────────────
+            const cv = document.getElementById("c");
+            const cx = cv.getContext("2d");
+            let CW, CH, R;
+            function resize() {
+                const w = Math.min(window.innerWidth - 16, 500);
+                CW = CH = w;
+                R = Math.max(14, Math.floor(w / 26));
+                cv.width = CW;
+                cv.height = CH;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+            const HW = () => R * Math.sqrt(3),
+                HH = () => R * 1.5,
+                OX = () => CW / 2,
+                OY = () => CH / 2;
+            function hcen([q, r]) {
+                return [OX() + q * HW() + (r * HW()) / 2, OY() + r * HH()];
+            }
+            function hcorn(x, y, r) {
+                return Array.from({ length: 6 }, (_, i) => {
+                    const a = (Math.PI / 3) * i + Math.PI / 6;
+                    return [x + r * Math.cos(a), y + r * Math.sin(a)];
+                });
+            }
+            function p2h(px, py) {
+                const x = px - OX(),
+                    y = py - OY();
+                return hexRound([
+                    ((x * Math.sqrt(3)) / 3 - y / 3) / R,
+                    (y * 2) / 3 / R,
+                ]);
+            }
+            function dHex(x, y, r, fill, stroke, sw = 1) {
+                const c = hcorn(x, y, r - 1);
+                cx.beginPath();
+                cx.moveTo(...c[0]);
+                c.slice(1).forEach((p) => cx.lineTo(...p));
+                cx.closePath();
+                cx.fillStyle = fill;
+                cx.fill();
+                if (stroke) {
+                    cx.strokeStyle = stroke;
+                    cx.lineWidth = sw;
+                    cx.stroke();
+                }
+            }
 
-// ── Game state ────────────────────────────────────────────────────────────
-let gs={ball:[0,0],ballCd:0,players:[],scores:[],n:0,gm:{},celebrating:false};
+            // ── Game state ────────────────────────────────────────────────────────────
+            let gs = {
+                ball: [0, 0],
+                ballCd: 0,
+                players: [],
+                scores: [],
+                n: 0,
+                gm: {},
+                celebrating: false,
+            };
 
-function allPc(){return gs.players.flatMap(p=>p.pieces);}
-function isOcc(h){return allPc().some(p=>aEq(p.pos,h));}
-function adjPow(pi,now){
-  if(!gs.players[pi])return 0;
-  return gs.players[pi].pieces.filter(p=>aDist(p.pos,gs.ball)===1&&p.cd<=now).length;
-}
-function ballReach(from,range,occFn){
-  const res=new Map(), q=[{h:from,s:0,path:[from]}];
-  while(q.length){
-    const{h,s,path}=q.shift();
-    if(s>0){const k=aKey(h);if(!res.has(k))res.set(k,path);}
-    if(s>=range)continue;
-    for(const d of HEX_DIRS){
-      const nb=aAdd(h,d);
-      if(!BSET.has(aKey(nb)))continue;
-      if(occFn(nb))continue;
-      if(path.some(p=>aEq(p,nb)))continue;
-      q.push({h:nb,s:s+1,path:[...path,nb]});
-    }
-  }
-  res.delete(aKey(from));
-  return res;
-}
-function validMoves(piece){
-  return HEX_DIRS.map(d=>aAdd(piece.pos,d))
-    .filter(h=>BSET.has(aKey(h))&&!aEq(h,gs.ball)&&!isOcc(h));
-}
-function rebuild(){
-  const n=gs.n; if(!n)return;
-  gs.gm=buildGoalMap(n); gs.ball=[0,0]; gs.ballCd=0;
-  gs.players.forEach((p,i)=>{p.pieces=mkPieces(i,n);});
-}
-function serial(){
-  return JSON.parse(JSON.stringify({
-    ball:gs.ball,ballCd:gs.ballCd,
-    players:gs.players.map(p=>({label:p.label,color:p.color,idx:p.idx,
-      pieces:p.pieces.map(pc=>({pos:pc.pos,cd:pc.cd}))})),
-    scores:gs.scores,n:gs.n,gm:gs.gm,celebrating:gs.celebrating
-  }));
-}
+            function allPc() {
+                return gs.players.flatMap((p) => p.pieces);
+            }
+            function isOcc(h) {
+                return allPc().some((p) => aEq(p.pos, h));
+            }
+            function adjPow(pi, now) {
+                if (!gs.players[pi]) return 0;
+                return gs.players[pi].pieces.filter(
+                    (p) => aDist(p.pos, gs.ball) === 1 && p.cd <= now,
+                ).length;
+            }
+            function ballReach(from, range, occFn) {
+                const res = new Map(),
+                    q = [{ h: from, s: 0, path: [from] }];
+                while (q.length) {
+                    const { h, s, path } = q.shift();
+                    if (s > 0) {
+                        const k = aKey(h);
+                        if (!res.has(k)) res.set(k, path);
+                    }
+                    if (s >= range) continue;
+                    for (const d of HEX_DIRS) {
+                        const nb = aAdd(h, d);
+                        if (!BSET.has(aKey(nb))) continue;
+                        if (occFn(nb)) continue;
+                        if (path.some((p) => aEq(p, nb))) continue;
+                        q.push({ h: nb, s: s + 1, path: [...path, nb] });
+                    }
+                }
+                res.delete(aKey(from));
+                return res;
+            }
+            function validMoves(piece) {
+                return HEX_DIRS.map((d) => aAdd(piece.pos, d)).filter(
+                    (h) => BSET.has(aKey(h)) && !aEq(h, gs.ball) && !isOcc(h),
+                );
+            }
+            function rebuild() {
+                const n = gs.n;
+                if (!n) return;
+                gs.gm = buildGoalMap(n);
+                gs.ball = [0, 0];
+                gs.ballCd = 0;
+                gs.players.forEach((p, i) => {
+                    p.pieces = mkPieces(i, n);
+                });
+            }
+            function serial() {
+                return JSON.parse(
+                    JSON.stringify({
+                        ball: gs.ball,
+                        ballCd: gs.ballCd,
+                        players: gs.players.map((p) => ({
+                            label: p.label,
+                            color: p.color,
+                            idx: p.idx,
+                            pieces: p.pieces.map((pc) => ({
+                                pos: pc.pos,
+                                cd: pc.cd,
+                            })),
+                        })),
+                        scores: gs.scores,
+                        n: gs.n,
+                        gm: gs.gm,
+                        celebrating: gs.celebrating,
+                    }),
+                );
+            }
 
-// ── Host actions ──────────────────────────────────────────────────────────
-let clientConns=[], peerQueue=[];
+            // ── Host actions ──────────────────────────────────────────────────────────
+            let clientConns = [],
+                peerQueue = [];
 
-function bcast(d){clientConns.forEach(c=>{try{c.send(d);}catch(e){}});}
-function bcastState(){bcast({type:'state',gs:serial()});applyGs(serial());}
-function bcastQueue(){bcast({type:'queue',q:[...peerQueue]});renderQueue();}
+            function bcast(d) {
+                clientConns.forEach((c) => {
+                    try {
+                        c.send(d);
+                    } catch (e) {}
+                });
+            }
+            function bcastState() {
+                bcast({ type: "state", gs: serial() });
+                applyGs(serial());
+            }
+            function bcastQueue() {
+                bcast({ type: "queue", q: [...peerQueue] });
+                renderQueue();
+            }
 
-function hostAdd(pid){
-  if(gs.n>=MAX_PLAYERS){
-    if(!peerQueue.includes(pid))peerQueue.push(pid);
-    const c=clientConns.find(c=>c.peer===pid);
-    if(c)c.send({type:'assign',idx:-1,qpos:peerQueue.indexOf(pid)+1});
-    bcastQueue(); return;
-  }
-  const i=gs.n++;
-  gs.scores.push(0);
-  const def=PDEFS[i];
-  gs.players.push({label:def.label,color:def.color,idx:i,
-    pieces:mkPieces(i,gs.n),peerId:pid});
-  rebuild();
-  clientConns.forEach(c=>{
-    const pl=gs.players.find(p=>p.peerId===c.peer);
-    c.send(pl
-      ?{type:'assign',idx:pl.idx,qpos:-1}
-      :{type:'assign',idx:-1,qpos:peerQueue.indexOf(c.peer)+1});
-  });
-  bcastState();
-}
+            function hostAdd(pid) {
+                if (gs.n >= MAX_PLAYERS) {
+                    if (!peerQueue.includes(pid)) peerQueue.push(pid);
+                    const c = clientConns.find((c) => c.peer === pid);
+                    if (c)
+                        c.send({
+                            type: "assign",
+                            idx: -1,
+                            qpos: peerQueue.indexOf(pid) + 1,
+                        });
+                    bcastQueue();
+                    return;
+                }
+                const i = gs.n++;
+                gs.scores.push(0);
+                const def = PDEFS[i];
+                gs.players.push({
+                    label: def.label,
+                    color: def.color,
+                    idx: i,
+                    pieces: mkPieces(i, gs.n),
+                    peerId: pid,
+                });
+                rebuild();
+                clientConns.forEach((c) => {
+                    const pl = gs.players.find((p) => p.peerId === c.peer);
+                    c.send(
+                        pl
+                            ? { type: "assign", idx: pl.idx, qpos: -1 }
+                            : {
+                                  type: "assign",
+                                  idx: -1,
+                                  qpos: peerQueue.indexOf(c.peer) + 1,
+                              },
+                    );
+                });
+                bcastState();
+            }
 
-function hostRemove(pid){
-  const qi=peerQueue.indexOf(pid);
-  if(qi!==-1){peerQueue.splice(qi,1);bcastQueue();return;}
-  const pi=gs.players.findIndex(p=>p.peerId===pid);
-  if(pi===-1)return;
-  gs.players.splice(pi,1); gs.scores.splice(pi,1); gs.n--;
-  gs.players.forEach((p,i)=>{p.idx=i;});
-  if(gs.n>0)rebuild();
-  if(peerQueue.length&&gs.n<MAX_PLAYERS){
-    const nid=peerQueue.shift();
-    const nc=clientConns.find(c=>c.peer===nid);
-    if(nc){
-      const i=gs.n++; gs.scores.push(0); const def=PDEFS[i];
-      gs.players.push({label:def.label,color:def.color,idx:i,
-        pieces:mkPieces(i,gs.n),peerId:nid});
-      if(gs.n>0)rebuild();
-    }
-    bcastQueue();
-  }
-  clientConns.forEach(c=>{
-    const pl=gs.players.find(p=>p.peerId===c.peer);
-    c.send(pl
-      ?{type:'assign',idx:pl.idx,qpos:-1}
-      :{type:'assign',idx:-1,qpos:peerQueue.indexOf(c.peer)+1});
-  });
-  bcastState();
-}
+            function hostRemove(pid) {
+                const qi = peerQueue.indexOf(pid);
+                if (qi !== -1) {
+                    peerQueue.splice(qi, 1);
+                    bcastQueue();
+                    return;
+                }
+                const pi = gs.players.findIndex((p) => p.peerId === pid);
+                if (pi === -1) return;
+                gs.players.splice(pi, 1);
+                gs.scores.splice(pi, 1);
+                gs.n--;
+                gs.players.forEach((p, i) => {
+                    p.idx = i;
+                });
+                if (gs.n > 0) rebuild();
+                if (peerQueue.length && gs.n < MAX_PLAYERS) {
+                    const nid = peerQueue.shift();
+                    const nc = clientConns.find((c) => c.peer === nid);
+                    if (nc) {
+                        const i = gs.n++;
+                        gs.scores.push(0);
+                        const def = PDEFS[i];
+                        gs.players.push({
+                            label: def.label,
+                            color: def.color,
+                            idx: i,
+                            pieces: mkPieces(i, gs.n),
+                            peerId: nid,
+                        });
+                        if (gs.n > 0) rebuild();
+                    }
+                    bcastQueue();
+                }
+                clientConns.forEach((c) => {
+                    const pl = gs.players.find((p) => p.peerId === c.peer);
+                    c.send(
+                        pl
+                            ? { type: "assign", idx: pl.idx, qpos: -1 }
+                            : {
+                                  type: "assign",
+                                  idx: -1,
+                                  qpos: peerQueue.indexOf(c.peer) + 1,
+                              },
+                    );
+                });
+                bcastState();
+            }
 
-function hostMovePiece(pi,ji,target){
-  const now=Date.now();
-  const p=gs.players[pi]; if(!p)return;
-  const pc=p.pieces[ji]; if(!pc||pc.cd>now)return;
-  if(!validMoves(pc).some(h=>aEq(h,target)))return;
-  pc.pos=target; pc.cd=now+COOLDOWN;
-  bcastState();
-}
+            function hostMovePiece(pi, ji, target) {
+                const now = Date.now();
+                const p = gs.players[pi];
+                if (!p) return;
+                const pc = p.pieces[ji];
+                if (!pc || pc.cd > now) return;
+                if (!validMoves(pc).some((h) => aEq(h, target))) return;
+                pc.pos = target;
+                pc.cd = now + COOLDOWN;
+                bcastState();
+            }
 
-function hostMoveBall(pi,target){
-  const now=Date.now();
-  if(gs.ballCd>now)return;
-  const pow=adjPow(pi,now); if(!pow)return;
-  const reach=ballReach(gs.ball,pow,isOcc);
-  if(!reach.has(aKey(target)))return;
-  gs.ball=target; gs.ballCd=now+BALL_CD;
-  bcastState();
-  const gk=aKey(gs.ball);
-  if(gs.gm[gk]!==undefined){
-    const sc=gs.gm[gk];
-    gs.scores[sc]=(gs.scores[sc]||0)+1;
-    gs.celebrating=true; bcastState(); bcast({type:'scored',sc});
-    setTimeout(()=>{rebuild();gs.celebrating=false;bcastState();},2200);
-  }
-}
+            function hostMoveBall(pi, target) {
+                const now = Date.now();
+                if (gs.ballCd > now) return;
+                const pow = adjPow(pi, now);
+                if (!pow) return;
+                const reach = ballReach(gs.ball, pow, isOcc);
+                if (!reach.has(aKey(target))) return;
+                gs.ball = target;
+                gs.ballCd = now + BALL_CD;
+                bcastState();
+                const gk = aKey(gs.ball);
+                if (gs.gm[gk] !== undefined) {
+                    const sc = gs.gm[gk];
+                    gs.scores[sc] = (gs.scores[sc] || 0) + 1;
+                    gs.celebrating = true;
+                    bcastState();
+                    bcast({ type: "scored", sc });
+                    setTimeout(() => {
+                        rebuild();
+                        gs.celebrating = false;
+                        bcastState();
+                    }, 2200);
+                }
+            }
 
-function handleFromClient(pid,d){
-  if(d.type==='movePiece'){
-    const p=gs.players[d.pi];
-    if(p&&p.peerId===pid)hostMovePiece(d.pi,d.ji,d.target);
-  }
-  if(d.type==='moveBall'){
-    const p=gs.players[d.pi];
-    if(p&&p.peerId===pid)hostMoveBall(d.pi,d.target);
-  }
-}
+            function handleFromClient(pid, d) {
+                if (d.type === "movePiece") {
+                    const p = gs.players[d.pi];
+                    if (p && p.peerId === pid)
+                        hostMovePiece(d.pi, d.ji, d.target);
+                }
+                if (d.type === "moveBall") {
+                    const p = gs.players[d.pi];
+                    if (p && p.peerId === pid) hostMoveBall(d.pi, d.target);
+                }
+            }
 
-// ── Client state ──────────────────────────────────────────────────────────
-let lgs=null, myIdx=-1, sel=null, msg='', myQueue=[];
-let peer, isHost=false, hConn=null, myId=null;
+            // ── Client state ──────────────────────────────────────────────────────────
+            let lgs = null,
+                myIdx = -1,
+                sel = null,
+                msg = "",
+                myQueue = [];
+            let peer,
+                isHost = false,
+                hConn = null,
+                myId = null;
 
-function applyGs(data){lgs=data;renderScores();}
-function sendUp(d){
-  if(isHost)handleFromClient(myId,d);
-  else if(hConn&&hConn.open)hConn.send(d);
-}
+            function applyGs(data) {
+                lgs = data;
+                renderScores();
+            }
+            function sendUp(d) {
+                if (isHost) handleFromClient(myId, d);
+                else if (hConn && hConn.open) hConn.send(d);
+            }
 
-// ── Input ─────────────────────────────────────────────────────────────────
-cv.addEventListener('pointerdown',e=>{
-  if(!lgs||lgs.celebrating||myIdx===-1)return;
-  e.preventDefault();
-  const rect=cv.getBoundingClientRect();
-  const px=(e.clientX-rect.left)*CW/rect.width;
-  const py=(e.clientY-rect.top)*CH/rect.height;
-  const h=p2h(px,py);
-  if(!BSET.has(aKey(h)))return;
-  const now=Date.now();
-  const myPl=lgs.players[myIdx]; if(!myPl)return;
-  const allPcs=lgs.players.flatMap(p=>p.pieces);
-  const occ=hex=>allPcs.some(p=>aEq(p.pos,hex));
+            // ── Input ─────────────────────────────────────────────────────────────────
+            cv.addEventListener("pointerdown", (e) => {
+                if (!lgs || lgs.celebrating || myIdx === -1) return;
+                e.preventDefault();
+                const rect = cv.getBoundingClientRect();
+                const px = ((e.clientX - rect.left) * CW) / rect.width;
+                const py = ((e.clientY - rect.top) * CH) / rect.height;
+                const h = p2h(px, py);
+                if (!BSET.has(aKey(h))) return;
+                const now = Date.now();
+                const myPl = lgs.players[myIdx];
+                if (!myPl) return;
+                const allPcs = lgs.players.flatMap((p) => p.pieces);
+                const occ = (hex) => allPcs.some((p) => aEq(p.pos, hex));
 
-  if(sel&&sel.type==='ball'){
-    const reach=ballReach(lgs.ball,sel.range,occ);
-    if(reach.has(aKey(h))){sendUp({type:'moveBall',pi:myIdx,target:h});sel=null;msg='';return;}
-    sel=null;msg='';return;
-  }
-  if(sel&&sel.type==='piece'){
-    const pc=myPl.pieces[sel.ji];
-    const moves=HEX_DIRS.map(d=>aAdd(pc.pos,d))
-      .filter(h2=>BSET.has(aKey(h2))&&!aEq(h2,lgs.ball)&&!occ(h2));
-    if(moves.some(m=>aEq(m,h))){sendUp({type:'movePiece',pi:myIdx,ji:sel.ji,target:h});sel=null;msg='';return;}
-    sel=null;msg='';return;
-  }
-  if(aEq(h,lgs.ball)){
-    if((lgs.ballCd||0)>now){msg='ball cooling…';return;}
-    const pow=myPl.pieces.filter(pc=>aDist(pc.pos,lgs.ball)===1&&(pc.cd||0)<=now).length;
-    if(!pow){msg='get adjacent first';return;}
-    sel={type:'ball',range:pow};
-    msg='tap destination ('+pow+'× range)';
-    return;
-  }
-  for(let ji=0;ji<myPl.pieces.length;ji++){
-    const pc=myPl.pieces[ji];
-    if(aEq(pc.pos,h)){
-      if((pc.cd||0)<=now){sel={type:'piece',ji};msg='tap destination';}
-      else msg='cooling…';
-      return;
-    }
-  }
-  sel=null;msg='';
-});
+                if (sel && sel.type === "ball") {
+                    const reach = ballReach(lgs.ball, sel.range, occ);
+                    if (reach.has(aKey(h))) {
+                        sendUp({ type: "moveBall", pi: myIdx, target: h });
+                        sel = null;
+                        msg = "";
+                        return;
+                    }
+                    sel = null;
+                    msg = "";
+                    return;
+                }
+                if (sel && sel.type === "piece") {
+                    const pc = myPl.pieces[sel.ji];
+                    const moves = HEX_DIRS.map((d) => aAdd(pc.pos, d)).filter(
+                        (h2) =>
+                            BSET.has(aKey(h2)) &&
+                            !aEq(h2, lgs.ball) &&
+                            !occ(h2),
+                    );
+                    if (moves.some((m) => aEq(m, h))) {
+                        sendUp({
+                            type: "movePiece",
+                            pi: myIdx,
+                            ji: sel.ji,
+                            target: h,
+                        });
+                        sel = null;
+                        msg = "";
+                        return;
+                    }
+                    sel = null;
+                    msg = "";
+                    return;
+                }
+                if (aEq(h, lgs.ball)) {
+                    if ((lgs.ballCd || 0) > now) {
+                        msg = "ball cooling…";
+                        return;
+                    }
+                    const pow = myPl.pieces.filter(
+                        (pc) =>
+                            aDist(pc.pos, lgs.ball) === 1 &&
+                            (pc.cd || 0) <= now,
+                    ).length;
+                    if (!pow) {
+                        msg = "get adjacent first";
+                        return;
+                    }
+                    sel = { type: "ball", range: pow };
+                    msg = "tap destination (" + pow + "× range)";
+                    return;
+                }
+                for (let ji = 0; ji < myPl.pieces.length; ji++) {
+                    const pc = myPl.pieces[ji];
+                    if (aEq(pc.pos, h)) {
+                        if ((pc.cd || 0) <= now) {
+                            sel = { type: "piece", ji };
+                            msg = "tap destination";
+                        } else msg = "cooling…";
+                        return;
+                    }
+                }
+                sel = null;
+                msg = "";
+            });
 
-// ── Render ────────────────────────────────────────────────────────────────
-function setSb(t){document.getElementById('sb').textContent=t;}
-function renderScores(){
-  if(!lgs){document.getElementById('scores').innerHTML='';return;}
-  document.getElementById('scores').innerHTML=lgs.players
-    .map((p,i)=>`<div class="sp" style="background:${p.color}22;color:${p.color};border-color:${p.color}55">${p.label} ${lgs.scores[i]||0}</div>`)
-    .join('');
-}
-function renderQueue(){
-  document.getElementById('qbar').textContent=myQueue.length?myQueue.length+' in queue':'';
-}
-function renderCDs(now){
-  if(!lgs){document.getElementById('cds').innerHTML='';return;}
-  const br=Math.max(0,(lgs.ballCd||0)-now);
-  document.getElementById('cds').innerHTML=
-    `<div class="cd" style="color:#52504a">ball<div class="cdbg"><div class="cdbar" style="width:${Math.min(100,(1-br/BALL_CD)*100).toFixed(0)}%;background:#52504a"></div></div></div>`+
-    lgs.players.map(pl=>`<div class="cd" style="color:${pl.color}">${pl.label}${
-      pl.pieces.map(pc=>{
-        const rem=Math.max(0,(pc.cd||0)-now);
-        return`<div class="cdbg"><div class="cdbar" style="width:${Math.min(100,(1-rem/COOLDOWN)*100).toFixed(0)}%;background:${pl.color}"></div></div>`;
-      }).join('')
-    }</div>`).join('');
-}
+            // ── Render ────────────────────────────────────────────────────────────────
+            function setSb(t) {
+                document.getElementById("sb").textContent = t;
+            }
+            function renderScores() {
+                if (!lgs) {
+                    document.getElementById("scores").innerHTML = "";
+                    return;
+                }
+                document.getElementById("scores").innerHTML = lgs.players
+                    .map(
+                        (p, i) =>
+                            `<div class="sp" style="background:${p.color}22;color:${p.color};border-color:${p.color}55">${p.label} ${lgs.scores[i] || 0}</div>`,
+                    )
+                    .join("");
+            }
+            function renderQueue() {
+                document.getElementById("qbar").textContent = myQueue.length
+                    ? myQueue.length + " in queue"
+                    : "";
+            }
+            function renderCDs(now) {
+                if (!lgs) {
+                    document.getElementById("cds").innerHTML = "";
+                    return;
+                }
+                const br = Math.max(0, (lgs.ballCd || 0) - now);
+                document.getElementById("cds").innerHTML =
+                    `<div class="cd" style="color:#52504a">ball<div class="cdbg"><div class="cdbar" style="width:${Math.min(100, (1 - br / BALL_CD) * 100).toFixed(0)}%;background:#52504a"></div></div></div>` +
+                    lgs.players
+                        .map(
+                            (pl) =>
+                                `<div class="cd" style="color:${pl.color}">${pl.label}${pl.pieces
+                                    .map((pc) => {
+                                        const rem = Math.max(
+                                            0,
+                                            (pc.cd || 0) - now,
+                                        );
+                                        return `<div class="cdbg"><div class="cdbar" style="width:${Math.min(100, (1 - rem / COOLDOWN) * 100).toFixed(0)}%;background:${pl.color}"></div></div>`;
+                                    })
+                                    .join("")}</div>`,
+                        )
+                        .join("");
+            }
 
-function draw(now){
-  cx.clearRect(0,0,CW,CH);
-  const gm=lgs?lgs.gm:{};
-  const n=lgs?lgs.n:0;
+            function draw(now) {
+                cx.clearRect(0, 0, CW, CH);
+                const gm = lgs ? lgs.gm : {};
+                const n = lgs ? lgs.n : 0;
 
-  BOARD.forEach(h=>{
-    const[x,y]=hcen(h); const gk=aKey(h);
-    let fill='#181818',stroke='#242424',sw=1;
-    if(gm[gk]!==undefined&&lgs&&lgs.players[gm[gk]]){
-      const col=lgs.players[gm[gk]].color;
-      fill=col+'22';stroke=col+'66';sw=2;
-    }
-    dHex(x,y,R,fill,stroke,sw);
-  });
+                BOARD.forEach((h) => {
+                    const [x, y] = hcen(h);
+                    const gk = aKey(h);
+                    let fill = "#181818",
+                        stroke = "#242424",
+                        sw = 1;
+                    if (gm[gk] !== undefined && lgs && lgs.players[gm[gk]]) {
+                        const col = lgs.players[gm[gk]].color;
+                        fill = col + "22";
+                        stroke = col + "66";
+                        sw = 2;
+                    }
+                    dHex(x, y, R, fill, stroke, sw);
+                });
 
-  if(lgs&&n>0)lgs.players.forEach((pl,i)=>{
-    const mid=goalSlice(i,n)[1];
-    const[gx,gy]=hcen(mid);
-    cx.fillStyle=pl.color+'88';
-    cx.font=(R*0.37)+'px monospace';
-    cx.textAlign='center';cx.textBaseline='middle';
-    cx.fillText(pl.label,gx,gy);
-  });
+                if (lgs && n > 0)
+                    lgs.players.forEach((pl, i) => {
+                        const mid = goalSlice(i, n)[1];
+                        const [gx, gy] = hcen(mid);
+                        cx.fillStyle = pl.color + "88";
+                        cx.font = R * 0.37 + "px monospace";
+                        cx.textAlign = "center";
+                        cx.textBaseline = "middle";
+                        cx.fillText(pl.label, gx, gy);
+                    });
 
-  if(sel&&lgs){
-    const allPcs=lgs.players.flatMap(p=>p.pieces);
-    const occ=h=>allPcs.some(p=>aEq(p.pos,h));
-    if(sel.type==='ball'){
-      ballReach(lgs.ball,sel.range,occ).forEach((_,k)=>{
-        const[q,r]=k.split(',').map(Number);
-        const[hx,hy]=hcen([q,r]);
-        dHex(hx,hy,R-2,'#ffffff09','#ffffff44',1);
-      });
-    }
-    if(sel.type==='piece'&&lgs.players[myIdx]){
-      const pc=lgs.players[myIdx].pieces[sel.ji];
-      const col=lgs.players[myIdx].color;
-      HEX_DIRS.map(d=>aAdd(pc.pos,d))
-        .filter(h=>BSET.has(aKey(h))&&!aEq(h,lgs.ball)&&!occ(h))
-        .forEach(h=>{const[hx,hy]=hcen(h);dHex(hx,hy,R-2,col+'18',col+'55',1);});
-    }
-  }
+                if (sel && lgs) {
+                    const allPcs = lgs.players.flatMap((p) => p.pieces);
+                    const occ = (h) => allPcs.some((p) => aEq(p.pos, h));
+                    if (sel.type === "ball") {
+                        ballReach(lgs.ball, sel.range, occ).forEach((_, k) => {
+                            const [q, r] = k.split(",").map(Number);
+                            const [hx, hy] = hcen([q, r]);
+                            dHex(hx, hy, R - 2, "#ffffff09", "#ffffff44", 1);
+                        });
+                    }
+                    if (sel.type === "piece" && lgs.players[myIdx]) {
+                        const pc = lgs.players[myIdx].pieces[sel.ji];
+                        const col = lgs.players[myIdx].color;
+                        HEX_DIRS.map((d) => aAdd(pc.pos, d))
+                            .filter(
+                                (h) =>
+                                    BSET.has(aKey(h)) &&
+                                    !aEq(h, lgs.ball) &&
+                                    !occ(h),
+                            )
+                            .forEach((h) => {
+                                const [hx, hy] = hcen(h);
+                                dHex(hx, hy, R - 2, col + "18", col + "55", 1);
+                            });
+                    }
+                }
 
-  if(lgs&&myIdx>=0&&lgs.players[myIdx]){
-    const col=lgs.players[myIdx].color;
-    lgs.players[myIdx].pieces.forEach(pc=>{
-      if(aDist(pc.pos,lgs.ball)===1&&(pc.cd||0)<=now){
-        const[px,py]=hcen(pc.pos);
-        cx.beginPath();cx.arc(px,py,R*0.6,0,Math.PI*2);
-        cx.strokeStyle=col+'55';cx.lineWidth=1.5;cx.stroke();
-      }
-    });
-  }
+                if (lgs && myIdx >= 0 && lgs.players[myIdx]) {
+                    const col = lgs.players[myIdx].color;
+                    lgs.players[myIdx].pieces.forEach((pc) => {
+                        if (
+                            aDist(pc.pos, lgs.ball) === 1 &&
+                            (pc.cd || 0) <= now
+                        ) {
+                            const [px, py] = hcen(pc.pos);
+                            cx.beginPath();
+                            cx.arc(px, py, R * 0.6, 0, Math.PI * 2);
+                            cx.strokeStyle = col + "55";
+                            cx.lineWidth = 1.5;
+                            cx.stroke();
+                        }
+                    });
+                }
 
-  if(lgs)(lgs.players||[]).forEach(pl=>{
-    pl.pieces.forEach((pc,j)=>{
-      const[px,py]=hcen(pc.pos);
-      const rem=Math.max(0,(pc.cd||0)-now);
-      const ready=!rem;
-      const isSel=sel&&sel.type==='piece'&&myIdx===pl.idx&&sel.ji===j;
-      if(isSel){cx.beginPath();cx.arc(px,py,R*0.66,0,Math.PI*2);cx.fillStyle=pl.color+'33';cx.fill();}
-      cx.beginPath();cx.arc(px,py,R*0.46,0,Math.PI*2);
-      cx.fillStyle=ready?pl.color:pl.color+'44';cx.fill();
-      if(!ready){
-        cx.beginPath();cx.arc(px,py,R*0.46,-Math.PI/2,-Math.PI/2+(1-rem/COOLDOWN)*Math.PI*2);
-        cx.strokeStyle=pl.color;cx.lineWidth=2;cx.stroke();
-      }
-      cx.fillStyle='#fff';cx.font='bold '+(R*0.34)+'px monospace';
-      cx.textAlign='center';cx.textBaseline='middle';
-      cx.fillText(pl.label[1]+(j+1),px,py);
-    });
-  });
+                if (lgs)
+                    (lgs.players || []).forEach((pl) => {
+                        pl.pieces.forEach((pc, j) => {
+                            const [px, py] = hcen(pc.pos);
+                            const rem = Math.max(0, (pc.cd || 0) - now);
+                            const ready = !rem;
+                            const isSel =
+                                sel &&
+                                sel.type === "piece" &&
+                                myIdx === pl.idx &&
+                                sel.ji === j;
+                            if (isSel) {
+                                cx.beginPath();
+                                cx.arc(px, py, R * 0.66, 0, Math.PI * 2);
+                                cx.fillStyle = pl.color + "33";
+                                cx.fill();
+                            }
+                            cx.beginPath();
+                            cx.arc(px, py, R * 0.46, 0, Math.PI * 2);
+                            cx.fillStyle = ready ? pl.color : pl.color + "44";
+                            cx.fill();
+                            if (!ready) {
+                                cx.beginPath();
+                                cx.arc(
+                                    px,
+                                    py,
+                                    R * 0.46,
+                                    -Math.PI / 2,
+                                    -Math.PI / 2 +
+                                        (1 - rem / COOLDOWN) * Math.PI * 2,
+                                );
+                                cx.strokeStyle = pl.color;
+                                cx.lineWidth = 2;
+                                cx.stroke();
+                            }
+                            cx.fillStyle = "#fff";
+                            cx.font = "bold " + R * 0.34 + "px monospace";
+                            cx.textAlign = "center";
+                            cx.textBaseline = "middle";
+                            cx.fillText(pl.label[1] + (j + 1), px, py);
+                        });
+                    });
 
-  if(lgs){
-    const[bx,by]=hcen(lgs.ball);
-    const br=Math.max(0,(lgs.ballCd||0)-now);
-    const rdy=!br;
-    const bsel=sel&&sel.type==='ball';
-    if(bsel){cx.beginPath();cx.arc(bx,by,R*0.54,0,Math.PI*2);cx.fillStyle='#ffffff15';cx.fill();}
-    cx.beginPath();cx.arc(bx,by,R*0.33,0,Math.PI*2);
-    cx.fillStyle=rdy?'#e8e0d0':'#e8e0d044';cx.fill();
-    cx.strokeStyle='#444';cx.lineWidth=1.5;cx.stroke();
-    if(!rdy){
-      cx.beginPath();cx.arc(bx,by,R*0.33,-Math.PI/2,-Math.PI/2+(1-br/BALL_CD)*Math.PI*2);
-      cx.strokeStyle='#e8e0d099';cx.lineWidth=2;cx.stroke();
-    }
-    if(bsel){
-      cx.fillStyle='#111';cx.font='bold '+(R*0.3)+'px monospace';
-      cx.textAlign='center';cx.textBaseline='middle';
-      cx.fillText(sel.range+'×',bx,by);
-    }
-  }
-  document.getElementById('msg').textContent=msg;
-}
+                if (lgs) {
+                    const [bx, by] = hcen(lgs.ball);
+                    const br = Math.max(0, (lgs.ballCd || 0) - now);
+                    const rdy = !br;
+                    const bsel = sel && sel.type === "ball";
+                    if (bsel) {
+                        cx.beginPath();
+                        cx.arc(bx, by, R * 0.54, 0, Math.PI * 2);
+                        cx.fillStyle = "#ffffff15";
+                        cx.fill();
+                    }
+                    cx.beginPath();
+                    cx.arc(bx, by, R * 0.33, 0, Math.PI * 2);
+                    cx.fillStyle = rdy ? "#e8e0d0" : "#e8e0d044";
+                    cx.fill();
+                    cx.strokeStyle = "#444";
+                    cx.lineWidth = 1.5;
+                    cx.stroke();
+                    if (!rdy) {
+                        cx.beginPath();
+                        cx.arc(
+                            bx,
+                            by,
+                            R * 0.33,
+                            -Math.PI / 2,
+                            -Math.PI / 2 + (1 - br / BALL_CD) * Math.PI * 2,
+                        );
+                        cx.strokeStyle = "#e8e0d099";
+                        cx.lineWidth = 2;
+                        cx.stroke();
+                    }
+                    if (bsel) {
+                        cx.fillStyle = "#111";
+                        cx.font = "bold " + R * 0.3 + "px monospace";
+                        cx.textAlign = "center";
+                        cx.textBaseline = "middle";
+                        cx.fillText(sel.range + "×", bx, by);
+                    }
+                }
+                document.getElementById("msg").textContent = msg;
+            }
 
-function loop(){const now=Date.now();draw(now);renderCDs(now);requestAnimationFrame(loop);}
-loop();
+            function loop() {
+                const now = Date.now();
+                draw(now);
+                renderCDs(now);
+                requestAnimationFrame(loop);
+            }
+            loop();
 
-// ── Networking ────────────────────────────────────────────────────────────
-async function start(){
-  setSb('connecting…');
-  peer = new Peer({host:'0.peerjs.com', port:443, secure:true, debug:0});
-  await new Promise((res,rej)=>{
-    peer.on('open', id=>{ myId=id; res(); });
-    peer.on('error', e=>{ setSb('peer error: '+e.type); rej(e); });
-    setTimeout(()=>rej(new Error('peer open timeout')), 8000);
-  }).catch(e=>setSb('connection error: '+e.message));
+            // ── Networking ────────────────────────────────────────────────────────────
+            async function start() {
+                setSb("connecting…");
+                peer = new Peer({
+                    host: "0.peerjs.com",
+                    port: 443,
+                    secure: true,
+                    debug: 0,
+                });
+                await new Promise((res, rej) => {
+                    peer.on("open", (id) => {
+                        myId = id;
+                        res();
+                    });
+                    peer.on("error", (e) => {
+                        setSb("peer error: " + e.type);
+                        rej(e);
+                    });
+                    setTimeout(() => rej(new Error("peer open timeout")), 8000);
+                }).catch((e) => setSb("connection error: " + e.message));
 
-  if(!myId) return;
+                if (!myId) return;
 
-  const room = new URLSearchParams(window.location.search).get('room');
-  if(room){
-    setSb('joining room…');
-    const joined = await tryConnect(room);
-    if(!joined){
-      setSb('could not join room. starting new game…');
-      setTimeout(setupAsHost, 2000);
-    }
-  } else {
-    setupAsHost();
-  }
-}
+                const room = new URLSearchParams(window.location.search).get(
+                    "room",
+                );
+                if (room) {
+                    setSb("joining room…");
+                    const joined = await tryConnect(room);
+                    if (!joined) {
+                        setSb("could not join room. starting new game…");
+                        setTimeout(setupAsHost, 2000);
+                    }
+                } else {
+                    setupAsHost();
+                }
+            }
 
-function setupAsHost(){
-  isHost=true; myIdx=0;
-  gs.n=1; gs.scores=[0];
-  gs.players=[{label:'P1',color:'#e05a2b',idx:0,pieces:mkPieces(0,1),peerId:myId}];
-  gs.gm=buildGoalMap(1); gs.ball=[0,0]; gs.ballCd=0; gs.celebrating=false;
-  lgs=serial(); renderScores();
-  setSb('host · waiting for players');
-  document.getElementById('specbadge').style.display='none';
-  
-  const url = new URL(window.location.href);
-  url.searchParams.set('room', myId);
-  document.getElementById('roomlink').textContent = 'copy join link';
-  document.getElementById('roomlink').dataset.link = url.toString();
+            function setupAsHost() {
+                isHost = true;
+                myIdx = 0;
+                gs.n = 1;
+                gs.scores = [0];
+                gs.players = [
+                    {
+                        label: "P1",
+                        color: "#e05a2b",
+                        idx: 0,
+                        pieces: mkPieces(0, 1),
+                        peerId: myId,
+                    },
+                ];
+                gs.gm = buildGoalMap(1);
+                gs.ball = [0, 0];
+                gs.ballCd = 0;
+                gs.celebrating = false;
+                lgs = serial();
+                renderScores();
+                setSb("host · waiting for players");
+                document.getElementById("specbadge").style.display = "none";
 
-  peer.on('connection', c=>{
-    c.on('open',()=>{
-      clientConns.push(c);
-      hostAdd(c.peer);
-      setSb(gs.n+' player'+(gs.n>1?'s':''));
-    });
-    c.on('data', d=>handleFromClient(c.peer,d));
-    c.on('close',()=>{
-      clientConns=clientConns.filter(x=>x!==c);
-      hostRemove(c.peer);
-      setSb(gs.n+' player'+(gs.n>1?'s':''));
-    });
-  });
-}
+                const url = new URL(window.location.href);
+                url.searchParams.set("room", myId);
+                document.getElementById("roomlink").textContent =
+                    "copy join link";
+                document.getElementById("roomlink").dataset.link =
+                    url.toString();
 
-async function tryConnect(hostId){
-  return new Promise(resolve=>{
-    if(hostId===myId){resolve(false);return;}
-    const c=peer.connect(hostId,{reliable:true,serialization:'json'});
-    let done=false;
-    c.on('open',()=>{ done=true; hConn=c; setupAsClient(c); resolve(true); });
-    c.on('error',()=>{ if(!done){done=true;resolve(false);} });
-    setTimeout(()=>{ if(!done){done=true;c.close();resolve(false);} }, 5000);
-  });
-}
+                peer.on("connection", (c) => {
+                    c.on("open", () => {
+                        clientConns.push(c);
+                        hostAdd(c.peer);
+                        setSb(gs.n + " player" + (gs.n > 1 ? "s" : ""));
+                    });
+                    c.on("data", (d) => handleFromClient(c.peer, d));
+                    c.on("close", () => {
+                        clientConns = clientConns.filter((x) => x !== c);
+                        hostRemove(c.peer);
+                        setSb(gs.n + " player" + (gs.n > 1 ? "s" : ""));
+                    });
+                });
+            }
 
-function setupAsClient(c){
-  isHost=false;
-  c.on('data',d=>{
-    if(d.type==='state')applyGs(d.gs);
-    if(d.type==='assign'){
-      myIdx=d.idx;
-      if(myIdx===-1){
-        document.getElementById('specbadge').style.display='block';
-        document.getElementById('qpos').textContent=d.qpos||'?';
-        setSb('spectating');
-      } else {
-        document.getElementById('specbadge').style.display='none';
-        setSb('you are '+PDEFS[myIdx].label);
-      }
-    }
-    if(d.type==='queue'){
-      myQueue=d.q; renderQueue();
-      if(myIdx===-1){
-        const pos=myQueue.indexOf(myId)+1;
-        if(pos>0)document.getElementById('qpos').textContent=pos;
-      }
-    }
-    if(d.type==='scored'){
-      const pl=lgs&&lgs.players[d.sc];
-      if(pl){msg=pl.label+' scores! 🎉';setTimeout(()=>{msg='';},2200);}
-    }
-  });
-  c.on('close',()=>{
-    setSb('host left');
-    hConn=null; myIdx=-1; lgs=null; sel=null;
-  });
-}
+            async function tryConnect(hostId) {
+                return new Promise((resolve) => {
+                    if (hostId === myId) {
+                        resolve(false);
+                        return;
+                    }
+                    const c = peer.connect(hostId, {
+                        reliable: true,
+                        serialization: "json",
+                    });
+                    let done = false;
+                    c.on("open", () => {
+                        done = true;
+                        hConn = c;
+                        setupAsClient(c);
+                        resolve(true);
+                    });
+                    c.on("error", () => {
+                        if (!done) {
+                            done = true;
+                            resolve(false);
+                        }
+                    });
+                    setTimeout(() => {
+                        if (!done) {
+                            done = true;
+                            c.close();
+                            resolve(false);
+                        }
+                    }, 5000);
+                });
+            }
 
-function copyLink(){
-  const link = document.getElementById('roomlink').dataset.link;
-  if(!link) return;
-  navigator.clipboard.writeText(link).then(()=>{
-    const old = document.getElementById('roomlink').textContent;
-    document.getElementById('roomlink').textContent = 'copied!';
-    setTimeout(()=>document.getElementById('roomlink').textContent=old, 2000);
-  });
-}
+            function setupAsClient(c) {
+                isHost = false;
+                c.on("data", (d) => {
+                    if (d.type === "state") applyGs(d.gs);
+                    if (d.type === "assign") {
+                        myIdx = d.idx;
+                        if (myIdx === -1) {
+                            document.getElementById("specbadge").style.display =
+                                "block";
+                            document.getElementById("qpos").textContent =
+                                d.qpos || "?";
+                            setSb("spectating");
+                        } else {
+                            document.getElementById("specbadge").style.display =
+                                "none";
+                            setSb("you are " + PDEFS[myIdx].label);
+                        }
+                    }
+                    if (d.type === "queue") {
+                        myQueue = d.q;
+                        renderQueue();
+                        if (myIdx === -1) {
+                            const pos = myQueue.indexOf(myId) + 1;
+                            if (pos > 0)
+                                document.getElementById("qpos").textContent =
+                                    pos;
+                        }
+                    }
+                    if (d.type === "scored") {
+                        const pl = lgs && lgs.players[d.sc];
+                        if (pl) {
+                            msg = pl.label + " scores! 🎉";
+                            setTimeout(() => {
+                                msg = "";
+                            }, 2200);
+                        }
+                    }
+                });
+                c.on("close", () => {
+                    setSb("host left");
+                    hConn = null;
+                    myIdx = -1;
+                    lgs = null;
+                    sel = null;
+                });
+            }
 
-start();
-</script>
-</body>
+            function copyLink() {
+                const link = document.getElementById("roomlink").dataset.link;
+                if (!link) return;
+                navigator.clipboard.writeText(link).then(() => {
+                    const old = document.getElementById("roomlink").textContent;
+                    document.getElementById("roomlink").textContent = "copied!";
+                    setTimeout(
+                        () =>
+                            (document.getElementById("roomlink").textContent =
+                                old),
+                        2000,
+                    );
+                });
+            }
+
+            start();
+        </script>
+    </body>
 </html>

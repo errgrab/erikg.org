@@ -1,1215 +1,2083 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>khem / roadmap manager</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap');
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>khem / roadmap manager</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap");
 
-:root {
-  --bg:       #0a0a0a;
-  --s0:       #101010;
-  --s1:       #161616;
-  --s2:       #1e1e1e;
-  --s3:       #262626;
-  --border:   #2a2a2a;
-  --b2:       #363636;
-  --dim:      #484848;
-  --fg3:      #555;
-  --fg2:      #888;
-  --fg1:      #aaa;
-  --fg:       #d4d0c8;
-  --acc:      #c8a84b;
-  --acc-dim:  #7a6628;
-  --green:    #6b9e78;
-  --green-dim:#2a4a33;
-  --blue:     #7a8fa8;
-  --blue-dim: #2a3a4a;
-  --red:      #a86b6b;
-  --red-dim:  #4a2222;
-  --amber:    #d4924a;
-  --mono:     'DM Mono', 'Fira Mono', ui-monospace, monospace;
-  --serif:    'Instrument Serif', Georgia, serif;
-}
+            :root {
+                --bg: #0a0a0a;
+                --s0: #101010;
+                --s1: #161616;
+                --s2: #1e1e1e;
+                --s3: #262626;
+                --border: #2a2a2a;
+                --b2: #363636;
+                --dim: #484848;
+                --fg3: #555;
+                --fg2: #888;
+                --fg1: #aaa;
+                --fg: #d4d0c8;
+                --acc: #c8a84b;
+                --acc-dim: #7a6628;
+                --green: #6b9e78;
+                --green-dim: #2a4a33;
+                --blue: #7a8fa8;
+                --blue-dim: #2a3a4a;
+                --red: #a86b6b;
+                --red-dim: #4a2222;
+                --amber: #d4924a;
+                --mono: "DM Mono", "Fira Mono", ui-monospace, monospace;
+                --serif: "Instrument Serif", Georgia, serif;
+            }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
-html { height: 100%; }
-body {
-  min-height: 100%;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
+            html {
+                height: 100%;
+            }
+            body {
+                min-height: 100%;
+                background: var(--bg);
+                color: var(--fg);
+                font-family: var(--mono);
+                font-size: 12px;
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+            }
 
-/* ── scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); }
+            /* ── scrollbar ── */
+            ::-webkit-scrollbar {
+                width: 4px;
+            }
+            ::-webkit-scrollbar-track {
+                background: var(--bg);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--border);
+            }
 
-/* ═══════════════════════════════════════
+            /* ═══════════════════════════════════════
    LOGIN SCREEN
 ════════════════════════════════════════ */
-#login-screen {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  padding: 40px 20px;
-}
-.login-box {
-  width: 100%; max-width: 400px;
-}
-.login-wordmark {
-  margin-bottom: 40px;
-}
-.login-wordmark h1 {
-  font-family: var(--serif);
-  font-size: 32px; font-weight: 400;
-  color: var(--acc); letter-spacing: 0.02em;
-  line-height: 1;
-}
-.login-wordmark p {
-  font-size: 10.5px; color: var(--fg3);
-  letter-spacing: 0.08em; margin-top: 6px;
-}
-.login-label {
-  font-size: 10px; color: var(--fg2);
-  letter-spacing: 0.12em; margin-bottom: 8px;
-  display: block;
-}
-.login-input-row { position: relative; }
-.login-input {
-  width: 100%;
-  background: var(--s1); border: 1px solid var(--border);
-  color: var(--fg); font-family: var(--mono); font-size: 12px;
-  padding: 12px 14px; outline: none;
-  transition: border-color 0.15s;
-  letter-spacing: 0.04em;
-}
-.login-input:focus { border-color: var(--acc); }
-.login-input::placeholder { color: var(--fg3); }
-.login-btn {
-  width: 100%; margin-top: 10px;
-  background: var(--s2); border: 1px solid var(--b2);
-  color: var(--fg1); font-family: var(--mono); font-size: 11px;
-  padding: 11px; cursor: pointer; letter-spacing: 0.08em;
-  transition: border-color 0.15s, color 0.15s;
-}
-.login-btn:hover { border-color: var(--acc); color: var(--acc); }
-.login-error {
-  margin-top: 10px; font-size: 11px; color: var(--red);
-  min-height: 18px;
-}
-.login-footer {
-  margin-top: 32px; font-size: 10px; color: var(--fg3);
-  line-height: 1.8; border-top: 1px solid var(--border);
-  padding-top: 16px;
-}
-.login-footer a { color: var(--fg2); text-decoration: none; }
-.login-footer a:hover { color: var(--acc); }
+            #login-screen {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 40px 20px;
+            }
+            .login-box {
+                width: 100%;
+                max-width: 400px;
+            }
+            .login-wordmark {
+                margin-bottom: 40px;
+            }
+            .login-wordmark h1 {
+                font-family: var(--serif);
+                font-size: 32px;
+                font-weight: 400;
+                color: var(--acc);
+                letter-spacing: 0.02em;
+                line-height: 1;
+            }
+            .login-wordmark p {
+                font-size: 10.5px;
+                color: var(--fg3);
+                letter-spacing: 0.08em;
+                margin-top: 6px;
+            }
+            .login-label {
+                font-size: 10px;
+                color: var(--fg2);
+                letter-spacing: 0.12em;
+                margin-bottom: 8px;
+                display: block;
+            }
+            .login-input-row {
+                position: relative;
+            }
+            .login-input {
+                width: 100%;
+                background: var(--s1);
+                border: 1px solid var(--border);
+                color: var(--fg);
+                font-family: var(--mono);
+                font-size: 12px;
+                padding: 12px 14px;
+                outline: none;
+                transition: border-color 0.15s;
+                letter-spacing: 0.04em;
+            }
+            .login-input:focus {
+                border-color: var(--acc);
+            }
+            .login-input::placeholder {
+                color: var(--fg3);
+            }
+            .login-btn {
+                width: 100%;
+                margin-top: 10px;
+                background: var(--s2);
+                border: 1px solid var(--b2);
+                color: var(--fg1);
+                font-family: var(--mono);
+                font-size: 11px;
+                padding: 11px;
+                cursor: pointer;
+                letter-spacing: 0.08em;
+                transition:
+                    border-color 0.15s,
+                    color 0.15s;
+            }
+            .login-btn:hover {
+                border-color: var(--acc);
+                color: var(--acc);
+            }
+            .login-error {
+                margin-top: 10px;
+                font-size: 11px;
+                color: var(--red);
+                min-height: 18px;
+            }
+            .login-footer {
+                margin-top: 32px;
+                font-size: 10px;
+                color: var(--fg3);
+                line-height: 1.8;
+                border-top: 1px solid var(--border);
+                padding-top: 16px;
+            }
+            .login-footer a {
+                color: var(--fg2);
+                text-decoration: none;
+            }
+            .login-footer a:hover {
+                color: var(--acc);
+            }
 
-/* ═══════════════════════════════════════
+            /* ═══════════════════════════════════════
    APP SHELL
 ════════════════════════════════════════ */
-#app { display: none; min-height: 100vh; }
-#app.visible { display: flex; flex-direction: column; }
+            #app {
+                display: none;
+                min-height: 100vh;
+            }
+            #app.visible {
+                display: flex;
+                flex-direction: column;
+            }
 
-/* topbar */
-.topbar {
-  position: sticky; top: 0; z-index: 100;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 0;
-  padding: 0 20px; height: 44px;
-}
-.topbar-logo {
-  font-family: var(--serif); font-size: 17px;
-  color: var(--acc); letter-spacing: 0.02em;
-  margin-right: 8px;
-}
-.topbar-sep { color: var(--fg3); margin: 0 8px; }
-.topbar-title { font-size: 11px; color: var(--fg2); letter-spacing: 0.06em; }
-.topbar-spacer { flex: 1; }
-.topbar-status { font-size: 10px; color: var(--fg3); letter-spacing: 0.06em; margin-right: 16px; }
-.topbar-status.saving { color: var(--amber); }
-.topbar-status.saved  { color: var(--green); }
-.topbar-status.err    { color: var(--red); }
-.topbar-btn {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
-  padding: 5px 12px; background: transparent;
-  border: 1px solid var(--border); color: var(--fg2);
-  cursor: pointer; transition: border-color 0.1s, color 0.1s;
-  margin-left: 6px;
-}
-.topbar-btn:hover { border-color: var(--b2); color: var(--fg); }
-.topbar-btn.primary { border-color: var(--acc-dim); color: var(--acc); }
-.topbar-btn.primary:hover { border-color: var(--acc); }
-.topbar-btn.danger:hover { border-color: var(--red); color: var(--red); }
+            /* topbar */
+            .topbar {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: var(--bg);
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                align-items: center;
+                gap: 0;
+                padding: 0 20px;
+                height: 44px;
+            }
+            .topbar-logo {
+                font-family: var(--serif);
+                font-size: 17px;
+                color: var(--acc);
+                letter-spacing: 0.02em;
+                margin-right: 8px;
+            }
+            .topbar-sep {
+                color: var(--fg3);
+                margin: 0 8px;
+            }
+            .topbar-title {
+                font-size: 11px;
+                color: var(--fg2);
+                letter-spacing: 0.06em;
+            }
+            .topbar-spacer {
+                flex: 1;
+            }
+            .topbar-status {
+                font-size: 10px;
+                color: var(--fg3);
+                letter-spacing: 0.06em;
+                margin-right: 16px;
+            }
+            .topbar-status.saving {
+                color: var(--amber);
+            }
+            .topbar-status.saved {
+                color: var(--green);
+            }
+            .topbar-status.err {
+                color: var(--red);
+            }
+            .topbar-btn {
+                font-family: var(--mono);
+                font-size: 10px;
+                letter-spacing: 0.08em;
+                padding: 5px 12px;
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--fg2);
+                cursor: pointer;
+                transition:
+                    border-color 0.1s,
+                    color 0.1s;
+                margin-left: 6px;
+            }
+            .topbar-btn:hover {
+                border-color: var(--b2);
+                color: var(--fg);
+            }
+            .topbar-btn.primary {
+                border-color: var(--acc-dim);
+                color: var(--acc);
+            }
+            .topbar-btn.primary:hover {
+                border-color: var(--acc);
+            }
+            .topbar-btn.danger:hover {
+                border-color: var(--red);
+                color: var(--red);
+            }
 
-/* layout */
-.layout {
-  display: grid;
-  grid-template-columns: 220px 1fr 280px;
-  flex: 1; min-height: 0;
-}
+            /* layout */
+            .layout {
+                display: grid;
+                grid-template-columns: 220px 1fr 280px;
+                flex: 1;
+                min-height: 0;
+            }
 
-/* ── sidebar ── */
-.sidebar {
-  border-right: 1px solid var(--border);
-  padding: 20px 0;
-  position: sticky; top: 44px;
-  height: calc(100vh - 44px);
-  overflow-y: auto;
-}
-.sidebar-section { margin-bottom: 24px; }
-.sidebar-head {
-  font-size: 9.5px; color: var(--fg3);
-  letter-spacing: 0.14em; padding: 0 16px;
-  margin-bottom: 6px;
-}
-.sidebar-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 16px; cursor: pointer; font-size: 11px;
-  color: var(--fg2); transition: color 0.1s, background 0.1s;
-  border-left: 2px solid transparent;
-}
-.sidebar-item:hover { color: var(--fg); background: var(--s1); }
-.sidebar-item.active {
-  color: var(--acc); background: var(--s0);
-  border-left-color: var(--acc);
-}
-.sidebar-item .si-num { font-size: 9.5px; color: var(--fg3); min-width: 20px; }
-.sidebar-progress {
-  height: 2px; background: var(--border);
-  margin: 3px 16px 0;
-}
-.sidebar-progress-fill { height: 100%; background: var(--acc); transition: width 0.3s; }
+            /* ── sidebar ── */
+            .sidebar {
+                border-right: 1px solid var(--border);
+                padding: 20px 0;
+                position: sticky;
+                top: 44px;
+                height: calc(100vh - 44px);
+                overflow-y: auto;
+            }
+            .sidebar-section {
+                margin-bottom: 24px;
+            }
+            .sidebar-head {
+                font-size: 9.5px;
+                color: var(--fg3);
+                letter-spacing: 0.14em;
+                padding: 0 16px;
+                margin-bottom: 6px;
+            }
+            .sidebar-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 16px;
+                cursor: pointer;
+                font-size: 11px;
+                color: var(--fg2);
+                transition:
+                    color 0.1s,
+                    background 0.1s;
+                border-left: 2px solid transparent;
+            }
+            .sidebar-item:hover {
+                color: var(--fg);
+                background: var(--s1);
+            }
+            .sidebar-item.active {
+                color: var(--acc);
+                background: var(--s0);
+                border-left-color: var(--acc);
+            }
+            .sidebar-item .si-num {
+                font-size: 9.5px;
+                color: var(--fg3);
+                min-width: 20px;
+            }
+            .sidebar-progress {
+                height: 2px;
+                background: var(--border);
+                margin: 3px 16px 0;
+            }
+            .sidebar-progress-fill {
+                height: 100%;
+                background: var(--acc);
+                transition: width 0.3s;
+            }
 
-.stats { padding: 0 16px; }
-.stat-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 10.5px; color: var(--fg2); border-bottom: 1px solid var(--border); }
-.stat-row:last-child { border-bottom: none; }
-.stat-val { color: var(--fg); }
-.stat-val.green { color: var(--green); }
-.stat-val.amber { color: var(--amber); }
-.stat-val.red   { color: var(--red); }
+            .stats {
+                padding: 0 16px;
+            }
+            .stat-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 4px 0;
+                font-size: 10.5px;
+                color: var(--fg2);
+                border-bottom: 1px solid var(--border);
+            }
+            .stat-row:last-child {
+                border-bottom: none;
+            }
+            .stat-val {
+                color: var(--fg);
+            }
+            .stat-val.green {
+                color: var(--green);
+            }
+            .stat-val.amber {
+                color: var(--amber);
+            }
+            .stat-val.red {
+                color: var(--red);
+            }
 
-/* ── main ── */
-.main {
-  padding: 28px 32px;
-  overflow-y: auto;
-  min-height: 0;
-}
+            /* ── main ── */
+            .main {
+                padding: 28px 32px;
+                overflow-y: auto;
+                min-height: 0;
+            }
 
-/* phase view */
-.phase-view { }
-.phase-header {
-  display: flex; align-items: baseline; gap: 12px;
-  margin-bottom: 8px;
-}
-.phase-num   { font-size: 9.5px; color: var(--fg3); letter-spacing: 0.18em; }
-.phase-title { font-size: 16px; color: var(--fg); }
-.phase-est   { font-size: 10px; color: var(--fg3); margin-left: auto; }
-.phase-desc  {
-  font-size: 11px; color: var(--fg2); line-height: 1.65;
-  padding: 12px 0 20px; border-bottom: 1px solid var(--border);
-  margin-bottom: 20px;
-}
+            /* phase view */
+            .phase-view {
+            }
+            .phase-header {
+                display: flex;
+                align-items: baseline;
+                gap: 12px;
+                margin-bottom: 8px;
+            }
+            .phase-num {
+                font-size: 9.5px;
+                color: var(--fg3);
+                letter-spacing: 0.18em;
+            }
+            .phase-title {
+                font-size: 16px;
+                color: var(--fg);
+            }
+            .phase-est {
+                font-size: 10px;
+                color: var(--fg3);
+                margin-left: auto;
+            }
+            .phase-desc {
+                font-size: 11px;
+                color: var(--fg2);
+                line-height: 1.65;
+                padding: 12px 0 20px;
+                border-bottom: 1px solid var(--border);
+                margin-bottom: 20px;
+            }
 
-/* task list */
-.task-list { display: flex; flex-direction: column; gap: 1px; }
+            /* task list */
+            .task-list {
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+            }
 
-.task-row {
-  display: grid;
-  grid-template-columns: 8px 52px 1fr 80px 32px;
-  align-items: start; gap: 0 12px;
-  padding: 10px 14px;
-  background: var(--s0);
-  transition: background 0.1s;
-  cursor: pointer;
-}
-.task-row:hover { background: var(--s1); }
+            .task-row {
+                display: grid;
+                grid-template-columns: 8px 52px 1fr 80px 32px;
+                align-items: start;
+                gap: 0 12px;
+                padding: 10px 14px;
+                background: var(--s0);
+                transition: background 0.1s;
+                cursor: pointer;
+            }
+            .task-row:hover {
+                background: var(--s1);
+            }
 
-.tr-dot {
-  width: 8px; height: 8px; border-radius: 50%; margin-top: 3px;
-  flex-shrink: 0;
-}
-.todo    .tr-dot { background: var(--border); }
-.active  .tr-dot { background: var(--acc); box-shadow: 0 0 6px var(--acc); }
-.done    .tr-dot { background: var(--green); }
-.blocked .tr-dot { background: var(--red); }
+            .tr-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                margin-top: 3px;
+                flex-shrink: 0;
+            }
+            .todo .tr-dot {
+                background: var(--border);
+            }
+            .active .tr-dot {
+                background: var(--acc);
+                box-shadow: 0 0 6px var(--acc);
+            }
+            .done .tr-dot {
+                background: var(--green);
+            }
+            .blocked .tr-dot {
+                background: var(--red);
+            }
 
-.tr-id { font-size: 10px; color: var(--fg3); padding-top: 1px; }
-.tr-body { }
-.tr-title { font-size: 12px; color: var(--fg); margin-bottom: 3px; }
-.tr-desc  { font-size: 10.5px; color: var(--fg2); line-height: 1.5; }
-.tr-desc code { color: var(--acc); font-family: var(--mono); font-size: 10px; }
+            .tr-id {
+                font-size: 10px;
+                color: var(--fg3);
+                padding-top: 1px;
+            }
+            .tr-body {
+            }
+            .tr-title {
+                font-size: 12px;
+                color: var(--fg);
+                margin-bottom: 3px;
+            }
+            .tr-desc {
+                font-size: 10.5px;
+                color: var(--fg2);
+                line-height: 1.5;
+            }
+            .tr-desc code {
+                color: var(--acc);
+                font-family: var(--mono);
+                font-size: 10px;
+            }
 
-.done .tr-title { opacity: 0.4; text-decoration: line-through; }
-.done .tr-desc  { opacity: 0.3; }
+            .done .tr-title {
+                opacity: 0.4;
+                text-decoration: line-through;
+            }
+            .done .tr-desc {
+                opacity: 0.3;
+            }
 
-/* status selector */
-.status-sel {
-  position: relative;
-}
-.status-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 9.5px; padding: 3px 8px;
-  border: 1px solid var(--border); cursor: pointer;
-  transition: border-color 0.1s;
-  white-space: nowrap; letter-spacing: 0.04em;
-  user-select: none;
-}
-.status-badge:hover { border-color: var(--b2); }
-.todo    .status-badge { color: var(--fg2); }
-.active  .status-badge { color: var(--acc);   border-color: var(--acc-dim); background: #1a1500; }
-.done    .status-badge { color: var(--green); border-color: var(--green-dim); background: #0a1a0e; }
-.blocked .status-badge { color: var(--red);   border-color: var(--red-dim); background: #1a0a0a; }
+            /* status selector */
+            .status-sel {
+                position: relative;
+            }
+            .status-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 9.5px;
+                padding: 3px 8px;
+                border: 1px solid var(--border);
+                cursor: pointer;
+                transition: border-color 0.1s;
+                white-space: nowrap;
+                letter-spacing: 0.04em;
+                user-select: none;
+            }
+            .status-badge:hover {
+                border-color: var(--b2);
+            }
+            .todo .status-badge {
+                color: var(--fg2);
+            }
+            .active .status-badge {
+                color: var(--acc);
+                border-color: var(--acc-dim);
+                background: #1a1500;
+            }
+            .done .status-badge {
+                color: var(--green);
+                border-color: var(--green-dim);
+                background: #0a1a0e;
+            }
+            .blocked .status-badge {
+                color: var(--red);
+                border-color: var(--red-dim);
+                background: #1a0a0a;
+            }
 
-.status-menu {
-  display: none; position: absolute; right: 0; top: calc(100% + 4px);
-  background: var(--s2); border: 1px solid var(--b2);
-  z-index: 50; min-width: 110px;
-}
-.status-menu.open { display: block; }
-.status-opt {
-  padding: 7px 12px; font-size: 10.5px; cursor: pointer;
-  display: flex; align-items: center; gap: 7px;
-  transition: background 0.1s;
-}
-.status-opt:hover { background: var(--s3); }
-.status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+            .status-menu {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: calc(100% + 4px);
+                background: var(--s2);
+                border: 1px solid var(--b2);
+                z-index: 50;
+                min-width: 110px;
+            }
+            .status-menu.open {
+                display: block;
+            }
+            .status-opt {
+                padding: 7px 12px;
+                font-size: 10.5px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                transition: background 0.1s;
+            }
+            .status-opt:hover {
+                background: var(--s3);
+            }
+            .status-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
 
-/* expand button */
-.tr-expand {
-  width: 20px; height: 20px; margin-top: 1px;
-  border: 1px solid var(--border); background: transparent;
-  color: var(--fg3); font-family: var(--mono); font-size: 11px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: border-color 0.1s, color 0.1s;
-}
-.tr-expand:hover { border-color: var(--b2); color: var(--fg1); }
+            /* expand button */
+            .tr-expand {
+                width: 20px;
+                height: 20px;
+                margin-top: 1px;
+                border: 1px solid var(--border);
+                background: transparent;
+                color: var(--fg3);
+                font-family: var(--mono);
+                font-size: 11px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition:
+                    border-color 0.1s,
+                    color 0.1s;
+            }
+            .tr-expand:hover {
+                border-color: var(--b2);
+                color: var(--fg1);
+            }
 
-/* task detail drawer */
-.task-detail {
-  display: none; grid-column: 1 / -1;
-  background: var(--s1); border-left: 2px solid var(--acc);
-  padding: 16px 14px 16px 26px;
-  margin-top: 1px;
-}
-.task-detail.open { display: block; }
-.detail-field { margin-bottom: 14px; }
-.detail-label {
-  font-size: 9.5px; color: var(--fg3);
-  letter-spacing: 0.12em; margin-bottom: 5px;
-}
-.detail-input, .detail-textarea {
-  width: 100%; background: var(--s2); border: 1px solid var(--border);
-  color: var(--fg); font-family: var(--mono); font-size: 11px;
-  padding: 8px 10px; outline: none; resize: vertical;
-  transition: border-color 0.15s; line-height: 1.55;
-}
-.detail-input:focus, .detail-textarea:focus { border-color: var(--acc); }
-.detail-textarea { min-height: 60px; }
-.tag-editor { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
-.tag-badge {
-  font-size: 9.5px; padding: 2px 8px; border: 1px solid;
-  cursor: pointer; transition: opacity 0.1s;
-}
-.tag-badge:hover { opacity: 0.7; }
-.tag-badge.active-tag.c    { color:#c8a84b;border-color:#3a3210;background:#1a1608; }
-.tag-badge.active-tag.kh   { color:#6b9e78;border-color:#1e3a22;background:#0e1a10; }
-.tag-badge.active-tag.spec { color:#7a8fa8;border-color:#1e2f3a;background:#0e1218; }
-.tag-badge.active-tag.wasm { color:#b07848;border-color:#3a2818;background:#181008; }
-.tag-badge.inactive-tag    { color:var(--fg3);border-color:var(--border);background:transparent; }
-.detail-actions { display: flex; gap: 6px; margin-top: 4px; }
-.detail-btn {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
-  padding: 5px 12px; border: 1px solid var(--border); background: var(--s2);
-  color: var(--fg2); cursor: pointer; transition: all 0.1s;
-}
-.detail-btn:hover { border-color: var(--b2); color: var(--fg); }
-.detail-btn.save  { border-color: var(--acc-dim); color: var(--acc); }
-.detail-btn.save:hover  { border-color: var(--acc); background: #1a1500; }
-.detail-btn.del:hover { border-color: var(--red); color: var(--red); }
+            /* task detail drawer */
+            .task-detail {
+                display: none;
+                grid-column: 1 / -1;
+                background: var(--s1);
+                border-left: 2px solid var(--acc);
+                padding: 16px 14px 16px 26px;
+                margin-top: 1px;
+            }
+            .task-detail.open {
+                display: block;
+            }
+            .detail-field {
+                margin-bottom: 14px;
+            }
+            .detail-label {
+                font-size: 9.5px;
+                color: var(--fg3);
+                letter-spacing: 0.12em;
+                margin-bottom: 5px;
+            }
+            .detail-input,
+            .detail-textarea {
+                width: 100%;
+                background: var(--s2);
+                border: 1px solid var(--border);
+                color: var(--fg);
+                font-family: var(--mono);
+                font-size: 11px;
+                padding: 8px 10px;
+                outline: none;
+                resize: vertical;
+                transition: border-color 0.15s;
+                line-height: 1.55;
+            }
+            .detail-input:focus,
+            .detail-textarea:focus {
+                border-color: var(--acc);
+            }
+            .detail-textarea {
+                min-height: 60px;
+            }
+            .tag-editor {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                align-items: center;
+            }
+            .tag-badge {
+                font-size: 9.5px;
+                padding: 2px 8px;
+                border: 1px solid;
+                cursor: pointer;
+                transition: opacity 0.1s;
+            }
+            .tag-badge:hover {
+                opacity: 0.7;
+            }
+            .tag-badge.active-tag.c {
+                color: #c8a84b;
+                border-color: #3a3210;
+                background: #1a1608;
+            }
+            .tag-badge.active-tag.kh {
+                color: #6b9e78;
+                border-color: #1e3a22;
+                background: #0e1a10;
+            }
+            .tag-badge.active-tag.spec {
+                color: #7a8fa8;
+                border-color: #1e2f3a;
+                background: #0e1218;
+            }
+            .tag-badge.active-tag.wasm {
+                color: #b07848;
+                border-color: #3a2818;
+                background: #181008;
+            }
+            .tag-badge.inactive-tag {
+                color: var(--fg3);
+                border-color: var(--border);
+                background: transparent;
+            }
+            .detail-actions {
+                display: flex;
+                gap: 6px;
+                margin-top: 4px;
+            }
+            .detail-btn {
+                font-family: var(--mono);
+                font-size: 10px;
+                letter-spacing: 0.06em;
+                padding: 5px 12px;
+                border: 1px solid var(--border);
+                background: var(--s2);
+                color: var(--fg2);
+                cursor: pointer;
+                transition: all 0.1s;
+            }
+            .detail-btn:hover {
+                border-color: var(--b2);
+                color: var(--fg);
+            }
+            .detail-btn.save {
+                border-color: var(--acc-dim);
+                color: var(--acc);
+            }
+            .detail-btn.save:hover {
+                border-color: var(--acc);
+                background: #1a1500;
+            }
+            .detail-btn.del:hover {
+                border-color: var(--red);
+                color: var(--red);
+            }
 
-/* add task */
-.add-task-btn {
-  width: 100%; margin-top: 10px;
-  background: transparent; border: 1px dashed var(--border);
-  color: var(--fg3); font-family: var(--mono); font-size: 10.5px;
-  padding: 10px; cursor: pointer; letter-spacing: 0.06em;
-  transition: border-color 0.1s, color 0.1s;
-}
-.add-task-btn:hover { border-color: var(--b2); color: var(--fg2); }
+            /* add task */
+            .add-task-btn {
+                width: 100%;
+                margin-top: 10px;
+                background: transparent;
+                border: 1px dashed var(--border);
+                color: var(--fg3);
+                font-family: var(--mono);
+                font-size: 10.5px;
+                padding: 10px;
+                cursor: pointer;
+                letter-spacing: 0.06em;
+                transition:
+                    border-color 0.1s,
+                    color 0.1s;
+            }
+            .add-task-btn:hover {
+                border-color: var(--b2);
+                color: var(--fg2);
+            }
 
-/* gate */
-.gate {
-  margin-top: 16px; padding: 10px 14px;
-  background: #0e1218; border: 1px solid #1e2f3a;
-  font-size: 10.5px; color: var(--blue); line-height: 1.6;
-}
-.gate code { font-family: var(--mono); color: #9ab3c8; font-size: 10.5px; }
-.gate-acc { background: #140f00; border-color: #3a3210; color: var(--acc); }
+            /* gate */
+            .gate {
+                margin-top: 16px;
+                padding: 10px 14px;
+                background: #0e1218;
+                border: 1px solid #1e2f3a;
+                font-size: 10.5px;
+                color: var(--blue);
+                line-height: 1.6;
+            }
+            .gate code {
+                font-family: var(--mono);
+                color: #9ab3c8;
+                font-size: 10.5px;
+            }
+            .gate-acc {
+                background: #140f00;
+                border-color: #3a3210;
+                color: var(--acc);
+            }
 
-/* milestone */
-.milestone-row {
-  margin-top: 20px; padding: 8px 14px;
-  border: 1px solid var(--acc-dim); background: #100d00;
-  font-size: 10px; color: var(--acc); letter-spacing: 0.1em;
-}
+            /* milestone */
+            .milestone-row {
+                margin-top: 20px;
+                padding: 8px 14px;
+                border: 1px solid var(--acc-dim);
+                background: #100d00;
+                font-size: 10px;
+                color: var(--acc);
+                letter-spacing: 0.1em;
+            }
 
-/* ── right panel ── */
-.panel {
-  border-left: 1px solid var(--border);
-  padding: 20px 18px;
-  position: sticky; top: 44px;
-  height: calc(100vh - 44px);
-  overflow-y: auto;
-}
-.panel-section { margin-bottom: 28px; }
-.panel-head {
-  font-size: 9.5px; color: var(--fg3);
-  letter-spacing: 0.14em; margin-bottom: 12px;
-  padding-bottom: 8px; border-bottom: 1px solid var(--border);
-}
+            /* ── right panel ── */
+            .panel {
+                border-left: 1px solid var(--border);
+                padding: 20px 18px;
+                position: sticky;
+                top: 44px;
+                height: calc(100vh - 44px);
+                overflow-y: auto;
+            }
+            .panel-section {
+                margin-bottom: 28px;
+            }
+            .panel-head {
+                font-size: 9.5px;
+                color: var(--fg3);
+                letter-spacing: 0.14em;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid var(--border);
+            }
 
-/* phase progress */
-.phase-prog-row {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 8px; cursor: pointer;
-  padding: 4px 0;
-}
-.phase-prog-row:hover .pp-label { color: var(--acc); }
-.pp-label { font-size: 10px; color: var(--fg2); min-width: 28px; }
-.pp-bar { flex: 1; height: 2px; background: var(--border); }
-.pp-fill { height: 100%; background: var(--acc); transition: width 0.4s; }
-.pp-pct { font-size: 9.5px; color: var(--fg3); min-width: 28px; text-align: right; }
+            /* phase progress */
+            .phase-prog-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 8px;
+                cursor: pointer;
+                padding: 4px 0;
+            }
+            .phase-prog-row:hover .pp-label {
+                color: var(--acc);
+            }
+            .pp-label {
+                font-size: 10px;
+                color: var(--fg2);
+                min-width: 28px;
+            }
+            .pp-bar {
+                flex: 1;
+                height: 2px;
+                background: var(--border);
+            }
+            .pp-fill {
+                height: 100%;
+                background: var(--acc);
+                transition: width 0.4s;
+            }
+            .pp-pct {
+                font-size: 9.5px;
+                color: var(--fg3);
+                min-width: 28px;
+                text-align: right;
+            }
 
-/* activity log */
-.log-entry {
-  font-size: 10px; color: var(--fg3); padding: 4px 0;
-  border-bottom: 1px solid var(--border); line-height: 1.5;
-}
-.log-entry:last-child { border-bottom: none; }
-.log-time { color: var(--fg3); margin-right: 6px; }
-.log-task { color: var(--fg2); }
-.log-status { }
-.log-status.done    { color: var(--green); }
-.log-status.active  { color: var(--acc); }
-.log-status.blocked { color: var(--red); }
-.log-status.todo    { color: var(--fg3); }
+            /* activity log */
+            .log-entry {
+                font-size: 10px;
+                color: var(--fg3);
+                padding: 4px 0;
+                border-bottom: 1px solid var(--border);
+                line-height: 1.5;
+            }
+            .log-entry:last-child {
+                border-bottom: none;
+            }
+            .log-time {
+                color: var(--fg3);
+                margin-right: 6px;
+            }
+            .log-task {
+                color: var(--fg2);
+            }
+            .log-status {
+            }
+            .log-status.done {
+                color: var(--green);
+            }
+            .log-status.active {
+                color: var(--acc);
+            }
+            .log-status.blocked {
+                color: var(--red);
+            }
+            .log-status.todo {
+                color: var(--fg3);
+            }
 
-/* bulk actions */
-.bulk-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 2px; }
-.bulk-btn {
-  font-family: var(--mono); font-size: 10px; padding: 4px 10px;
-  border: 1px solid var(--border); background: transparent;
-  color: var(--fg2); cursor: pointer; transition: all 0.1s;
-}
-.bulk-btn:hover { border-color: var(--b2); color: var(--fg); }
+            /* bulk actions */
+            .bulk-row {
+                display: flex;
+                gap: 5px;
+                flex-wrap: wrap;
+                margin-top: 2px;
+            }
+            .bulk-btn {
+                font-family: var(--mono);
+                font-size: 10px;
+                padding: 4px 10px;
+                border: 1px solid var(--border);
+                background: transparent;
+                color: var(--fg2);
+                cursor: pointer;
+                transition: all 0.1s;
+            }
+            .bulk-btn:hover {
+                border-color: var(--b2);
+                color: var(--fg);
+            }
 
-/* ── backlog ── */
-.backlog-view { }
-.backlog-item {
-  display: grid; grid-template-columns: 48px 1fr 28px;
-  align-items: center; gap: 12px;
-  padding: 9px 14px; background: var(--s0); margin-bottom: 1px;
-  cursor: pointer; transition: background 0.1s;
-}
-.backlog-item:hover { background: var(--s1); }
-.bl-id { font-size: 10px; color: var(--fg3); }
-.bl-title { font-size: 11px; color: var(--fg2); }
-.bl-del {
-  width: 20px; height: 20px;
-  background: transparent; border: 1px solid var(--border);
-  color: var(--fg3); font-size: 11px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.1s; opacity: 0;
-}
-.backlog-item:hover .bl-del { opacity: 1; }
-.bl-del:hover { border-color: var(--red); color: var(--red); }
+            /* ── backlog ── */
+            .backlog-view {
+            }
+            .backlog-item {
+                display: grid;
+                grid-template-columns: 48px 1fr 28px;
+                align-items: center;
+                gap: 12px;
+                padding: 9px 14px;
+                background: var(--s0);
+                margin-bottom: 1px;
+                cursor: pointer;
+                transition: background 0.1s;
+            }
+            .backlog-item:hover {
+                background: var(--s1);
+            }
+            .bl-id {
+                font-size: 10px;
+                color: var(--fg3);
+            }
+            .bl-title {
+                font-size: 11px;
+                color: var(--fg2);
+            }
+            .bl-del {
+                width: 20px;
+                height: 20px;
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--fg3);
+                font-size: 11px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.1s;
+                opacity: 0;
+            }
+            .backlog-item:hover .bl-del {
+                opacity: 1;
+            }
+            .bl-del:hover {
+                border-color: var(--red);
+                color: var(--red);
+            }
 
-/* add backlog */
-.add-bl-row {
-  display: flex; gap: 6px; margin-top: 10px;
-}
-.add-bl-input {
-  flex: 1; background: var(--s1); border: 1px solid var(--border);
-  color: var(--fg); font-family: var(--mono); font-size: 11px;
-  padding: 8px 10px; outline: none;
-  transition: border-color 0.15s;
-}
-.add-bl-input:focus { border-color: var(--acc); }
-.add-bl-input::placeholder { color: var(--fg3); }
-.add-bl-btn {
-  font-family: var(--mono); font-size: 10px; padding: 8px 14px;
-  border: 1px solid var(--border); background: var(--s2);
-  color: var(--fg2); cursor: pointer; transition: all 0.1s;
-  white-space: nowrap;
-}
-.add-bl-btn:hover { border-color: var(--acc-dim); color: var(--acc); }
+            /* add backlog */
+            .add-bl-row {
+                display: flex;
+                gap: 6px;
+                margin-top: 10px;
+            }
+            .add-bl-input {
+                flex: 1;
+                background: var(--s1);
+                border: 1px solid var(--border);
+                color: var(--fg);
+                font-family: var(--mono);
+                font-size: 11px;
+                padding: 8px 10px;
+                outline: none;
+                transition: border-color 0.15s;
+            }
+            .add-bl-input:focus {
+                border-color: var(--acc);
+            }
+            .add-bl-input::placeholder {
+                color: var(--fg3);
+            }
+            .add-bl-btn {
+                font-family: var(--mono);
+                font-size: 10px;
+                padding: 8px 14px;
+                border: 1px solid var(--border);
+                background: var(--s2);
+                color: var(--fg2);
+                cursor: pointer;
+                transition: all 0.1s;
+                white-space: nowrap;
+            }
+            .add-bl-btn:hover {
+                border-color: var(--acc-dim);
+                color: var(--acc);
+            }
 
-/* toast */
-.toast {
-  position: fixed; bottom: 20px; right: 20px;
-  padding: 9px 16px; background: var(--s2);
-  border: 1px solid var(--border); font-size: 10.5px;
-  color: var(--fg2); opacity: 0; transition: opacity 0.2s;
-  pointer-events: none; z-index: 999; letter-spacing: 0.04em;
-}
-.toast.show { opacity: 1; }
-.toast.ok   { border-color: var(--green-dim); color: var(--green); }
-.toast.err  { border-color: var(--red-dim);   color: var(--red); }
+            /* toast */
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 9px 16px;
+                background: var(--s2);
+                border: 1px solid var(--border);
+                font-size: 10.5px;
+                color: var(--fg2);
+                opacity: 0;
+                transition: opacity 0.2s;
+                pointer-events: none;
+                z-index: 999;
+                letter-spacing: 0.04em;
+            }
+            .toast.show {
+                opacity: 1;
+            }
+            .toast.ok {
+                border-color: var(--green-dim);
+                color: var(--green);
+            }
+            .toast.err {
+                border-color: var(--red-dim);
+                color: var(--red);
+            }
 
-/* empty state */
-.empty {
-  text-align: center; padding: 60px 20px;
-  color: var(--fg3); font-size: 11px; line-height: 2;
-}
-</style>
-</head>
-<body>
-
-<!-- ═══════════════════ LOGIN ═══════════════════ -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-wordmark">
-      <h1>khem</h1>
-      <p>ROADMAP MANAGER</p>
-    </div>
-    <div class="login-input-row">
-      <span class="login-label">API TOKEN</span>
-      <input type="password" id="tokenInput" class="login-input" placeholder="enter ai.erikg.org token…">
-    </div>
-    <button class="login-btn" onclick="doLogin()">ACCESS ROADMAP</button>
-    <div class="login-error" id="loginError"></div>
-    <div class="login-footer">
-      requires your api token to push roadmap updates.<br>
-      <a href="https://ai.erikg.org" target="_blank">ai.erikg.org</a>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════ APP ═══════════════════ -->
-<div id="app">
-
-  <!-- topbar -->
-  <div class="topbar">
-    <span class="topbar-logo">khem</span>
-    <span class="topbar-sep">/</span>
-    <span class="topbar-title">roadmap manager</span>
-    <div class="topbar-spacer"></div>
-    <span class="topbar-status" id="saveStatus"></span>
-    <button class="topbar-btn primary" onclick="saveAll()">save</button>
-    <button class="topbar-btn" onclick="loadAll()">refresh</button>
-    <button class="topbar-btn danger" onclick="logout()">logout</button>
-  </div>
-
-  <div class="layout">
-
-    <!-- sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-head">PHASES</div>
-        <div id="sidebarPhases"></div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-item" id="sb-backlog" onclick="showBacklog()">
-          <span class="si-num">—</span>
-          backlog
+            /* empty state */
+            .empty {
+                text-align: center;
+                padding: 60px 20px;
+                color: var(--fg3);
+                font-size: 11px;
+                line-height: 2;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- ═══════════════════ LOGIN ═══════════════════ -->
+        <div id="login-screen">
+            <div class="login-box">
+                <div class="login-wordmark">
+                    <h1>khem</h1>
+                    <p>ROADMAP MANAGER</p>
+                </div>
+                <div class="login-input-row">
+                    <span class="login-label">API TOKEN</span>
+                    <input
+                        type="password"
+                        id="tokenInput"
+                        class="login-input"
+                        placeholder="enter ai.erikg.org token…"
+                    />
+                </div>
+                <button class="login-btn" onclick="doLogin()">
+                    ACCESS ROADMAP
+                </button>
+                <div class="login-error" id="loginError"></div>
+                <div class="login-footer">
+                    requires your api token to push roadmap updates.<br />
+                    <a href="https://ai.erikg.org" target="_blank"
+                        >ai.erikg.org</a
+                    >
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-head">OVERVIEW</div>
-        <div class="stats" id="globalStats"></div>
-      </div>
-    </div>
 
-    <!-- main -->
-    <div class="main" id="mainArea">
-      <div class="empty">loading…</div>
-    </div>
+        <!-- ═══════════════════ APP ═══════════════════ -->
+        <div id="app">
+            <!-- topbar -->
+            <div class="topbar">
+                <span class="topbar-logo">khem</span>
+                <span class="topbar-sep">/</span>
+                <span class="topbar-title">roadmap manager</span>
+                <div class="topbar-spacer"></div>
+                <span class="topbar-status" id="saveStatus"></span>
+                <button class="topbar-btn primary" onclick="saveAll()">
+                    save
+                </button>
+                <button class="topbar-btn" onclick="loadAll()">refresh</button>
+                <button class="topbar-btn danger" onclick="logout()">
+                    logout
+                </button>
+            </div>
 
-    <!-- right panel -->
-    <div class="panel">
-      <div class="panel-section">
-        <div class="panel-head">PHASE PROGRESS</div>
-        <div id="phaseProgressList"></div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-head">BULK ACTIONS</div>
-        <div class="bulk-row">
-          <button class="bulk-btn" onclick="bulkPhase('done')">mark phase done</button>
-          <button class="bulk-btn" onclick="bulkPhase('todo')">reset phase</button>
+            <div class="layout">
+                <!-- sidebar -->
+                <div class="sidebar">
+                    <div class="sidebar-section">
+                        <div class="sidebar-head">PHASES</div>
+                        <div id="sidebarPhases"></div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div
+                            class="sidebar-item"
+                            id="sb-backlog"
+                            onclick="showBacklog()"
+                        >
+                            <span class="si-num">—</span>
+                            backlog
+                        </div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-head">OVERVIEW</div>
+                        <div class="stats" id="globalStats"></div>
+                    </div>
+                </div>
+
+                <!-- main -->
+                <div class="main" id="mainArea">
+                    <div class="empty">loading…</div>
+                </div>
+
+                <!-- right panel -->
+                <div class="panel">
+                    <div class="panel-section">
+                        <div class="panel-head">PHASE PROGRESS</div>
+                        <div id="phaseProgressList"></div>
+                    </div>
+                    <div class="panel-section">
+                        <div class="panel-head">BULK ACTIONS</div>
+                        <div class="bulk-row">
+                            <button
+                                class="bulk-btn"
+                                onclick="bulkPhase('done')"
+                            >
+                                mark phase done
+                            </button>
+                            <button
+                                class="bulk-btn"
+                                onclick="bulkPhase('todo')"
+                            >
+                                reset phase
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-section">
+                        <div class="panel-head">RECENT CHANGES</div>
+                        <div id="activityLog">
+                            <div style="font-size: 10px; color: var(--fg3)">
+                                no changes yet
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-head">RECENT CHANGES</div>
-        <div id="activityLog"><div style="font-size:10px;color:var(--fg3)">no changes yet</div></div>
-      </div>
-    </div>
 
-  </div>
-</div>
+        <div class="toast" id="toast"></div>
 
-<div class="toast" id="toast"></div>
-
-<script>
-/* ═══════════════════════════════════════════════
+        <script>
+            /* ═══════════════════════════════════════════════
    CONFIG
 ════════════════════════════════════════════════ */
-const API_BASE      = 'https://ai.erikg.org/api';
-const STATE_KEY     = 'khem-roadmap-state';
-const STRUCTURE_KEY = 'khem-roadmap-structure';
-const TOKEN_KEY     = 'khem-api-token';
+            const API_BASE = "https://ai.erikg.org/api";
+            const STATE_KEY = "khem-roadmap-state";
+            const STRUCTURE_KEY = "khem-roadmap-structure";
+            const TOKEN_KEY = "khem-api-token";
 
-let token = '';
+            let token = "";
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    DEFAULT DATA — full roadmap definition
 ════════════════════════════════════════════════ */
-const DEFAULT_DATA = {
-  phases: [
-    { id:'p1', num:'PHASE 1', title:'Parser', est:'~1 evening',
-      desc:'<strong>Goal:</strong> read a string, produce a stream of correctly typed tokens. Nothing evaluates yet. Just the lexer. Get it right before touching anything else.',
-      gate:'Gate: all token types correct · nested braces depth-balanced · valgrind clean · all tests pass',
-      tasks:[
-        {id:'1-01',title:'Token types',desc:'Define: <code>WORD STR CMD SEP EOL EOF</code>. WORD is a bare token. STR is <code>{...}</code>. CMD is <code>[...]</code>.',tags:['spec','c']},
-        {id:'1-02',title:'Brace quoting { }',desc:'Depth-balanced counter. No substitution inside. Nested braces fine. Unbalanced is an error.',tags:['c']},
-        {id:'1-03',title:'Bracket command [ ]',desc:'Depth-balanced. Content is a nested script. Token type CMD.',tags:['c']},
-        {id:'1-04',title:'Double-quoted strings',desc:'Substitution happens inside. <code>$var</code> and <code>[cmd]</code> expand. Escape sequences: <code>\\n \\t \\\\ \\$</code>.',tags:['c']},
-        {id:'1-05',title:'Separators, EOL, comments',desc:'Space/tab = SEP. Newline/<code>;</code> = EOL. <code>#</code> after EOL skips to end of line.',tags:['c']},
-        {id:'1-06',title:'Parser tests',desc:'C test file covering every token type, nested braces, unbalanced errors, empty strings, comments.',tags:['c']},
-      ]},
-    { id:'p2', num:'PHASE 2', title:'Substitution & Eval Loop', est:'~1 evening',
-      desc:'<strong>Goal:</strong> expand substitutions and dispatch commands. After this phase <code>puts "hello world"</code> works.',
-      gate:'Gate: <code>set x hello; set y world; puts "$x, $y"</code> runs correctly and cleanly.',
-      tasks:[
-        {id:'2-01',title:'Variable substitution $name',desc:'<code>$name</code> and <code>${name}</code> look up and splice the value. Undefined variable is an error.',tags:['c']},
-        {id:'2-02',title:'Command substitution [cmd]',desc:'CMD tokens recursively evaluate. Result splices into parent argument.',tags:['c']},
-        {id:'2-03',title:'Command dispatch',desc:'First token looked up in command table. Unknown command is an error.',tags:['c']},
-        {id:'2-04',title:'Result codes',desc:'<code>OK ERR RETURN BREAK CONTINUE</code>. Propagate correctly through nested evals.',tags:['c']},
-        {id:'2-05',title:'Variable scope (single frame)',desc:'Linked list of name→value. <code>set</code> writes, <code>$name</code> reads. Proc frames in Phase 3.',tags:['c']},
-        {id:'2-06',title:'Four bootstrap commands',desc:'Implement exactly: <code>set puts eval error</code>.',tags:['c']},
-      ]},
-    { id:'p3', num:'PHASE 3', title:'Procedures & Scopes', est:'~1 evening',
-      desc:'<strong>Goal:</strong> <code>proc</code> with named arguments, call frames, <code>return</code>, <code>upvar</code>.',
-      gate:'Gate: recursive fibonacci works · proc with zero args works · upvar mutates caller variable · valgrind clean',
-      tasks:[
-        {id:'3-01',title:'Call frame stack',desc:'Each proc call pushes a new scope. Return pops it.',tags:['c']},
-        {id:'3-02',title:'proc name {args} {body}',desc:'Empty arglist <code>{}</code> must work — <code>proc true {} {return 1}</code>.',tags:['c']},
-        {id:'3-03',title:'return ?value?',desc:'RETURN propagates up through nested evals until proc frame catches it.',tags:['c']},
-        {id:'3-04',title:'upvar and global',desc:'<code>upvar 1 outervar localname</code> links local to parent frame.',tags:['c']},
-      ]},
-    { id:'p4', num:'PHASE 4', title:'Core Commands', est:'~1 evening',
-      desc:'<strong>Goal:</strong> every built-in command. Last C-heavy phase before writing Khem in Khem.',
-      gate:'Gate: FizzBuzz · GCD · prime sieve · Collatz — all correct, all valgrind clean.',
-      tasks:[
-        {id:'4-01',title:'Control flow',desc:'<code>if while for break continue</code>',tags:['c']},
-        {id:'4-02',title:'Arithmetic: prefix + expr',desc:'<code>+ - * / %</code> prefix. <code>expr {infix}</code> with full operator precedence.',tags:['c']},
-        {id:'4-03',title:'Comparison operators',desc:'<code>== != &lt; &lt;= &gt; &gt;=</code> · <code>eq not</code>',tags:['c']},
-        {id:'4-04',title:'String commands',desc:'<code>cat len eq not substr indexof contains startswith endswith split trim subst incr defined</code>',tags:['c']},
-        {id:'4-05',title:'List commands',desc:'<code>list llength lindex lappend lset</code>',tags:['c']},
-        {id:'4-06',title:'source',desc:'<code>source path</code> loads and evaluates a <code>.kh</code> file.',tags:['c']},
-      ]},
-    { id:'p5', num:'PHASE 5', title:'stdlib.kh', est:'~1 evening',
-      desc:'<strong>Goal:</strong> everything that doesn\'t need C gets written in Khem. The self-hosting seed.',
-      milestone:'milestone — kh 0.1 · the language works',
-      gate:'Gate: a person who has never seen Khem can read the examples and understand them.',
-      gateAcc: true,
-      tasks:[
-        {id:'5-01',title:'Boolean and numeric helpers',desc:'<code>true false and or bool max min abs even odd clamp pow</code>',tags:['kh']},
-        {id:'5-02',title:'List higher-order',desc:'<code>lmap lfilter lreduce lrange lfirst llast lreverse</code>',tags:['kh']},
-        {id:'5-03',title:'String helpers',desc:'<code>repeat join unless</code>',tags:['kh']},
-        {id:'5-04',title:'Auto-load on startup',desc:'Finds and sources <code>stdlib.kh</code> relative to the binary.',tags:['c']},
-      ]},
-    { id:'p6', num:'PHASE 6', title:'Host API', est:'~1 afternoon',
-      desc:'<strong>Goal:</strong> a clean public header so any C program can embed Khem in an afternoon.',
-      milestone:'milestone — kh 0.2 · embeddable',
-      gate:'Gate: a C developer can embed Khem and add a custom command in under an hour.',
-      gateAcc: true,
-      tasks:[
-        {id:'6-01',title:'kh.h public header',desc:'Clean separation of public API from internals.',tags:['spec','c']},
-        {id:'6-02',title:'Lifecycle + eval',desc:'<code>khem_new() khem_free(k) khem_eval(k, script) khem_result(k)</code>',tags:['c']},
-        {id:'6-03',title:'Extension API',desc:'<code>khem_cmd khem_set khem_get</code>',tags:['c']},
-        {id:'6-04',title:'Advanced API',desc:'<code>khem_set_result khem_frame_push khem_frame_pop</code>',tags:['c']},
-        {id:'6-05',title:'Embedding example',desc:'50-line <code>host_example.c</code>: embed, register command, eval, read result.',tags:['c']},
-      ]},
-    { id:'p7', num:'PHASE 7', title:'Types & Dict', est:'~1 weekend',
-      desc:'<strong>Goal:</strong> typed values internally. Dict as first-class citizen. Language surface unchanged.',
-      milestone:'milestone — kh 0.3 · typed',
-      tasks:[
-        {id:'7-01',title:'Val tagged union',desc:'<code>Val { type, union { long i, double f, char *s, ... } }</code>',tags:['c']},
-        {id:'7-02',title:'Int and float inference',desc:'<code>strtol</code> then <code>strtod</code> before treating token as string.',tags:['c']},
-        {id:'7-03',title:'Dict type and commands',desc:'<code>dict new set get has keys values each size delete merge</code>',tags:['c']},
-        {id:'7-04',title:'List as typed Val',desc:'Internal array of Val. <code>lindex</code> and <code>lset</code> become O(1).',tags:['c']},
-        {id:'7-05',title:'Canonical string form',desc:'Every Val serializes deterministically for string contexts.',tags:['c']},
-        {id:'7-06',title:'Dict stdlib helpers',desc:'<code>dict-map dict-filter dict-from-lists dict-to-list</code>',tags:['kh']},
-      ]},
-    { id:'p8', num:'PHASE 8', title:'WASM & First Host', est:'~1 weekend',
-      desc:'<strong>Goal:</strong> Khem running in a browser. Same <code>kh.c</code>, different build target.',
-      milestone:'milestone — kh 0.4 · runs in a browser',
-      tasks:[
-        {id:'8-01',title:'WASM build',desc:'<code>emcc kh.c -o kh.wasm</code>. Exported: the six host API functions.',tags:['wasm']},
-        {id:'8-02',title:'JS wrapper (~50 lines)',desc:'<code>kh.eval(script) kh.result() kh.cmd(name, fn)</code>',tags:['wasm']},
-        {id:'8-03',title:'Console device (browser)',desc:'<code>puts</code> → <code>console.log</code>. First working browser device.',tags:['wasm']},
-        {id:'8-04',title:'Subprocess protocol',desc:'<code>eval script\\n</code> → <code>ok result\\n</code> or <code>err message\\n</code>',tags:['c','spec']},
-        {id:'8-05',title:'Demo on erikg.org',desc:'Single HTML page loading Khem via WASM, running a <code>.kh</code> script live.',tags:['wasm']},
-      ]},
-  ],
-  backlog: [
-    {id:'B-01',title:'VM bytecode + compiler (khem 1.0)'},
-    {id:'B-02',title:'Device model: console file timer draw input net leaf meta'},
-    {id:'B-03',title:'VM snapshot / restore — serialisable state'},
-    {id:'B-04',title:'Leaf host: leaf device, component system, event system'},
-    {id:'B-05',title:'Tail call optimisation'},
-    {id:'B-06',title:'Coroutines / yield'},
-    {id:'B-07',title:'Package system (Seed)'},
-    {id:'B-08',title:'Sandboxing for untrusted plugins'},
-    {id:'B-09',title:'Self-hosted tools: formatter, linter, test runner'},
-    {id:'B-10',title:'Grove: shared Leaf workspace'},
-  ]
-};
+            const DEFAULT_DATA = {
+                phases: [
+                    {
+                        id: "p1",
+                        num: "PHASE 1",
+                        title: "Parser",
+                        est: "~1 evening",
+                        desc: "<strong>Goal:</strong> read a string, produce a stream of correctly typed tokens. Nothing evaluates yet. Just the lexer. Get it right before touching anything else.",
+                        gate: "Gate: all token types correct · nested braces depth-balanced · valgrind clean · all tests pass",
+                        tasks: [
+                            {
+                                id: "1-01",
+                                title: "Token types",
+                                desc: "Define: <code>WORD STR CMD SEP EOL EOF</code>. WORD is a bare token. STR is <code>{...}</code>. CMD is <code>[...]</code>.",
+                                tags: ["spec", "c"],
+                            },
+                            {
+                                id: "1-02",
+                                title: "Brace quoting { }",
+                                desc: "Depth-balanced counter. No substitution inside. Nested braces fine. Unbalanced is an error.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "1-03",
+                                title: "Bracket command [ ]",
+                                desc: "Depth-balanced. Content is a nested script. Token type CMD.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "1-04",
+                                title: "Double-quoted strings",
+                                desc: "Substitution happens inside. <code>$var</code> and <code>[cmd]</code> expand. Escape sequences: <code>\\n \\t \\\\ \\$</code>.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "1-05",
+                                title: "Separators, EOL, comments",
+                                desc: "Space/tab = SEP. Newline/<code>;</code> = EOL. <code>#</code> after EOL skips to end of line.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "1-06",
+                                title: "Parser tests",
+                                desc: "C test file covering every token type, nested braces, unbalanced errors, empty strings, comments.",
+                                tags: ["c"],
+                            },
+                        ],
+                    },
+                    {
+                        id: "p2",
+                        num: "PHASE 2",
+                        title: "Substitution & Eval Loop",
+                        est: "~1 evening",
+                        desc: '<strong>Goal:</strong> expand substitutions and dispatch commands. After this phase <code>puts "hello world"</code> works.',
+                        gate: 'Gate: <code>set x hello; set y world; puts "$x, $y"</code> runs correctly and cleanly.',
+                        tasks: [
+                            {
+                                id: "2-01",
+                                title: "Variable substitution $name",
+                                desc: "<code>$name</code> and <code>${name}</code> look up and splice the value. Undefined variable is an error.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "2-02",
+                                title: "Command substitution [cmd]",
+                                desc: "CMD tokens recursively evaluate. Result splices into parent argument.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "2-03",
+                                title: "Command dispatch",
+                                desc: "First token looked up in command table. Unknown command is an error.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "2-04",
+                                title: "Result codes",
+                                desc: "<code>OK ERR RETURN BREAK CONTINUE</code>. Propagate correctly through nested evals.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "2-05",
+                                title: "Variable scope (single frame)",
+                                desc: "Linked list of name→value. <code>set</code> writes, <code>$name</code> reads. Proc frames in Phase 3.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "2-06",
+                                title: "Four bootstrap commands",
+                                desc: "Implement exactly: <code>set puts eval error</code>.",
+                                tags: ["c"],
+                            },
+                        ],
+                    },
+                    {
+                        id: "p3",
+                        num: "PHASE 3",
+                        title: "Procedures & Scopes",
+                        est: "~1 evening",
+                        desc: "<strong>Goal:</strong> <code>proc</code> with named arguments, call frames, <code>return</code>, <code>upvar</code>.",
+                        gate: "Gate: recursive fibonacci works · proc with zero args works · upvar mutates caller variable · valgrind clean",
+                        tasks: [
+                            {
+                                id: "3-01",
+                                title: "Call frame stack",
+                                desc: "Each proc call pushes a new scope. Return pops it.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "3-02",
+                                title: "proc name {args} {body}",
+                                desc: "Empty arglist <code>{}</code> must work — <code>proc true {} {return 1}</code>.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "3-03",
+                                title: "return ?value?",
+                                desc: "RETURN propagates up through nested evals until proc frame catches it.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "3-04",
+                                title: "upvar and global",
+                                desc: "<code>upvar 1 outervar localname</code> links local to parent frame.",
+                                tags: ["c"],
+                            },
+                        ],
+                    },
+                    {
+                        id: "p4",
+                        num: "PHASE 4",
+                        title: "Core Commands",
+                        est: "~1 evening",
+                        desc: "<strong>Goal:</strong> every built-in command. Last C-heavy phase before writing Khem in Khem.",
+                        gate: "Gate: FizzBuzz · GCD · prime sieve · Collatz — all correct, all valgrind clean.",
+                        tasks: [
+                            {
+                                id: "4-01",
+                                title: "Control flow",
+                                desc: "<code>if while for break continue</code>",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "4-02",
+                                title: "Arithmetic: prefix + expr",
+                                desc: "<code>+ - * / %</code> prefix. <code>expr {infix}</code> with full operator precedence.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "4-03",
+                                title: "Comparison operators",
+                                desc: "<code>== != &lt; &lt;= &gt; &gt;=</code> · <code>eq not</code>",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "4-04",
+                                title: "String commands",
+                                desc: "<code>cat len eq not substr indexof contains startswith endswith split trim subst incr defined</code>",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "4-05",
+                                title: "List commands",
+                                desc: "<code>list llength lindex lappend lset</code>",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "4-06",
+                                title: "source",
+                                desc: "<code>source path</code> loads and evaluates a <code>.kh</code> file.",
+                                tags: ["c"],
+                            },
+                        ],
+                    },
+                    {
+                        id: "p5",
+                        num: "PHASE 5",
+                        title: "stdlib.kh",
+                        est: "~1 evening",
+                        desc: "<strong>Goal:</strong> everything that doesn't need C gets written in Khem. The self-hosting seed.",
+                        milestone: "milestone — kh 0.1 · the language works",
+                        gate: "Gate: a person who has never seen Khem can read the examples and understand them.",
+                        gateAcc: true,
+                        tasks: [
+                            {
+                                id: "5-01",
+                                title: "Boolean and numeric helpers",
+                                desc: "<code>true false and or bool max min abs even odd clamp pow</code>",
+                                tags: ["kh"],
+                            },
+                            {
+                                id: "5-02",
+                                title: "List higher-order",
+                                desc: "<code>lmap lfilter lreduce lrange lfirst llast lreverse</code>",
+                                tags: ["kh"],
+                            },
+                            {
+                                id: "5-03",
+                                title: "String helpers",
+                                desc: "<code>repeat join unless</code>",
+                                tags: ["kh"],
+                            },
+                            {
+                                id: "5-04",
+                                title: "Auto-load on startup",
+                                desc: "Finds and sources <code>stdlib.kh</code> relative to the binary.",
+                                tags: ["c"],
+                            },
+                        ],
+                    },
+                    {
+                        id: "p6",
+                        num: "PHASE 6",
+                        title: "Host API",
+                        est: "~1 afternoon",
+                        desc: "<strong>Goal:</strong> a clean public header so any C program can embed Khem in an afternoon.",
+                        milestone: "milestone — kh 0.2 · embeddable",
+                        gate: "Gate: a C developer can embed Khem and add a custom command in under an hour.",
+                        gateAcc: true,
+                        tasks: [
+                            {
+                                id: "6-01",
+                                title: "kh.h public header",
+                                desc: "Clean separation of public API from internals.",
+                                tags: ["spec", "c"],
+                            },
+                            {
+                                id: "6-02",
+                                title: "Lifecycle + eval",
+                                desc: "<code>khem_new() khem_free(k) khem_eval(k, script) khem_result(k)</code>",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "6-03",
+                                title: "Extension API",
+                                desc: "<code>khem_cmd khem_set khem_get</code>",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "6-04",
+                                title: "Advanced API",
+                                desc: "<code>khem_set_result khem_frame_push khem_frame_pop</code>",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "6-05",
+                                title: "Embedding example",
+                                desc: "50-line <code>host_example.c</code>: embed, register command, eval, read result.",
+                                tags: ["c"],
+                            },
+                        ],
+                    },
+                    {
+                        id: "p7",
+                        num: "PHASE 7",
+                        title: "Types & Dict",
+                        est: "~1 weekend",
+                        desc: "<strong>Goal:</strong> typed values internally. Dict as first-class citizen. Language surface unchanged.",
+                        milestone: "milestone — kh 0.3 · typed",
+                        tasks: [
+                            {
+                                id: "7-01",
+                                title: "Val tagged union",
+                                desc: "<code>Val { type, union { long i, double f, char *s, ... } }</code>",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "7-02",
+                                title: "Int and float inference",
+                                desc: "<code>strtol</code> then <code>strtod</code> before treating token as string.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "7-03",
+                                title: "Dict type and commands",
+                                desc: "<code>dict new set get has keys values each size delete merge</code>",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "7-04",
+                                title: "List as typed Val",
+                                desc: "Internal array of Val. <code>lindex</code> and <code>lset</code> become O(1).",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "7-05",
+                                title: "Canonical string form",
+                                desc: "Every Val serializes deterministically for string contexts.",
+                                tags: ["c"],
+                            },
+                            {
+                                id: "7-06",
+                                title: "Dict stdlib helpers",
+                                desc: "<code>dict-map dict-filter dict-from-lists dict-to-list</code>",
+                                tags: ["kh"],
+                            },
+                        ],
+                    },
+                    {
+                        id: "p8",
+                        num: "PHASE 8",
+                        title: "WASM & First Host",
+                        est: "~1 weekend",
+                        desc: "<strong>Goal:</strong> Khem running in a browser. Same <code>kh.c</code>, different build target.",
+                        milestone: "milestone — kh 0.4 · runs in a browser",
+                        tasks: [
+                            {
+                                id: "8-01",
+                                title: "WASM build",
+                                desc: "<code>emcc kh.c -o kh.wasm</code>. Exported: the six host API functions.",
+                                tags: ["wasm"],
+                            },
+                            {
+                                id: "8-02",
+                                title: "JS wrapper (~50 lines)",
+                                desc: "<code>kh.eval(script) kh.result() kh.cmd(name, fn)</code>",
+                                tags: ["wasm"],
+                            },
+                            {
+                                id: "8-03",
+                                title: "Console device (browser)",
+                                desc: "<code>puts</code> → <code>console.log</code>. First working browser device.",
+                                tags: ["wasm"],
+                            },
+                            {
+                                id: "8-04",
+                                title: "Subprocess protocol",
+                                desc: "<code>eval script\\n</code> → <code>ok result\\n</code> or <code>err message\\n</code>",
+                                tags: ["c", "spec"],
+                            },
+                            {
+                                id: "8-05",
+                                title: "Demo on erikg.org",
+                                desc: "Single HTML page loading Khem via WASM, running a <code>.kh</code> script live.",
+                                tags: ["wasm"],
+                            },
+                        ],
+                    },
+                ],
+                backlog: [
+                    { id: "B-01", title: "VM bytecode + compiler (khem 1.0)" },
+                    {
+                        id: "B-02",
+                        title: "Device model: console file timer draw input net leaf meta",
+                    },
+                    {
+                        id: "B-03",
+                        title: "VM snapshot / restore — serialisable state",
+                    },
+                    {
+                        id: "B-04",
+                        title: "Leaf host: leaf device, component system, event system",
+                    },
+                    { id: "B-05", title: "Tail call optimisation" },
+                    { id: "B-06", title: "Coroutines / yield" },
+                    { id: "B-07", title: "Package system (Seed)" },
+                    { id: "B-08", title: "Sandboxing for untrusted plugins" },
+                    {
+                        id: "B-09",
+                        title: "Self-hosted tools: formatter, linter, test runner",
+                    },
+                    { id: "B-10", title: "Grove: shared Leaf workspace" },
+                ],
+            };
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    STATE
 ════════════════════════════════════════════════ */
-let taskStatus = {};   // taskId → 'todo'|'active'|'done'|'blocked'
-let roadmap = null;
-let currentView = 'p1';
-let activityLog = [];
-let dirty = false;
-let openDetails = {};
+            let taskStatus = {}; // taskId → 'todo'|'active'|'done'|'blocked'
+            let roadmap = null;
+            let currentView = "p1";
+            let activityLog = [];
+            let dirty = false;
+            let openDetails = {};
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    API
 ════════════════════════════════════════════════ */
-async function apiGet(path) {
-  const r = await fetch(API_BASE + path, {
-    headers: { 'Authorization': 'Bearer ' + token }
-  });
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  return r.json();
-}
+            async function apiGet(path) {
+                const r = await fetch(API_BASE + path, {
+                    headers: { Authorization: "Bearer " + token },
+                });
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            }
 
-async function apiPost(path, body) {
-  const r = await fetch(API_BASE + path, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + token,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  });
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  return r.json();
-}
+            async function apiPost(path, body) {
+                const r = await fetch(API_BASE + path, {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Bearer " + token,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                });
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            }
 
-/* ═══════════════════════════════════════════════
-   AUTH 
+            /* ═══════════════════════════════════════════════
+   AUTH
 ════════════════════════════════════════════════ */
-function logout() {
-  localStorage.removeItem(TOKEN_KEY);
-  location.reload();
-}
+            function logout() {
+                localStorage.removeItem(TOKEN_KEY);
+                location.reload();
+            }
 
-document.getElementById('tokenInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
+            document
+                .getElementById("tokenInput")
+                .addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") doLogin();
+                });
 
-async function doLogin() {
-  const t = document.getElementById('tokenInput').value.trim();
-  if (!t) { showLoginError('enter a token'); return; }
-  token = t;
-  document.getElementById('loginError').textContent = 'connecting…';
-  try {
-    await loadAll(true);
-    localStorage.setItem(TOKEN_KEY, t);
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').classList.add('visible');
-  } catch(e) {
-    token = '';
-    document.getElementById('loginError').textContent = 'invalid token or API unreachable';
-  }
-}
+            async function doLogin() {
+                const t = document.getElementById("tokenInput").value.trim();
+                if (!t) {
+                    showLoginError("enter a token");
+                    return;
+                }
+                token = t;
+                document.getElementById("loginError").textContent =
+                    "connecting…";
+                try {
+                    await loadAll(true);
+                    localStorage.setItem(TOKEN_KEY, t);
+                    document.getElementById("login-screen").style.display =
+                        "none";
+                    document.getElementById("app").classList.add("visible");
+                } catch (e) {
+                    token = "";
+                    document.getElementById("loginError").textContent =
+                        "invalid token or API unreachable";
+                }
+            }
 
-function showLoginError(msg) {
-  document.getElementById('loginError').textContent = msg;
-}
+            function showLoginError(msg) {
+                document.getElementById("loginError").textContent = msg;
+            }
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    LOAD / SAVE
 ════════════════════════════════════════════════ */
-async function loadAll(silent) {
-  if (!silent) setStatus('loading…', '');
-  const [structRes, stateRes] = await Promise.all([
-    apiGet('/data/' + STRUCTURE_KEY).catch(() => null),
-    apiGet('/data/' + STATE_KEY).catch(() => null),
-  ]);
-  
-  // Adapt to ai.erikg.org API format which might wrap payload in 'data' or return naked json
-  const structure = structRes ? (structRes.data || structRes) : null;
-  const state     = stateRes  ? (stateRes.data  || stateRes)  : null;
-  
-  taskStatus = state || {};
-  roadmap = (structure && structure.phases)
-    ? JSON.parse(JSON.stringify(structure))
-    : JSON.parse(JSON.stringify(DEFAULT_DATA));
-  dirty = false;
-  render();
-  if (!silent) {
-    setStatus('loaded', 'saved');
-    setTimeout(() => setStatus('', ''), 1500);
-  }
-}
+            async function loadAll(silent) {
+                if (!silent) setStatus("loading…", "");
+                const [structRes, stateRes] = await Promise.all([
+                    apiGet("/data/" + STRUCTURE_KEY).catch(() => null),
+                    apiGet("/data/" + STATE_KEY).catch(() => null),
+                ]);
 
-async function saveAll() {
-  setStatus('saving…', 'saving');
-  try {
-    await Promise.all([
-      apiPost('/data/' + STRUCTURE_KEY, { phases: roadmap.phases, backlog: roadmap.backlog }),
-      apiPost('/data/' + STATE_KEY, taskStatus),
-    ]);
-    dirty = false;
-    setStatus('saved', 'saved');
-    toast('saved', 'ok');
-    setTimeout(() => setStatus('', ''), 2000);
-  } catch(e) {
-    setStatus('save failed', 'err');
-    toast('save failed: ' + e.message, 'err');
-  }
-}
+                // Adapt to ai.erikg.org API format which might wrap payload in 'data' or return naked json
+                const structure = structRes
+                    ? structRes.data || structRes
+                    : null;
+                const state = stateRes ? stateRes.data || stateRes : null;
 
-function setStatus(msg, cls) {
-  const el = document.getElementById('saveStatus');
-  el.textContent = msg;
-  el.className = 'topbar-status ' + cls;
-}
+                taskStatus = state || {};
+                roadmap =
+                    structure && structure.phases
+                        ? JSON.parse(JSON.stringify(structure))
+                        : JSON.parse(JSON.stringify(DEFAULT_DATA));
+                dirty = false;
+                render();
+                if (!silent) {
+                    setStatus("loaded", "saved");
+                    setTimeout(() => setStatus("", ""), 1500);
+                }
+            }
 
-/* ═══════════════════════════════════════════════
+            async function saveAll() {
+                setStatus("saving…", "saving");
+                try {
+                    await Promise.all([
+                        apiPost("/data/" + STRUCTURE_KEY, {
+                            phases: roadmap.phases,
+                            backlog: roadmap.backlog,
+                        }),
+                        apiPost("/data/" + STATE_KEY, taskStatus),
+                    ]);
+                    dirty = false;
+                    setStatus("saved", "saved");
+                    toast("saved", "ok");
+                    setTimeout(() => setStatus("", ""), 2000);
+                } catch (e) {
+                    setStatus("save failed", "err");
+                    toast("save failed: " + e.message, "err");
+                }
+            }
+
+            function setStatus(msg, cls) {
+                const el = document.getElementById("saveStatus");
+                el.textContent = msg;
+                el.className = "topbar-status " + cls;
+            }
+
+            /* ═══════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════ */
-function initApp() {
-  if (!roadmap) roadmap = JSON.parse(JSON.stringify(DEFAULT_DATA));
-  render();
-}
+            function initApp() {
+                if (!roadmap)
+                    roadmap = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                render();
+            }
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    RENDER
 ════════════════════════════════════════════════ */
-function getStatus(id) { return taskStatus[id] || 'todo'; }
+            function getStatus(id) {
+                return taskStatus[id] || "todo";
+            }
 
-const TAG_CLASS = { c:'tag-badge active-tag c', kh:'tag-badge active-tag kh', spec:'tag-badge active-tag spec', wasm:'tag-badge active-tag wasm' };
+            const TAG_CLASS = {
+                c: "tag-badge active-tag c",
+                kh: "tag-badge active-tag kh",
+                spec: "tag-badge active-tag spec",
+                wasm: "tag-badge active-tag wasm",
+            };
 
-function tagBadges(tags) {
-  return (tags||[]).map(t =>
-    `<span class="tag-badge active-tag ${t}">${t}</span>`
-  ).join('');
-}
+            function tagBadges(tags) {
+                return (tags || [])
+                    .map(
+                        (t) =>
+                            `<span class="tag-badge active-tag ${t}">${t}</span>`,
+                    )
+                    .join("");
+            }
 
-function statusBadge(st) {
-  const labels = { todo:'todo', active:'active', done:'done', blocked:'blocked' };
-  return `<div class="status-badge" onclick="event.stopPropagation()">${labels[st]||'todo'}</div>`;
-}
+            function statusBadge(st) {
+                const labels = {
+                    todo: "todo",
+                    active: "active",
+                    done: "done",
+                    blocked: "blocked",
+                };
+                return `<div class="status-badge" onclick="event.stopPropagation()">${labels[st] || "todo"}</div>`;
+            }
 
-function renderTask(t, phaseId) {
-  const st = getStatus(t.id);
-  const isOpen = openDetails[t.id];
-  return `
+            function renderTask(t, phaseId) {
+                const st = getStatus(t.id);
+                const isOpen = openDetails[t.id];
+                return `
     <div class="task-row ${st}" id="tr-${t.id}" onclick="toggleDetail('${t.id}')">
       <div class="tr-dot"></div>
       <div class="tr-id">${t.id}</div>
       <div class="tr-body">
         <div class="tr-title">${t.title}</div>
-        <div class="tr-desc">${t.desc||''}</div>
+        <div class="tr-desc">${t.desc || ""}</div>
       </div>
       <div class="status-sel" id="ss-${t.id}">
         ${renderStatusSel(t.id, st)}
       </div>
-      <button class="tr-expand" onclick="event.stopPropagation();toggleDetail('${t.id}')">${isOpen?'−':'+'}</button>
+      <button class="tr-expand" onclick="event.stopPropagation();toggleDetail('${t.id}')">${isOpen ? "−" : "+"}</button>
     </div>
-    <div class="task-detail ${isOpen?'open':''}" id="td-${t.id}">
+    <div class="task-detail ${isOpen ? "open" : ""}" id="td-${t.id}">
       ${renderDetail(t, phaseId)}
     </div>`;
-}
+            }
 
-function renderStatusSel(taskId, st) {
-  const opts = [
-    {v:'todo',    label:'todo',    col:'var(--b2)'},
-    {v:'active',  label:'active',  col:'var(--acc)'},
-    {v:'done',    label:'done',    col:'var(--green)'},
-    {v:'blocked', label:'blocked', col:'var(--red)'},
-  ];
-  return `
+            function renderStatusSel(taskId, st) {
+                const opts = [
+                    { v: "todo", label: "todo", col: "var(--b2)" },
+                    { v: "active", label: "active", col: "var(--acc)" },
+                    { v: "done", label: "done", col: "var(--green)" },
+                    { v: "blocked", label: "blocked", col: "var(--red)" },
+                ];
+                return `
     <div class="status-badge" onclick="event.stopPropagation();toggleStatusMenu('${taskId}')">${st}</div>
     <div class="status-menu" id="sm-${taskId}">
-      ${opts.map(o => `
+      ${opts
+          .map(
+              (o) => `
         <div class="status-opt" onclick="event.stopPropagation();setStatus_('${taskId}','${o.v}')">
           <div class="status-dot" style="background:${o.col}"></div>${o.label}
-        </div>`).join('')}
+        </div>`,
+          )
+          .join("")}
     </div>`;
-}
+            }
 
-function renderDetail(t, phaseId) {
-  return `
+            function renderDetail(t, phaseId) {
+                return `
     <div class="detail-field">
       <div class="detail-label">TITLE</div>
-      <input class="detail-input" id="di-title-${t.id}" value="${escHtml(t.title||'')}">
+      <input class="detail-input" id="di-title-${t.id}" value="${escHtml(t.title || "")}">
     </div>
     <div class="detail-field">
       <div class="detail-label">DESCRIPTION</div>
-      <textarea class="detail-textarea" id="di-desc-${t.id}">${escHtml(t.desc||'')}</textarea>
+      <textarea class="detail-textarea" id="di-desc-${t.id}">${escHtml(t.desc || "")}</textarea>
     </div>
     <div class="detail-field">
       <div class="detail-label">TAGS</div>
       <div class="tag-editor">
-        ${['c','kh','spec','wasm'].map(tag => {
-          const active = (t.tags||[]).includes(tag);
-          return `<span class="tag-badge ${active?'active-tag':'inactive-tag'} ${active?tag:''}"
+        ${["c", "kh", "spec", "wasm"]
+            .map((tag) => {
+                const active = (t.tags || []).includes(tag);
+                return `<span class="tag-badge ${active ? "active-tag" : "inactive-tag"} ${active ? tag : ""}"
             onclick="toggleTag('${t.id}','${tag}',this)">${tag}</span>`;
-        }).join('')}
+            })
+            .join("")}
       </div>
     </div>
     <div class="detail-actions">
       <button class="detail-btn save" onclick="saveTaskEdit('${t.id}','${phaseId}')">save changes</button>
       <button class="detail-btn del" onclick="deleteTask('${t.id}','${phaseId}')">delete task</button>
     </div>`;
-}
+            }
 
-function renderPhaseView(phase) {
-  const tasks = phase.tasks || [];
-  return `
+            function renderPhaseView(phase) {
+                const tasks = phase.tasks || [];
+                return `
     <div class="phase-view">
       <div class="phase-header">
         <span class="phase-num">${phase.num}</span>
         <span class="phase-title">${phase.title}</span>
-        <span class="phase-est">${phase.est||''}</span>
+        <span class="phase-est">${phase.est || ""}</span>
       </div>
-      <div class="phase-desc">${phase.desc||''}</div>
+      <div class="phase-desc">${phase.desc || ""}</div>
       <div class="task-list">
-        ${tasks.map(t => renderTask(t, phase.id)).join('')}
+        ${tasks.map((t) => renderTask(t, phase.id)).join("")}
       </div>
       <button class="add-task-btn" onclick="addTask('${phase.id}')">+ add task</button>
-      ${phase.milestone ? `<div class="milestone-row">${phase.milestone}</div>` : ''}
-      ${phase.gate ? `<div class="gate ${phase.gateAcc?'gate-acc':''}">${phase.gate}</div>` : ''}
+      ${phase.milestone ? `<div class="milestone-row">${phase.milestone}</div>` : ""}
+      ${phase.gate ? `<div class="gate ${phase.gateAcc ? "gate-acc" : ""}">${phase.gate}</div>` : ""}
     </div>`;
-}
+            }
 
-function renderBacklogView() {
-  const bl = roadmap.backlog || [];
-  return `
+            function renderBacklogView() {
+                const bl = roadmap.backlog || [];
+                return `
     <div class="backlog-view">
       <div class="phase-header">
         <span class="phase-num">BACKLOG</span>
         <span class="phase-title">Later — write it down, let it go</span>
       </div>
       <div class="phase-desc">Real ideas with a place to live. Not now.</div>
-      ${bl.map(b => `
+      ${bl
+          .map(
+              (b) => `
         <div class="backlog-item" id="bl-${b.id}">
           <span class="bl-id">${b.id}</span>
           <span class="bl-title">${escHtml(b.title)}</span>
           <button class="bl-del" onclick="deleteBacklogItem('${b.id}')">×</button>
-        </div>`).join('')}
+        </div>`,
+          )
+          .join("")}
       <div class="add-bl-row">
         <input class="add-bl-input" id="blInput" placeholder="new backlog item…" onkeydown="if(event.key==='Enter')addBacklogItem()">
         <button class="add-bl-btn" onclick="addBacklogItem()">add</button>
       </div>
     </div>`;
-}
+            }
 
-function renderSidebar() {
-  document.getElementById('sidebarPhases').innerHTML = roadmap.phases.map(p => {
-    const total = p.tasks.length;
-    const done  = p.tasks.filter(t => getStatus(t.id) === 'done').length;
-    const pct   = total ? Math.round(done/total*100) : 0;
-    return `
-      <div class="sidebar-item ${currentView===p.id?'active':''}" onclick="showPhase('${p.id}')">
-        <span class="si-num">${p.num.replace('PHASE ','P')}</span>
+            function renderSidebar() {
+                document.getElementById("sidebarPhases").innerHTML =
+                    roadmap.phases
+                        .map((p) => {
+                            const total = p.tasks.length;
+                            const done = p.tasks.filter(
+                                (t) => getStatus(t.id) === "done",
+                            ).length;
+                            const pct = total
+                                ? Math.round((done / total) * 100)
+                                : 0;
+                            return `
+      <div class="sidebar-item ${currentView === p.id ? "active" : ""}" onclick="showPhase('${p.id}')">
+        <span class="si-num">${p.num.replace("PHASE ", "P")}</span>
         ${p.title}
       </div>
       <div class="sidebar-progress">
         <div class="sidebar-progress-fill" style="width:${pct}%"></div>
       </div>`;
-  }).join('');
+                        })
+                        .join("");
 
-  document.getElementById('sb-backlog').className =
-    'sidebar-item' + (currentView === 'backlog' ? ' active' : '');
-}
+                document.getElementById("sb-backlog").className =
+                    "sidebar-item" +
+                    (currentView === "backlog" ? " active" : "");
+            }
 
-function renderPhaseProgress() {
-  document.getElementById('phaseProgressList').innerHTML =
-    roadmap.phases.map(p => {
-      const total = p.tasks.length;
-      const done  = p.tasks.filter(t => getStatus(t.id) === 'done').length;
-      const pct   = total ? Math.round(done/total*100) : 0;
-      return `
+            function renderPhaseProgress() {
+                document.getElementById("phaseProgressList").innerHTML =
+                    roadmap.phases
+                        .map((p) => {
+                            const total = p.tasks.length;
+                            const done = p.tasks.filter(
+                                (t) => getStatus(t.id) === "done",
+                            ).length;
+                            const pct = total
+                                ? Math.round((done / total) * 100)
+                                : 0;
+                            return `
         <div class="phase-prog-row" onclick="showPhase('${p.id}')">
-          <span class="pp-label">${p.num.replace('PHASE ','P')}</span>
+          <span class="pp-label">${p.num.replace("PHASE ", "P")}</span>
           <div class="pp-bar"><div class="pp-fill" style="width:${pct}%"></div></div>
           <span class="pp-pct">${pct}%</span>
         </div>`;
-    }).join('');
-}
+                        })
+                        .join("");
+            }
 
-function renderGlobalStats() {
-  let total=0, done=0, active=0, blocked=0;
-  roadmap.phases.forEach(p => p.tasks.forEach(t => {
-    total++;
-    const st = getStatus(t.id);
-    if (st==='done')    done++;
-    if (st==='active')  active++;
-    if (st==='blocked') blocked++;
-  }));
-  const todo = total - done - active - blocked;
-  document.getElementById('globalStats').innerHTML = `
+            function renderGlobalStats() {
+                let total = 0,
+                    done = 0,
+                    active = 0,
+                    blocked = 0;
+                roadmap.phases.forEach((p) =>
+                    p.tasks.forEach((t) => {
+                        total++;
+                        const st = getStatus(t.id);
+                        if (st === "done") done++;
+                        if (st === "active") active++;
+                        if (st === "blocked") blocked++;
+                    }),
+                );
+                const todo = total - done - active - blocked;
+                document.getElementById("globalStats").innerHTML = `
     <div class="stat-row"><span>total</span><span class="stat-val">${total}</span></div>
     <div class="stat-row"><span>done</span><span class="stat-val green">${done}</span></div>
     <div class="stat-row"><span>active</span><span class="stat-val amber">${active}</span></div>
     <div class="stat-row"><span>blocked</span><span class="stat-val red">${blocked}</span></div>
     <div class="stat-row"><span>todo</span><span class="stat-val">${todo}</span></div>
   `;
-}
+            }
 
-function render() {
-  renderSidebar();
-  renderPhaseProgress();
-  renderGlobalStats();
-  renderActivityLog();
-  renderMain();
-}
+            function render() {
+                renderSidebar();
+                renderPhaseProgress();
+                renderGlobalStats();
+                renderActivityLog();
+                renderMain();
+            }
 
-function renderMain() {
-  const main = document.getElementById('mainArea');
-  if (currentView === 'backlog') {
-    main.innerHTML = renderBacklogView();
-    return;
-  }
-  const phase = roadmap.phases.find(p => p.id === currentView);
-  if (phase) main.innerHTML = renderPhaseView(phase);
-}
+            function renderMain() {
+                const main = document.getElementById("mainArea");
+                if (currentView === "backlog") {
+                    main.innerHTML = renderBacklogView();
+                    return;
+                }
+                const phase = roadmap.phases.find((p) => p.id === currentView);
+                if (phase) main.innerHTML = renderPhaseView(phase);
+            }
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    INTERACTIONS
 ════════════════════════════════════════════════ */
-function showPhase(id) {
-  currentView = id;
-  openDetails = {};
-  render();
-  document.getElementById('mainArea').scrollTop = 0;
-}
+            function showPhase(id) {
+                currentView = id;
+                openDetails = {};
+                render();
+                document.getElementById("mainArea").scrollTop = 0;
+            }
 
-function showBacklog() {
-  currentView = 'backlog';
-  render();
-}
+            function showBacklog() {
+                currentView = "backlog";
+                render();
+            }
 
-function toggleDetail(taskId) {
-  openDetails[taskId] = !openDetails[taskId];
-  const tr = document.getElementById('td-' + taskId);
-  const btn = document.querySelector(`#tr-${taskId} .tr-expand`);
-  if (tr) tr.classList.toggle('open', !!openDetails[taskId]);
-  if (btn) btn.textContent = openDetails[taskId] ? '−' : '+';
-}
+            function toggleDetail(taskId) {
+                openDetails[taskId] = !openDetails[taskId];
+                const tr = document.getElementById("td-" + taskId);
+                const btn = document.querySelector(`#tr-${taskId} .tr-expand`);
+                if (tr) tr.classList.toggle("open", !!openDetails[taskId]);
+                if (btn) btn.textContent = openDetails[taskId] ? "−" : "+";
+            }
 
-function toggleStatusMenu(taskId) {
-  document.querySelectorAll('.status-menu').forEach(m => {
-    if (m.id !== 'sm-' + taskId) m.classList.remove('open');
-  });
-  const m = document.getElementById('sm-' + taskId);
-  if (m) m.classList.toggle('open');
-}
+            function toggleStatusMenu(taskId) {
+                document.querySelectorAll(".status-menu").forEach((m) => {
+                    if (m.id !== "sm-" + taskId) m.classList.remove("open");
+                });
+                const m = document.getElementById("sm-" + taskId);
+                if (m) m.classList.toggle("open");
+            }
 
-function setStatus_(taskId, st) {
-  const old = getStatus(taskId);
-  taskStatus[taskId] = st;
-  dirty = true;
-  logActivity(taskId, old, st);
+            function setStatus_(taskId, st) {
+                const old = getStatus(taskId);
+                taskStatus[taskId] = st;
+                dirty = true;
+                logActivity(taskId, old, st);
 
-  const row = document.getElementById('tr-' + taskId);
-  if (row) row.className = 'task-row ' + st;
+                const row = document.getElementById("tr-" + taskId);
+                if (row) row.className = "task-row " + st;
 
-  const ss = document.getElementById('ss-' + taskId);
-  if (ss) ss.innerHTML = renderStatusSel(taskId, st);
+                const ss = document.getElementById("ss-" + taskId);
+                if (ss) ss.innerHTML = renderStatusSel(taskId, st);
 
-  const m = document.getElementById('sm-' + taskId);
-  if (m) m.classList.remove('open');
+                const m = document.getElementById("sm-" + taskId);
+                if (m) m.classList.remove("open");
 
-  renderSidebar();
-  renderPhaseProgress();
-  renderGlobalStats();
-  setStatus('unsaved changes', 'saving');
-}
+                renderSidebar();
+                renderPhaseProgress();
+                renderGlobalStats();
+                setStatus("unsaved changes", "saving");
+            }
 
-document.addEventListener('click', () => {
-  document.querySelectorAll('.status-menu').forEach(m => m.classList.remove('open'));
-});
+            document.addEventListener("click", () => {
+                document
+                    .querySelectorAll(".status-menu")
+                    .forEach((m) => m.classList.remove("open"));
+            });
 
-function toggleTag(taskId, tag, el) {
-  const phase = roadmap.phases.find(p => p.tasks.some(t => t.id === taskId));
-  if (!phase) return;
-  const task = phase.tasks.find(t => t.id === taskId);
-  if (!task) return;
-  task.tags = task.tags || [];
-  const idx = task.tags.indexOf(tag);
-  if (idx >= 0) {
-    task.tags.splice(idx, 1);
-    el.className = 'tag-badge inactive-tag';
-  } else {
-    task.tags.push(tag);
-    el.className = `tag-badge active-tag ${tag}`;
-  }
-}
+            function toggleTag(taskId, tag, el) {
+                const phase = roadmap.phases.find((p) =>
+                    p.tasks.some((t) => t.id === taskId),
+                );
+                if (!phase) return;
+                const task = phase.tasks.find((t) => t.id === taskId);
+                if (!task) return;
+                task.tags = task.tags || [];
+                const idx = task.tags.indexOf(tag);
+                if (idx >= 0) {
+                    task.tags.splice(idx, 1);
+                    el.className = "tag-badge inactive-tag";
+                } else {
+                    task.tags.push(tag);
+                    el.className = `tag-badge active-tag ${tag}`;
+                }
+            }
 
-function saveTaskEdit(taskId, phaseId) {
-  const phase = roadmap.phases.find(p => p.id === phaseId);
-  if (!phase) return;
-  const task = phase.tasks.find(t => t.id === taskId);
-  if (!task) return;
-  const titleEl = document.getElementById('di-title-' + taskId);
-  const descEl  = document.getElementById('di-desc-'  + taskId);
-  if (titleEl) task.title = titleEl.value;
-  if (descEl)  task.desc  = descEl.value;
+            function saveTaskEdit(taskId, phaseId) {
+                const phase = roadmap.phases.find((p) => p.id === phaseId);
+                if (!phase) return;
+                const task = phase.tasks.find((t) => t.id === taskId);
+                if (!task) return;
+                const titleEl = document.getElementById("di-title-" + taskId);
+                const descEl = document.getElementById("di-desc-" + taskId);
+                if (titleEl) task.title = titleEl.value;
+                if (descEl) task.desc = descEl.value;
 
-  const row = document.getElementById('tr-' + taskId);
-  if (row) {
-    row.querySelector('.tr-title').textContent = task.title;
-    row.querySelector('.tr-desc').innerHTML = task.desc;
-  }
-  toast('task updated', 'ok');
-}
+                const row = document.getElementById("tr-" + taskId);
+                if (row) {
+                    row.querySelector(".tr-title").textContent = task.title;
+                    row.querySelector(".tr-desc").innerHTML = task.desc;
+                }
+                toast("task updated", "ok");
+            }
 
-function deleteTask(taskId, phaseId) {
-  if (!confirm(`delete task ${taskId}?`)) return;
-  const phase = roadmap.phases.find(p => p.id === phaseId);
-  if (!phase) return;
-  phase.tasks = phase.tasks.filter(t => t.id !== taskId);
-  delete taskStatus[taskId];
-  dirty = true;
-  renderMain();
-  renderSidebar();
-  renderPhaseProgress();
-  renderGlobalStats();
-  toast('task deleted', 'ok');
-}
+            function deleteTask(taskId, phaseId) {
+                if (!confirm(`delete task ${taskId}?`)) return;
+                const phase = roadmap.phases.find((p) => p.id === phaseId);
+                if (!phase) return;
+                phase.tasks = phase.tasks.filter((t) => t.id !== taskId);
+                delete taskStatus[taskId];
+                dirty = true;
+                renderMain();
+                renderSidebar();
+                renderPhaseProgress();
+                renderGlobalStats();
+                toast("task deleted", "ok");
+            }
 
-function addTask(phaseId) {
-  const phase = roadmap.phases.find(p => p.id === phaseId);
-  if (!phase) return;
-  const num = phaseId.replace('p','');
-  const idx = phase.tasks.length + 1;
-  const newId = `${num}-${String(idx).padStart(2,'0')}`;
-  phase.tasks.push({ id: newId, title: 'new task', desc: '', tags: [] });
-  dirty = true;
-  renderMain();
-  setTimeout(() => {
-    openDetails[newId] = true;
-    const tr = document.getElementById('td-' + newId);
-    const btn = document.querySelector(`#tr-${newId} .tr-expand`);
-    if (tr) tr.classList.add('open');
-    if (btn) btn.textContent = '−';
-  }, 50);
-}
+            function addTask(phaseId) {
+                const phase = roadmap.phases.find((p) => p.id === phaseId);
+                if (!phase) return;
+                const num = phaseId.replace("p", "");
+                const idx = phase.tasks.length + 1;
+                const newId = `${num}-${String(idx).padStart(2, "0")}`;
+                phase.tasks.push({
+                    id: newId,
+                    title: "new task",
+                    desc: "",
+                    tags: [],
+                });
+                dirty = true;
+                renderMain();
+                setTimeout(() => {
+                    openDetails[newId] = true;
+                    const tr = document.getElementById("td-" + newId);
+                    const btn = document.querySelector(
+                        `#tr-${newId} .tr-expand`,
+                    );
+                    if (tr) tr.classList.add("open");
+                    if (btn) btn.textContent = "−";
+                }, 50);
+            }
 
-function addBacklogItem() {
-  const input = document.getElementById('blInput');
-  const title = input.value.trim();
-  if (!title) return;
-  const ids = roadmap.backlog.map(b => parseInt(b.id.replace('B-'))||0);
-  const next = Math.max(0, ...ids) + 1;
-  roadmap.backlog.push({ id: `B-${String(next).padStart(2,'0')}`, title });
-  input.value = '';
-  dirty = true;
-  renderMain();
-  toast('backlog item added', 'ok');
-}
+            function addBacklogItem() {
+                const input = document.getElementById("blInput");
+                const title = input.value.trim();
+                if (!title) return;
+                const ids = roadmap.backlog.map(
+                    (b) => parseInt(b.id.replace("B-")) || 0,
+                );
+                const next = Math.max(0, ...ids) + 1;
+                roadmap.backlog.push({
+                    id: `B-${String(next).padStart(2, "0")}`,
+                    title,
+                });
+                input.value = "";
+                dirty = true;
+                renderMain();
+                toast("backlog item added", "ok");
+            }
 
-function deleteBacklogItem(id) {
-  roadmap.backlog = roadmap.backlog.filter(b => b.id !== id);
-  dirty = true;
-  renderMain();
-}
+            function deleteBacklogItem(id) {
+                roadmap.backlog = roadmap.backlog.filter((b) => b.id !== id);
+                dirty = true;
+                renderMain();
+            }
 
-function bulkPhase(st) {
-  const phase = roadmap.phases.find(p => p.id === currentView);
-  if (!phase) return;
-  phase.tasks.forEach(t => { taskStatus[t.id] = st; });
-  dirty = true;
-  render();
-  setStatus('unsaved changes', 'saving');
-  toast(`phase marked ${st}`, 'ok');
-}
+            function bulkPhase(st) {
+                const phase = roadmap.phases.find((p) => p.id === currentView);
+                if (!phase) return;
+                phase.tasks.forEach((t) => {
+                    taskStatus[t.id] = st;
+                });
+                dirty = true;
+                render();
+                setStatus("unsaved changes", "saving");
+                toast(`phase marked ${st}`, "ok");
+            }
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    ACTIVITY LOG
 ════════════════════════════════════════════════ */
-function logActivity(taskId, from, to) {
-  const now = new Date();
-  const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-  activityLog.unshift({ taskId, from, to, time });
-  if (activityLog.length > 20) activityLog.pop();
-  renderActivityLog();
-}
+            function logActivity(taskId, from, to) {
+                const now = new Date();
+                const time =
+                    now.getHours().toString().padStart(2, "0") +
+                    ":" +
+                    now.getMinutes().toString().padStart(2, "0");
+                activityLog.unshift({ taskId, from, to, time });
+                if (activityLog.length > 20) activityLog.pop();
+                renderActivityLog();
+            }
 
-function renderActivityLog() {
-  const el = document.getElementById('activityLog');
-  if (!activityLog.length) {
-    el.innerHTML = '<div style="font-size:10px;color:var(--fg3)">no changes yet</div>';
-    return;
-  }
-  el.innerHTML = activityLog.slice(0,8).map(e => `
+            function renderActivityLog() {
+                const el = document.getElementById("activityLog");
+                if (!activityLog.length) {
+                    el.innerHTML =
+                        '<div style="font-size:10px;color:var(--fg3)">no changes yet</div>';
+                    return;
+                }
+                el.innerHTML = activityLog
+                    .slice(0, 8)
+                    .map(
+                        (e) => `
     <div class="log-entry">
       <span class="log-time">${e.time}</span>
       <span class="log-task">${e.taskId}</span>
       → <span class="log-status ${e.to}">${e.to}</span>
-    </div>`).join('');
-}
+    </div>`,
+                    )
+                    .join("");
+            }
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    UTILS
 ════════════════════════════════════════════════ */
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+            function escHtml(s) {
+                return String(s)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;");
+            }
 
-function toast(msg, type) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show ' + (type||'');
-  setTimeout(() => el.className = 'toast', 2200);
-}
+            function toast(msg, type) {
+                const el = document.getElementById("toast");
+                el.textContent = msg;
+                el.className = "toast show " + (type || "");
+                setTimeout(() => (el.className = "toast"), 2200);
+            }
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    KEYBOARD
 ════════════════════════════════════════════════ */
-document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  if ((e.metaKey || e.ctrlKey) && e.key === 's') {
-    e.preventDefault();
-    saveAll();
-  }
-});
+            document.addEventListener("keydown", (e) => {
+                if (
+                    e.target.tagName === "INPUT" ||
+                    e.target.tagName === "TEXTAREA"
+                )
+                    return;
+                if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+                    e.preventDefault();
+                    saveAll();
+                }
+            });
 
-/* ═══════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════
    STARTUP
 ════════════════════════════════════════════════ */
-(async () => {
-  const saved = localStorage.getItem(TOKEN_KEY);
-  if (saved) {
-    token = saved;
-    document.getElementById('tokenInput').value = saved;
-    try {
-      await loadAll(true);
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').classList.add('visible');
-    } catch(e) {
-      token = '';
-      localStorage.removeItem(TOKEN_KEY);
-    }
-  }
-})();
-</script>
-</body>
+            (async () => {
+                const saved = localStorage.getItem(TOKEN_KEY);
+                if (saved) {
+                    token = saved;
+                    document.getElementById("tokenInput").value = saved;
+                    try {
+                        await loadAll(true);
+                        document.getElementById("login-screen").style.display =
+                            "none";
+                        document.getElementById("app").classList.add("visible");
+                    } catch (e) {
+                        token = "";
+                        localStorage.removeItem(TOKEN_KEY);
+                    }
+                }
+            })();
+        </script>
+    </body>
 </html>
