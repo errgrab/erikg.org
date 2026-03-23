@@ -3,173 +3,193 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Khem Sandbox</title>
+  <title>Khem IDE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tcl.min.js"></script>
+
   <style>
-    /* Khem Design System Variables */
     :root {
-      --bg: #0a0a0a;
-      --s0: #101010;
-      --s1: #161616;
-      --s2: #1e1e1e;
-      --s3: #262626;
-      
-      --border: #272727;
-      --b2: #333333;
-      
-      --fg: #d4d0c8;
-      --fg1: #aaaaaa;
-      --fg2: #888888;
-      --fg3: #555555;
-      --dim: #484848;
-      
-      --acc: #c8a84b;
-      --acc-dim: #7a6628;
-      --green: #6b9e78;
-      --green-dim: #2a4a33;
-      --red: #a86b6b;
-      --red-dim: #4a2222;
-      --blue: #7a8fa8;
-      --amber: #d4924a;
-      
+      --bg: #0a0a0a; --s0: #101010; --s1: #161616; --border: #272727; --b2: #333333;
+      --fg: #d4d0c8; --fg1: #aaaaaa; --fg2: #888888; --fg3: #555555; --dim: #484848;
+      --acc: #c8a84b; --green: #6b9e78; --red: #a86b6b; --blue: #7a8fa8;
       --mono: 'DM Mono', 'Fira Mono', ui-monospace, monospace;
       --serif: 'Instrument Serif', Georgia, serif;
     }
 
-    /* Reset & Boilerplate */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100vh; overflow: hidden; }
-    body {
-      background: var(--bg);
-      color: var(--fg);
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      display: flex;
-      flex-direction: column;
-    }
+    body { background: var(--bg); color: var(--fg); font-family: var(--mono); font-size: 12px; line-height: 1.6; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; }
 
-    /* Custom Scrollbars */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); }
     ::-webkit-scrollbar-thumb:hover { background: var(--b2); }
 
-    /* Header */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-    }
-    
-    .logo {
-      font-family: var(--serif);
-      font-size: 24px;
-      color: var(--fg);
-      line-height: 1;
-    }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg); }
+    .logo { font-family: var(--serif); font-size: 24px; color: var(--fg); line-height: 1; }
+    .btn-run { background: transparent; color: var(--acc); border: 1px solid var(--border); padding: 4px 12px; font-family: var(--mono); font-size: 12px; cursor: pointer; transition: 0.15s; }
+    .btn-run:hover { border-color: var(--acc); }
 
-    .btn-run {
-      background: transparent;
-      color: var(--acc);
-      border: 1px solid var(--border);
-      padding: 4px 12px;
-      font-family: var(--mono);
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    
-    .btn-run:hover {
-      border-color: var(--acc);
-      color: var(--acc);
-    }
+    main { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; flex: 1; gap: 1px; background: var(--border); min-height: 0; }
+    .pane { background: var(--bg); position: relative; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+    .pane-label { position: absolute; top: 8px; right: 12px; font-size: 9.5px; color: var(--dim); letter-spacing: 0.18em; text-transform: uppercase; pointer-events: none; z-index: 10; }
 
-    /* Main Grid Layout */
-    main {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      flex: 1;
-      gap: 1px; /* Creates the thin borders between panes */
-      background: var(--border); /* Acts as the border color between grid items */
-      min-height: 0;
-    }
+    .editor-container { position: relative; flex: 1; background: var(--s1); min-height: 0; overflow: hidden; }
+    .editor-textarea, .editor-highlight { margin: 0; padding: 24px 12px 12px 12px; border: none; width: 100%; height: 100%; font-family: var(--mono); font-size: 12px; line-height: 1.6; position: absolute; top: 0; left: 0; overflow: auto; white-space: pre; word-wrap: normal; tab-size: 2; }
+    .editor-textarea { color: transparent; background: transparent; caret-color: var(--fg); z-index: 2; outline: none; resize: none; }
+    .editor-highlight { z-index: 1; pointer-events: none; color: var(--fg); }
 
-    .pane {
-      background: var(--bg);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      min-width: 0;
-    }
-
-    .pane-label {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      font-size: 9.5px;
-      color: var(--dim);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    /* Inputs & Areas */
-    textarea, .output-area {
-      flex: 1;
-      width: 100%;
-      background: var(--s1);
-      color: var(--fg);
-      font-family: var(--mono);
-      font-size: 12px;
-      border: none;
-      padding: 24px 12px 12px 12px;
-      resize: none;
-      outline: none;
-      overflow-y: auto;
-      min-height: 0;
-    }
-
-    textarea {
-      border: 1px solid transparent; /* To prevent layout shift on focus */
-      transition: border-color 0.15s ease;
-    }
-
-    textarea:focus {
-      border: 1px solid var(--acc-dim);
-    }
-
-    code {
-      color: var(--acc);
-      font-size: 10.5px;
-    }
-
-    /* Console Specifics */
-    #console-out {
-      color: var(--fg2);
-      white-space: pre-wrap;
-    }
+    .output-area { flex: 1; background: var(--bg); color: var(--fg); padding: 24px 12px 12px 12px; overflow-y: auto; font-family: var(--mono); font-size: 12px; min-height: 0; }
+    #console-out { color: var(--fg2); white-space: pre-wrap; background: var(--s1); }
     .log-line { border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-bottom: 4px; }
-    .log-error { color: var(--red); }
-    .log-sys { color: var(--blue); font-size: 10px; }
+    .log-sys { color: var(--blue); } .log-error { color: var(--red); }
 
-    /* DOM Specifics */
-    #dom-out {
-      background: var(--bg);
-    }
+    code[class*="language-"], pre[class*="language-"] { font-family: var(--mono); }
+    .token.comment { color: var(--dim); font-style: italic; }
+    .token.string { color: var(--green); }
+    .token.keyword, .token.builtin, .token.function { color: var(--acc); }
+    .token.variable { color: var(--blue); }
+    .token.number, .token.boolean { color: var(--red); }
+    .token.punctuation, .token.operator { color: var(--fg3); }
   </style>
 </head>
 <body>
+
+  <script type="text/plain" id="default-khem">
+# Khem Homoiconic UI Definition
+set app_title "Khem Dashboard"
+set btn_label "Initialize System"
+
+render {
+  ui {
+    panel {
+      label $app_title
+      button {
+        text $btn_label
+        action { puts "Action clicked!" }
+      }
+    }
+  }
+}
+  </script>
+
+  <script type="text/plain" id="default-js">
+// --- 1. TOKENIZER ---
+function tokenize(input) {
+  let current = 0, tokens = [];
+  while (current < input.length) {
+    let char = input[current];
+    if (char === ' ' || char === '\t') { current++; continue; }
+    if (char === '\n' || char === ';') { tokens.push({ type: 'EOL', value: char }); current++; continue; }
+    if (char === '#') { while (current < input.length && input[current] !== '\n') current++; continue; }
+    if (char === '{') { tokens.push({ type: 'BRACE_OPEN', value: '{' }); current++; continue; }
+    if (char === '}') { tokens.push({ type: 'BRACE_CLOSE', value: '}' }); current++; continue; }
+    if (char === '"') {
+      let val = ''; current++; 
+      while (current < input.length && input[current] !== '"') { val += input[current++]; }
+      current++; tokens.push({ type: 'STRING', value: val }); continue;
+    }
+    if (/[^\s;\{\}\"]/.test(char)) {
+      let val = '';
+      while (current < input.length && /[^\s;\{\}\"]/.test(input[current])) { val += input[current++]; }
+      tokens.push({ type: 'WORD', value: val }); continue;
+    }
+    current++;
+  }
+  return tokens;
+}
+
+// --- 2. PARSER ---
+function parse(tokens) {
+  let current = 0;
+  function parseBlock() {
+    let block = [], statement = [];
+    while (current < tokens.length) {
+      let token = tokens[current];
+      if (token.type === 'EOL') {
+        if (statement.length > 0) { block.push(statement); statement = []; }
+        current++; continue;
+      }
+      if (token.type === 'BRACE_CLOSE') {
+        if (statement.length > 0) block.push(statement);
+        current++; return block;
+      }
+      if (token.type === 'BRACE_OPEN') {
+        current++; statement.push(parseBlock()); continue;
+      }
+      if (token.type === 'WORD' || token.type === 'STRING') {
+        statement.push(token.value); current++; continue;
+      }
+      current++;
+    }
+    if (statement.length > 0) block.push(statement);
+    return block;
+  }
+  return parseBlock();
+}
+
+// --- 3. ENVIRONMENT & EVALUATOR ---
+const env = { vars: {}, commands: {} };
+
+env.commands['set'] = (args, ctx) => { ctx.vars[args[0]] = args[1]; return ""; };
+env.commands['puts'] = (args, ctx) => { khemLog(args.join(" ")); return ""; };
+
+env.commands['render'] = (args, ctx) => {
+  const childHtml = evaluate(args[0], ctx).join("");
+  return `<div style="padding: 16px;">${childHtml}</div>`;
+};
+
+env.commands['ui'] = (args, ctx) => {
+  return `<div style="display: flex; flex-direction: column; gap: 12px;">${evaluate(args[0], ctx).join("")}</div>`;
+};
+
+env.commands['panel'] = (args, ctx) => {
+  return `<div style="border: 1px solid var(--border); background: var(--s1); padding: 12px;">${evaluate(args[0], ctx).join("")}</div>`;
+};
+
+env.commands['label'] = (args, ctx) => {
+  return `<div style="color: var(--fg2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">${args[0]}</div>`;
+};
+
+env.commands['button'] = (args, ctx) => {
+  return `<button style="background: transparent; color: var(--acc); border: 1px solid var(--border); padding: 6px 12px; cursor: pointer; font-family: var(--mono);">${evaluate(args[0], ctx).join("")}</button>`;
+};
+
+env.commands['text'] = (args, ctx) => args[0];
+env.commands['action'] = (args, ctx) => ""; 
+
+function substitute(str, ctx) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/\$([a-zA-Z0-9_-]+)/g, (m, name) => ctx.vars[name] !== undefined ? ctx.vars[name] : m);
+}
+
+function evaluate(ast, ctx) {
+  let results = [];
+  for (let statement of ast) {
+    if (!Array.isArray(statement) || statement.length === 0) continue;
+    const cmdName = statement[0];
+    const args = statement.slice(1).map(arg => typeof arg === 'string' ? substitute(arg, ctx) : arg);
+    
+    if (ctx.commands[cmdName]) {
+      const out = ctx.commands[cmdName](args, ctx);
+      if (out) results.push(out);
+    } else {
+      khemLog(`Unknown command: ${cmdName}`, "error");
+    }
+  }
+  return results;
+}
+
+// --- EXECUTE ---
+khemLog("Booting Khem Engine...", "sys");
+const tokens = tokenize(khemCode);
+const ast = parse(tokens);
+return evaluate(ast, env).join("");
+  </script>
 
   <header>
     <div class="logo">khem</div>
@@ -179,55 +199,18 @@
   <main>
     <div class="pane">
       <div class="pane-label">ENGINE.JS</div>
-      <textarea id="js-in" spellcheck="false">// Khem JS Engine Playground
-// 1. Parse 'khemCode' (the string from the right pane)
-// 2. Output logs using 'khemLog(msg)'
-// 3. Return an HTML string to render in the DOM pane
-
-khemLog("Initializing Khem engine...", "sys");
-khemLog(`Reading script... (${khemCode.length} bytes)`, "sys");
-
-let outputHtml = "<div style='padding: 10px;'>";
-
-// Extremely naive string matching just to prove the pipeline works
-if (khemCode.includes("render {")) {
-  khemLog("Detected 'render' block. Generating UI components...");
-  
-  outputHtml += "<h2 style='font-family: var(--serif); color: var(--acc); margin-bottom: 8px;'>Khem DOM Target</h2>";
-  
-  if (khemCode.includes("button {")) {
-    outputHtml += "<button style='background: transparent; color: var(--fg); border: 1px solid var(--border); padding: 4px 12px; cursor: pointer;'>Deploy</button>";
-  }
-  
-} else {
-  outputHtml += "<span style='color: var(--fg3)'>No render blocks found.</span>";
-}
-
-outputHtml += "</div>";
-
-// The returned string gets pushed to the DOM pane
-return outputHtml;
-</textarea>
+      <div class="editor-container">
+        <textarea id="js-in" class="editor-textarea" spellcheck="false"></textarea>
+        <pre aria-hidden="true"><code id="js-highlight" class="language-javascript editor-highlight"></code></pre>
+      </div>
     </div>
 
     <div class="pane">
       <div class="pane-label">APP.KH</div>
-      <textarea id="khem-in" spellcheck="false"># Welcome to Khem
-# A homoiconic DSL for the web
-
-set title "Hello Browser"
-
-render {
-  ui {
-    panel {
-      label "Click to execute"
-      button {
-        text "Deploy"
-        action { puts "Deploying..." }
-      }
-    }
-  }
-}</textarea>
+      <div class="editor-container">
+        <textarea id="khem-in" class="editor-textarea" spellcheck="false"></textarea>
+        <pre aria-hidden="true"><code id="khem-highlight" class="language-tcl editor-highlight"></code></pre>
+      </div>
     </div>
 
     <div class="pane">
@@ -237,55 +220,74 @@ render {
 
     <div class="pane">
       <div class="pane-label">DOM RENDER</div>
-      <div class="output-area" id="dom-out">
-        <span style="color: var(--fg3);">Awaiting execution...</span>
-      </div>
+      <div class="output-area" id="dom-out"></div>
     </div>
   </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const runBtn = document.getElementById('run-btn');
-      const jsIn = document.getElementById('js-in');
-      const khemIn = document.getElementById('khem-in');
-      const consoleOut = document.getElementById('console-out');
-      const domOut = document.getElementById('dom-out');
+    function setupEditor(textareaId, highlightId) {
+      const textarea = document.getElementById(textareaId);
+      const highlight = document.getElementById(highlightId);
 
-      // Custom logger available to the user's JS
-      function khemLog(message, type = "normal") {
-        const div = document.createElement('div');
-        div.className = `log-line ${type === 'error' ? 'log-error' : type === 'sys' ? 'log-sys' : ''}`;
-        div.textContent = `> ${message}`;
-        consoleOut.appendChild(div);
-        consoleOut.scrollTop = consoleOut.scrollHeight;
+      function update() {
+        let text = textarea.value;
+        text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        if (text[text.length - 1] === '\n') { text += ' '; }
+        highlight.innerHTML = text;
+        Prism.highlightElement(highlight);
       }
 
-      runBtn.addEventListener('click', () => {
-        // Clear outputs
-        consoleOut.innerHTML = '';
-        domOut.innerHTML = '';
+      function syncScroll() {
+        highlight.scrollTop = textarea.scrollTop;
+        highlight.scrollLeft = textarea.scrollLeft;
+      }
 
-        const jsCode = jsIn.value;
-        const khemCode = khemIn.value;
-
-        try {
-          // We wrap their code in a Function to execute it safely within this scope.
-          // It takes 'khemCode' and 'khemLog' as arguments so they can access them.
-          const engine = new Function('khemCode', 'khemLog', jsCode);
-          
-          // Execute and get the returned HTML
-          const resultingHTML = engine(khemCode, khemLog);
-          
-          if (resultingHTML) {
-            domOut.innerHTML = resultingHTML;
-          } else {
-            khemLog("Warning: Engine did not return any HTML.", "error");
-          }
-          
-        } catch (error) {
-          khemLog(`JS Engine Error: ${error.message}`, "error");
+      textarea.addEventListener('input', update);
+      textarea.addEventListener('scroll', syncScroll);
+      textarea.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          const start = this.selectionStart;
+          const end = this.selectionEnd;
+          this.value = this.value.substring(0, start) + "  " + this.value.substring(end);
+          this.selectionStart = this.selectionEnd = start + 2;
+          update();
         }
       });
+
+      return update;
+    }
+
+    // Load code from hidden templates
+    document.getElementById('js-in').value = document.getElementById('default-js').textContent.trim();
+    document.getElementById('khem-in').value = document.getElementById('default-khem').textContent.trim();
+    
+    const updateJS = setupEditor('js-in', 'js-highlight');
+    const updateKhem = setupEditor('khem-in', 'khem-highlight');
+    updateJS(); updateKhem();
+
+    document.getElementById('run-btn').addEventListener('click', () => {
+      const consoleOut = document.getElementById('console-out');
+      const domOut = document.getElementById('dom-out');
+      consoleOut.innerHTML = ''; domOut.innerHTML = '';
+
+      window.khemLog = function(msg, type = "normal") {
+        const div = document.createElement('div');
+        div.className = `log-line ${type === 'error' ? 'log-error' : type === 'sys' ? 'log-sys' : ''}`;
+        div.textContent = `> ${msg}`;
+        consoleOut.appendChild(div);
+        consoleOut.scrollTop = consoleOut.scrollHeight;
+      };
+
+      try {
+        const jsCode = document.getElementById('js-in').value;
+        const khemCode = document.getElementById('khem-in').value;
+        const engine = new Function('khemCode', jsCode);
+        const html = engine(khemCode);
+        if (html) domOut.innerHTML = html;
+      } catch (err) {
+        window.khemLog(`Engine Error: ${err.message}`, "error");
+      }
     });
   </script>
 </body>
