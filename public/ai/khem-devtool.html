@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khem Sandbox</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Khem Design System Variables */
+    :root {
+      --bg: #0a0a0a;
+      --s0: #101010;
+      --s1: #161616;
+      --s2: #1e1e1e;
+      --s3: #262626;
+      
+      --border: #272727;
+      --b2: #333333;
+      
+      --fg: #d4d0c8;
+      --fg1: #aaaaaa;
+      --fg2: #888888;
+      --fg3: #555555;
+      --dim: #484848;
+      
+      --acc: #c8a84b;
+      --acc-dim: #7a6628;
+      --green: #6b9e78;
+      --green-dim: #2a4a33;
+      --red: #a86b6b;
+      --red-dim: #4a2222;
+      --blue: #7a8fa8;
+      --amber: #d4924a;
+      
+      --mono: 'DM Mono', 'Fira Mono', ui-monospace, monospace;
+      --serif: 'Instrument Serif', Georgia, serif;
+    }
+
+    /* Reset & Boilerplate */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100vh; overflow: hidden; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--b2); }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    
+    .logo {
+      font-family: var(--serif);
+      font-size: 24px;
+      color: var(--fg);
+      line-height: 1;
+    }
+
+    .btn-run {
+      background: transparent;
+      color: var(--acc);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    
+    .btn-run:hover {
+      border-color: var(--acc);
+      color: var(--acc);
+    }
+
+    /* Main Grid Layout */
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      flex: 1;
+      gap: 1px; /* Creates the thin borders between panes */
+      background: var(--border); /* Acts as the border color between grid items */
+    }
+
+    .pane {
+      background: var(--bg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pane-label {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 9.5px;
+      color: var(--dim);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Inputs & Areas */
+    textarea, .output-area {
+      flex: 1;
+      width: 100%;
+      background: var(--s1);
+      color: var(--fg);
+      font-family: var(--mono);
+      font-size: 12px;
+      border: none;
+      padding: 24px 12px 12px 12px;
+      resize: none;
+      outline: none;
+      overflow-y: auto;
+    }
+
+    textarea {
+      border: 1px solid transparent; /* To prevent layout shift on focus */
+      transition: border-color 0.15s ease;
+    }
+
+    textarea:focus {
+      border: 1px solid var(--acc-dim);
+    }
+
+    code {
+      color: var(--acc);
+      font-size: 10.5px;
+    }
+
+    /* Console Specifics */
+    #console-out {
+      color: var(--fg2);
+      white-space: pre-wrap;
+    }
+    .log-line { border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-bottom: 4px; }
+    .log-error { color: var(--red); }
+    .log-sys { color: var(--blue); font-size: 10px; }
+
+    /* DOM Specifics */
+    #dom-out {
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">khem</div>
+    <button class="btn-run" id="run-btn">RUN ENGINE</button>
+  </header>
+
+  <main>
+    <div class="pane">
+      <div class="pane-label">ENGINE.JS</div>
+      <textarea id="js-in" spellcheck="false">// Khem JS Engine Playground
+// 1. Parse 'khemCode' (the string from the right pane)
+// 2. Output logs using 'khemLog(msg)'
+// 3. Return an HTML string to render in the DOM pane
+
+khemLog("Initializing Khem engine...", "sys");
+khemLog(`Reading script... (${khemCode.length} bytes)`, "sys");
+
+let outputHtml = "<div style='padding: 10px;'>";
+
+// Extremely naive string matching just to prove the pipeline works
+if (khemCode.includes("render {")) {
+  khemLog("Detected 'render' block. Generating UI components...");
+  
+  outputHtml += "<h2 style='font-family: var(--serif); color: var(--acc); margin-bottom: 8px;'>Khem DOM Target</h2>";
+  
+  if (khemCode.includes("button {")) {
+    outputHtml += "<button style='background: transparent; color: var(--fg); border: 1px solid var(--border); padding: 4px 12px; cursor: pointer;'>Deploy</button>";
+  }
+  
+} else {
+  outputHtml += "<span style='color: var(--fg3)'>No render blocks found.</span>";
+}
+
+outputHtml += "</div>";
+
+// The returned string gets pushed to the DOM pane
+return outputHtml;
+</textarea>
+    </div>
+
+    <div class="pane">
+      <div class="pane-label">APP.KH</div>
+      <textarea id="khem-in" spellcheck="false"># Welcome to Khem
+# A homoiconic DSL for the web
+
+set title "Hello Browser"
+
+render {
+  ui {
+    panel {
+      label "Click to execute"
+      button {
+        text "Deploy"
+        action { puts "Deploying..." }
+      }
+    }
+  }
+}</textarea>
+    </div>
+
+    <div class="pane">
+      <div class="pane-label">CONSOLE</div>
+      <div class="output-area" id="console-out"></div>
+    </div>
+
+    <div class="pane">
+      <div class="pane-label">DOM RENDER</div>
+      <div class="output-area" id="dom-out">
+        <span style="color: var(--fg3);">Awaiting execution...</span>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const runBtn = document.getElementById('run-btn');
+      const jsIn = document.getElementById('js-in');
+      const khemIn = document.getElementById('khem-in');
+      const consoleOut = document.getElementById('console-out');
+      const domOut = document.getElementById('dom-out');
+
+      // Custom logger available to the user's JS
+      function khemLog(message, type = "normal") {
+        const div = document.createElement('div');
+        div.className = `log-line ${type === 'error' ? 'log-error' : type === 'sys' ? 'log-sys' : ''}`;
+        div.textContent = `> ${message}`;
+        consoleOut.appendChild(div);
+        consoleOut.scrollTop = consoleOut.scrollHeight;
+      }
+
+      runBtn.addEventListener('click', () => {
+        // Clear outputs
+        consoleOut.innerHTML = '';
+        domOut.innerHTML = '';
+
+        const jsCode = jsIn.value;
+        const khemCode = khemIn.value;
+
+        try {
+          // We wrap their code in a Function to execute it safely within this scope.
+          // It takes 'khemCode' and 'khemLog' as arguments so they can access them.
+          const engine = new Function('khemCode', 'khemLog', jsCode);
+          
+          // Execute and get the returned HTML
+          const resultingHTML = engine(khemCode, khemLog);
+          
+          if (resultingHTML) {
+            domOut.innerHTML = resultingHTML;
+          } else {
+            khemLog("Warning: Engine did not return any HTML.", "error");
+          }
+          
+        } catch (error) {
+          khemLog(`JS Engine Error: ${error.message}`, "error");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
