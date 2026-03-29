@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Khem IDE</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin=""
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=Instrument+Serif:ital@0;1&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            :root {
+                --bg: #0a0a0a;
+                --s0: #101010;
+                --s1: #161616;
+                --s2: #1e1e1e;
+                --s3: #262626;
+                --border: #272727;
+                --b2: #333333;
+                --fg: #d4d0c8;
+                --fg1: #aaaaaa;
+                --fg2: #888888;
+                --fg3: #555555;
+                --dim: #484848;
+                --acc: #c8a84b;
+                --acc-dim: #7a6628;
+                --mono: "DM Mono", "Fira Mono", ui-monospace, monospace;
+                --serif: "Instrument Serif", Georgia, serif;
+                --red: #a86b6b;
+                --red-dim: #4a2222;
+                --blue: #7a8fa8;
+                --blue-dim: #2a3a4a;
+                --green: #6b9e78;
+                --green-dim: #2a4a33;
+                --amber: #d4924a;
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html,
+            body {
+                height: 100vh;
+                overflow: hidden;
+                background: var(--bg);
+                color: var(--fg);
+                font-family: var(--mono);
+                font-size: 12px;
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* ── Header ───────────────────────────────────────────── */
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 16px;
+                height: 44px;
+                border-bottom: 1px solid var(--border);
+                flex-shrink: 0;
+            }
+
+            .logo {
+                font-family: var(--serif);
+                font-size: 22px;
+                color: var(--fg);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .logo-badge {
+                font-family: var(--mono);
+                font-size: 9px;
+                color: var(--dim);
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                border: 1px solid var(--border);
+                padding: 1px 5px;
+                margin-top: 3px;
+            }
+
+            .header-controls {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            /* ── Mode switcher ────────────────────────────────────── */
+            .mode-switch {
+                display: flex;
+                border: 1px solid var(--border);
+                overflow: hidden;
+            }
+
+            .mode-btn {
+                background: transparent;
+                border: none;
+                border-right: 1px solid var(--border);
+                color: var(--fg3);
+                padding: 4px 10px;
+                font-family: var(--mono);
+                font-size: 9px;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                cursor: pointer;
+                transition: 0.15s;
+            }
+
+            .mode-btn:last-child {
+                border-right: none;
+            }
+
+            .mode-btn:hover {
+                color: var(--fg2);
+                background: var(--s1);
+            }
+
+            .mode-btn.active {
+                color: var(--acc);
+                background: var(--s1);
+            }
+
+            /* ── Buttons ──────────────────────────────────────────── */
+            .btn {
+                background: transparent;
+                color: var(--fg2);
+                border: 1px solid var(--border);
+                padding: 4px 12px;
+                font-family: var(--mono);
+                cursor: pointer;
+                font-size: 9px;
+                transition: 0.15s;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
+
+            .btn:hover {
+                border-color: var(--b2);
+                color: var(--fg);
+            }
+
+            .btn-run {
+                color: var(--acc);
+                border-color: var(--acc-dim);
+            }
+            .btn-run:hover {
+                border-color: var(--acc);
+            }
+
+            .btn-danger:hover {
+                color: var(--red);
+                border-color: var(--red);
+            }
+
+            /* ── Layout ───────────────────────────────────────────── */
+            main {
+                display: flex;
+                height: calc(100vh - 44px);
+            }
+
+            /* Left column: editor + console stacked */
+            .col-left {
+                width: 44%;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+                border-right: 1px solid var(--border);
+            }
+
+            /* Right column: preview + compiled HTML stacked */
+            .col-right {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* ── Panes ────────────────────────────────────────────── */
+            .pane {
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                min-height: 0;
+            }
+
+            .pane-editor {
+                flex: 3;
+                border-bottom: 1px solid var(--border);
+            }
+            .pane-console {
+                flex: 1;
+            }
+            .pane-preview {
+                flex: 3;
+                border-bottom: 1px solid var(--border);
+            }
+            .pane-html {
+                flex: 2;
+            }
+
+            /* ── Pane chrome ──────────────────────────────────────── */
+            .pane-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 12px;
+                height: 28px;
+                border-bottom: 1px solid var(--border);
+                flex-shrink: 0;
+            }
+
+            .pane-label {
+                font-size: 9px;
+                color: var(--dim);
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+            }
+
+            .pane-actions {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .pane-action-btn {
+                font-size: 9px;
+                color: var(--fg3);
+                cursor: pointer;
+                border: none;
+                background: none;
+                font-family: var(--mono);
+                transition: 0.15s;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                padding: 0;
+            }
+
+            .pane-action-btn:hover {
+                color: var(--fg2);
+            }
+            .pane-action-btn.danger:hover {
+                color: var(--red);
+            }
+
+            /* mode indicator in editor pane header */
+            .mode-indicator {
+                font-size: 9px;
+                padding: 1px 6px;
+                border: 1px solid var(--border);
+                color: var(--dim);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+            }
+
+            .mode-indicator.web {
+                color: var(--green);
+                border-color: var(--green-dim);
+            }
+            .mode-indicator.raw {
+                color: var(--blue);
+                border-color: var(--blue-dim);
+            }
+
+            /* ── Editor ───────────────────────────────────────────── */
+            .editor-wrap {
+                flex: 1;
+                position: relative;
+                min-height: 0;
+                background: var(--s1);
+            }
+
+            .khem-editor {
+                position: absolute;
+                inset: 0;
+                padding: 12px 14px;
+                border: none;
+                font-family: var(--mono);
+                font-size: 12px;
+                line-height: 1.65;
+                tab-size: 2;
+                white-space: pre;
+                overflow-wrap: normal;
+                word-wrap: normal;
+                overflow: auto;
+                color: var(--fg);
+                background: transparent;
+                caret-color: var(--acc);
+                z-index: 2;
+                outline: none;
+                resize: none;
+            }
+
+            /* ── Console ──────────────────────────────────────────── */
+            #console-out {
+                flex: 1;
+                background: var(--s0);
+                color: var(--fg2);
+                padding: 10px 14px;
+                overflow-y: auto;
+                font-size: 11px;
+                white-space: pre-wrap;
+                min-height: 0;
+            }
+
+            .log-line {
+                padding: 2px 0;
+                display: flex;
+                gap: 8px;
+            }
+
+            .log-prefix {
+                color: var(--dim);
+                flex-shrink: 0;
+                user-select: none;
+            }
+
+            .log-line.sys .log-msg {
+                color: var(--blue);
+            }
+            .log-line.err .log-msg {
+                color: var(--red);
+            }
+            .log-line.warn .log-msg {
+                color: var(--amber);
+            }
+            .log-line.ok .log-msg {
+                color: var(--green);
+            }
+            .log-line .log-msg {
+                color: var(--fg2);
+            }
+
+            /* ── Preview ──────────────────────────────────────────── */
+            #dom-out {
+                flex: 1;
+                min-height: 0;
+                background: #fff;
+                overflow: hidden;
+            }
+
+            #dom-out iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+            /* ── HTML output pane ─────────────────────────────────── */
+            .html-out-wrap {
+                flex: 1;
+                position: relative;
+                min-height: 0;
+            }
+
+            #html-out {
+                position: absolute;
+                inset: 0;
+                padding: 12px 14px;
+                border: none;
+                font-family: var(--mono);
+                font-size: 11px;
+                line-height: 1.65;
+                white-space: pre;
+                overflow: auto;
+                color: var(--fg2);
+                background: var(--s0);
+                outline: none;
+                resize: none;
+                width: 100%;
+            }
+
+            /* ── Status bar ───────────────────────────────────────── */
+            #status-bar {
+                height: 22px;
+                border-top: 1px solid var(--border);
+                display: flex;
+                align-items: center;
+                padding: 0 14px;
+                gap: 16px;
+                font-size: 9.5px;
+                color: var(--dim);
+                flex-shrink: 0;
+            }
+
+            .status-item {
+                display: flex;
+                gap: 5px;
+                align-items: center;
+            }
+
+            .status-dot {
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: var(--border);
+            }
+
+            .status-dot.ok {
+                background: var(--green);
+            }
+            .status-dot.err {
+                background: var(--red);
+            }
+            .status-dot.busy {
+                background: var(--amber);
+            }
+
+            /* ── auto-run toggle ──────────────────────────────────── */
+            .toggle-wrap {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 9px;
+                color: var(--fg3);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .toggle-wrap input[type="checkbox"] {
+                accent-color: var(--acc);
+                cursor: pointer;
+                width: 11px;
+                height: 11px;
+            }
+
+            /* ── Scrollbars ───────────────────────────────────────── */
+            *::-webkit-scrollbar {
+                width: 5px;
+                height: 5px;
+            }
+            *::-webkit-scrollbar-track {
+                background: var(--bg);
+            }
+            *::-webkit-scrollbar-thumb {
+                background: var(--border);
+            }
+            *::-webkit-scrollbar-thumb:hover {
+                background: var(--b2);
+            }
+        </style>
+    </head>
+
+    <body>
+        <header>
+            <div class="logo">
+                khem
+                <span class="logo-badge">IDE</span>
+            </div>
+
+            <div class="header-controls">
+                <div class="mode-switch" title="Evaluation mode">
+                    <button class="mode-btn active" data-mode="web">Web</button>
+                    <button class="mode-btn" data-mode="raw">Raw</button>
+                </div>
+
+                <label class="toggle-wrap">
+                    <input type="checkbox" id="auto-run" checked />
+                    Auto
+                </label>
+
+                <button class="btn btn-run" id="run-btn">▶ Run</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- ── Left: editor + console ───────────────────────── -->
+            <div class="col-left">
+                <div class="pane pane-editor">
+                    <div class="pane-header">
+                        <span class="pane-label">app.kh</span>
+                        <div class="pane-actions">
+                            <span class="mode-indicator web" id="mode-badge"
+                                >web</span
+                            >
+                            <button class="pane-action-btn" id="copy-source">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="editor-wrap">
+                        <textarea
+                            id="khem-in"
+                            class="khem-editor"
+                            spellcheck="false"
+                            wrap="off"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="pane pane-console">
+                    <div class="pane-header">
+                        <span class="pane-label">Console</span>
+                        <div class="pane-actions">
+                            <button
+                                class="pane-action-btn danger"
+                                id="clear-console"
+                            >
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                    <div id="console-out"></div>
+                </div>
+            </div>
+
+            <!-- ── Right: preview + html ────────────────────────── -->
+            <div class="col-right">
+                <div class="pane pane-preview">
+                    <div class="pane-header">
+                        <span class="pane-label">Preview</span>
+                        <div class="pane-actions">
+                            <button
+                                class="pane-action-btn"
+                                id="open-preview"
+                                title="Open in new tab"
+                            >
+                                ↗ Open
+                            </button>
+                        </div>
+                    </div>
+                    <div id="dom-out"></div>
+                </div>
+
+                <div class="pane pane-html">
+                    <div class="pane-header">
+                        <span class="pane-label">Compiled HTML</span>
+                        <div class="pane-actions">
+                            <button class="pane-action-btn" id="copy-html">
+                                Copy
+                            </button>
+                            <button class="pane-action-btn" id="download-html">
+                                ↓ Download
+                            </button>
+                        </div>
+                    </div>
+                    <div class="html-out-wrap">
+                        <textarea
+                            id="html-out"
+                            readonly
+                            spellcheck="false"
+                            wrap="off"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div id="status-bar">
+                    <div class="status-item">
+                        <div class="status-dot" id="status-dot"></div>
+                        <span id="status-text">ready</span>
+                    </div>
+                    <div
+                        class="status-item"
+                        id="char-count"
+                        style="margin-left: auto"
+                    ></div>
+                </div>
+            </div>
+        </main>
+
+        <script type="module">
+            import {
+                createEnvironment,
+                run,
+                renderForWeb,
+            } from "./src/index.js";
+
+            // ── State ─────────────────────────────────────────────────
+            let evalMode = "web"; // "web" | "raw"
+            let autoTimer = null;
+            let blobURL = null;
+            let lastHTML = "";
+
+            // ── Elements ──────────────────────────────────────────────
+            const kIn = document.getElementById("khem-in");
+            const htmlOut = document.getElementById("html-out");
+            const consoleEl = document.getElementById("console-out");
+            const domOut = document.getElementById("dom-out");
+            const statusDot = document.getElementById("status-dot");
+            const statusText = document.getElementById("status-text");
+            const modeBadge = document.getElementById("mode-badge");
+            const charCount = document.getElementById("char-count");
+
+            // ── Default snippets per mode ──────────────────────────────
+            const DEFAULTS = {
+                web: `document "Khem Starter" {
+  style {
+    .hero { padding 48px 0; border-bottom 1px solid var(--border); margin-bottom 32px }
+    .hero h1 { font-size 36px; color var(--acc); margin-bottom 8px }
+    .hero p { color var(--fg2); max-width 480px }
+    .grid { display grid; grid-template-columns repeat(2,1fr); gap 1px; background var(--border) }
+    .card { background var(--s1); padding 20px }
+    .card h4 { color var(--fg1); margin-bottom 4px; font-size 11px; text-transform uppercase; letter-spacing 0.08em }
+    .card p { color var(--fg2); font-size 11px }
+    .badge { display inline-block; font-size 9px; padding 2px 8px; border 1px solid var(--acc-dim); color var(--acc); text-transform uppercase; letter-spacing 0.1em; margin-bottom 12px }
+  }
+
+  div hero {
+    span badge { text "Khem v0.1" }
+    h1 "" { text "The Black Land" }
+    p "" { text "A minimalist homoiconic scripting language and UI compiler." }
+  }
+
+  div grid {
+    div card {
+      h4 "" { text "Homoiconic" }
+      p "" { text "Code is data. Every statement is a list." }
+    }
+    div card {
+      h4 "" { text "Zero-Dependency" }
+      p "" { text "Pure JavaScript core with no external overhead." }
+    }
+    div card {
+      h4 "" { text "Web Compiler" }
+      p "" { text "Outputs optimized HTML from high-density logic." }
+    }
+    div card {
+      h4 "" { text "Embeddable" }
+      p "" { text "Runs in Node.js or directly in the browser." }
+    }
+  }
+}`,
+
+                raw: `# Raw mode — evaluate Khem expressions, get string output
+set name "Khem"
+set version "0.1"
+
+puts [concat "Language: " $name " v" $version]
+
+proc greet { who } {
+  concat "Hello, " $who "!"
+}
+
+greet "World"`,
+            };
+
+            // ── Logging ───────────────────────────────────────────────
+            function log(msg, type = "") {
+                const line = document.createElement("div");
+                line.className = `log-line ${type}`;
+                line.innerHTML = `<span class="log-prefix">&gt;</span><span class="log-msg">${escHtml(String(msg))}</span>`;
+                consoleEl.appendChild(line);
+                consoleEl.scrollTop = consoleEl.scrollHeight;
+            }
+
+            function escHtml(s) {
+                return s
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            }
+
+            // ── Status ────────────────────────────────────────────────
+            function setStatus(state, text) {
+                statusDot.className = "status-dot " + state;
+                statusText.textContent = text;
+            }
+
+            // ── Core evaluation ───────────────────────────────────────
+            function execute() {
+                const code = kIn.value;
+                charCount.textContent = `${code.length} chars`;
+
+                setStatus("busy", "building…");
+
+                try {
+                    let html = "";
+
+                    if (evalMode === "web") {
+                        // renderForWeb: loads web lib, runs code, calls generateHTML
+                        html = renderForWeb(code);
+                    } else {
+                        // Raw mode: just evaluate, capture puts/return output
+                        const env = createEnvironment();
+                        html = run(code, env);
+                        // In raw mode wrap output in a dark-themed document so preview is readable
+                        if (html && !html.trim().startsWith("<!")) {
+                            html = rawWrap(html);
+                        }
+                    }
+
+                    if (!html || !html.trim()) {
+                        setStatus("ok", "ok — no output");
+                        htmlOut.value = "";
+                        domOut.innerHTML = "";
+                        lastHTML = "";
+                        return;
+                    }
+
+                    lastHTML = html;
+                    htmlOut.value = html;
+
+                    // Render preview via blob URL (gives correct origin isolation)
+                    if (blobURL) URL.revokeObjectURL(blobURL);
+                    const blob = new Blob([html], { type: "text/html" });
+                    blobURL = URL.createObjectURL(blob);
+                    domOut.innerHTML = `<iframe src="${blobURL}" sandbox="allow-scripts allow-same-origin"></iframe>`;
+
+                    setStatus("ok", "build ok");
+                } catch (err) {
+                    setStatus("err", "error");
+                    log(err.message, "err");
+                }
+            }
+
+            // ── Raw output wrapper (dark, Khem-styled) ────────────────
+            function rawWrap(content) {
+                return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#0a0a0a;--s1:#161616;--border:#272727;
+      --fg:#d4d0c8;--fg1:#aaaaaa;--fg2:#888888;
+      --acc:#c8a84b;--green:#6b9e78;--mono:'DM Mono',monospace;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--fg);font-family:var(--mono);
+      font-size:12px;line-height:1.6;padding:24px;-webkit-font-smoothing:antialiased}
+    pre{white-space:pre-wrap;word-break:break-word}
+  </style>
+</head>
+<body><pre>${escHtml(content)}</pre></body>
+</html>`;
+            }
+
+            // ── Mode switching ─────────────────────────────────────────
+            document.querySelectorAll(".mode-btn").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    if (btn.dataset.mode === evalMode) return;
+                    evalMode = btn.dataset.mode;
+                    document
+                        .querySelectorAll(".mode-btn")
+                        .forEach((b) =>
+                            b.classList.toggle(
+                                "active",
+                                b.dataset.mode === evalMode,
+                            ),
+                        );
+                    modeBadge.className = `mode-indicator ${evalMode}`;
+                    modeBadge.textContent = evalMode;
+                    kIn.value = DEFAULTS[evalMode];
+                    execute();
+                });
+            });
+
+            // ── Auto-run ───────────────────────────────────────────────
+            const autoCheck = document.getElementById("auto-run");
+
+            kIn.addEventListener("input", () => {
+                if (!autoCheck.checked) return;
+                clearTimeout(autoTimer);
+                autoTimer = setTimeout(execute, 700);
+            });
+
+            // Tab key support
+            kIn.addEventListener("keydown", (e) => {
+                if (e.key === "Tab") {
+                    e.preventDefault();
+                    const s = kIn.selectionStart,
+                        end = kIn.selectionEnd;
+                    kIn.value =
+                        kIn.value.substring(0, s) +
+                        "  " +
+                        kIn.value.substring(end);
+                    kIn.selectionStart = kIn.selectionEnd = s + 2;
+                }
+            });
+
+            // ── Run button ────────────────────────────────────────────
+            document.getElementById("run-btn").addEventListener("click", () => {
+                log("Manual build…", "sys");
+                execute();
+            });
+
+            // ── Clear console ─────────────────────────────────────────
+            document
+                .getElementById("clear-console")
+                .addEventListener("click", () => {
+                    consoleEl.innerHTML = "";
+                });
+
+            // ── Copy source ───────────────────────────────────────────
+            document
+                .getElementById("copy-source")
+                .addEventListener("click", () => {
+                    navigator.clipboard
+                        .writeText(kIn.value)
+                        .then(() => log("Source copied.", "ok"));
+                });
+
+            // ── Copy HTML ─────────────────────────────────────────────
+            document
+                .getElementById("copy-html")
+                .addEventListener("click", () => {
+                    if (!lastHTML) {
+                        log("Nothing compiled yet.", "warn");
+                        return;
+                    }
+                    navigator.clipboard
+                        .writeText(lastHTML)
+                        .then(() => log("HTML copied.", "ok"));
+                });
+
+            // ── Download HTML ─────────────────────────────────────────
+            document
+                .getElementById("download-html")
+                .addEventListener("click", () => {
+                    if (!lastHTML) {
+                        log("Nothing to download.", "warn");
+                        return;
+                    }
+                    const a = document.createElement("a");
+                    a.href =
+                        "data:text/html;charset=utf-8," +
+                        encodeURIComponent(lastHTML);
+                    a.download = "khem-output.html";
+                    a.click();
+                    log("Download started.", "ok");
+                });
+
+            // ── Open preview in new tab ───────────────────────────────
+            document
+                .getElementById("open-preview")
+                .addEventListener("click", () => {
+                    if (!blobURL) {
+                        log("Nothing to open.", "warn");
+                        return;
+                    }
+                    window.open(blobURL, "_blank");
+                });
+
+            // ── Intercept console.log from engine ────────────────────
+            const _origLog = console.log;
+            console.log = (...args) => {
+                _origLog(...args);
+                log(args.join(" "), "sys");
+            };
+            const _origWarn = console.warn;
+            console.warn = (...args) => {
+                _origWarn(...args);
+                log(args.join(" "), "warn");
+            };
+            const _origErr = console.error;
+            console.error = (...args) => {
+                _origErr(...args);
+                log(args.join(" "), "err");
+            };
+
+            // ── Bootstrap ─────────────────────────────────────────────
+            kIn.value = DEFAULTS[evalMode];
+            execute();
+        </script>
+    </body>
+</html>

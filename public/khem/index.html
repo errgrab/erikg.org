@@ -1,0 +1,1112 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>khem — build for the web</title>
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            :root {
+                --bg: #0a0a0a;
+                --s0: #101010;
+                --s1: #161616;
+                --s2: #1e1e1e;
+                --s3: #262626;
+                --border: #272727;
+                --b2: #333333;
+                --fg: #d4d0c8;
+                --fg1: #aaaaaa;
+                --fg2: #888888;
+                --fg3: #555555;
+                --dim: #484848;
+                --acc: #c8a84b;
+                --acc-dim: #7a6628;
+                --green: #6b9e78;
+                --red: #a86b6b;
+                --blue: #7a8fa8;
+                --amber: #d4924a;
+                --mono: "DM Mono", "Fira Mono", ui-monospace, monospace;
+                --serif: "Instrument Serif", Georgia, serif;
+            }
+
+            html {
+                height: 100%;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--fg);
+                font-family: var(--mono);
+                font-size: 12px;
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+                min-height: 100%;
+                overflow-x: hidden;
+            }
+
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            ::-webkit-scrollbar-track {
+                background: var(--bg);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 0;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--b2);
+            }
+
+            /* ── NAV ────────────────────────────────────── */
+
+            nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 2.5rem;
+                height: 48px;
+                border-bottom: 1px solid var(--border);
+                background: rgba(10, 10, 10, 0.85);
+                backdrop-filter: blur(8px);
+            }
+
+            .nav-logo {
+                font-family: var(--serif);
+                font-size: 1.35rem;
+                color: var(--fg);
+                text-decoration: none;
+                letter-spacing: -0.01em;
+            }
+
+            .nav-logo em {
+                font-style: italic;
+                color: var(--acc);
+            }
+
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+            }
+
+            .nav-links a {
+                color: var(--fg2);
+                text-decoration: none;
+                font-size: 11px;
+                letter-spacing: 0.04em;
+                transition: color 0.15s;
+            }
+
+            .nav-links a:hover {
+                color: var(--fg);
+            }
+
+            .nav-cta {
+                padding: 6px 14px;
+                border: 1px solid var(--acc-dim);
+                color: var(--acc) !important;
+                font-size: 11px !important;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s !important;
+            }
+
+            .nav-cta:hover {
+                border-color: var(--acc) !important;
+                background: rgba(200, 168, 75, 0.06) !important;
+            }
+
+            /* ── HERO ───────────────────────────────────── */
+
+            .hero {
+                padding: 10rem 2.5rem 6rem;
+                max-width: 860px;
+                margin: 0 auto;
+                animation: fadein 0.7s ease both;
+            }
+
+            .hero-eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 9.5px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--acc);
+                margin-bottom: 2rem;
+            }
+
+            .hero-eyebrow::before {
+                content: "";
+                display: inline-block;
+                width: 18px;
+                height: 1px;
+                background: var(--acc);
+            }
+
+            h1 {
+                font-family: var(--serif);
+                font-size: clamp(3rem, 8vw, 5.5rem);
+                font-weight: 400;
+                line-height: 1;
+                color: var(--fg);
+                letter-spacing: -0.02em;
+                margin-bottom: 2rem;
+            }
+
+            h1 em {
+                font-style: italic;
+                color: var(--acc);
+            }
+
+            .hero-sub {
+                font-size: 13px;
+                color: var(--fg2);
+                max-width: 420px;
+                line-height: 1.75;
+                margin-bottom: 3rem;
+            }
+
+            .hero-actions {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 9px 20px;
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.04em;
+                border: 1px solid var(--border);
+                color: var(--fg2);
+                text-decoration: none;
+                cursor: pointer;
+                background: transparent;
+                transition:
+                    border-color 0.15s,
+                    color 0.15s,
+                    background 0.15s;
+            }
+
+            .btn:hover {
+                border-color: var(--b2);
+                color: var(--fg);
+            }
+
+            .btn-primary {
+                border-color: var(--acc-dim);
+                color: var(--acc);
+                background: rgba(200, 168, 75, 0.04);
+            }
+
+            .btn-primary:hover {
+                border-color: var(--acc);
+                background: rgba(200, 168, 75, 0.1);
+            }
+
+            .btn-icon {
+                font-size: 14px;
+                line-height: 1;
+            }
+
+            /* ── CODE PREVIEW ───────────────────────────── */
+
+            .preview-wrap {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2.5rem 6rem;
+                animation: fadein 0.7s ease 0.15s both;
+            }
+
+            .preview-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 1rem;
+                height: 36px;
+                background: var(--s1);
+                border: 1px solid var(--border);
+                border-bottom: none;
+            }
+
+            .preview-dots {
+                display: flex;
+                gap: 6px;
+            }
+
+            .preview-dots span {
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: var(--border);
+            }
+
+            .preview-dots span:first-child {
+                background: var(--red);
+                opacity: 0.7;
+            }
+            .preview-dots span:nth-child(2) {
+                background: var(--amber);
+                opacity: 0.7;
+            }
+            .preview-dots span:nth-child(3) {
+                background: var(--green);
+                opacity: 0.7;
+            }
+
+            .preview-filename {
+                font-size: 10px;
+                color: var(--fg3);
+                letter-spacing: 0.04em;
+            }
+
+            .preview-lang {
+                font-size: 9.5px;
+                color: var(--acc-dim);
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+
+            .code-block {
+                background: var(--s0);
+                border: 1px solid var(--border);
+                padding: 1.5rem 1.25rem;
+                overflow-x: auto;
+                font-size: 11.5px;
+                line-height: 1.75;
+                position: relative;
+            }
+
+            .code-block pre {
+                margin: 0;
+                font-family: var(--mono);
+            }
+
+            .ln {
+                color: var(--dim);
+                user-select: none;
+                display: inline-block;
+                width: 2ch;
+                margin-right: 1.5rem;
+                text-align: right;
+            }
+            .kw {
+                color: var(--acc);
+            }
+            .cm {
+                color: var(--dim);
+                font-style: italic;
+            }
+            .str {
+                color: var(--green);
+            }
+            .tag {
+                color: var(--blue);
+            }
+            .val {
+                color: var(--fg1);
+            }
+            .proc {
+                color: var(--amber);
+            }
+
+            /* ── OUTPUT PREVIEW ─────────────────────────── */
+
+            .output-label {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 1.25rem;
+                background: var(--s1);
+                border: 1px solid var(--border);
+                border-top: none;
+                font-size: 9.5px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--fg3);
+            }
+
+            .output-label::before {
+                content: "";
+                display: inline-block;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--green);
+                box-shadow: 0 0 6px var(--green);
+            }
+
+            .output-box {
+                background: var(--s0);
+                border: 1px solid var(--border);
+                border-top: none;
+                padding: 1.5rem 1.25rem;
+                font-size: 12px;
+                color: var(--fg1);
+            }
+
+            .rendered-card {
+                border: 1px solid var(--border);
+                background: var(--s1);
+                padding: 1.25rem;
+                max-width: 280px;
+            }
+
+            .rendered-card .card-label {
+                font-size: 9.5px;
+                text-transform: uppercase;
+                letter-spacing: 0.14em;
+                color: var(--acc);
+                margin-bottom: 0.5rem;
+            }
+
+            .rendered-card .card-title {
+                font-family: var(--serif);
+                font-size: 1.1rem;
+                color: var(--fg);
+                margin-bottom: 0.4rem;
+            }
+
+            .rendered-card .card-desc {
+                font-size: 11px;
+                color: var(--fg2);
+                line-height: 1.6;
+            }
+
+            /* ── SECTION: FEATURES ──────────────────────── */
+
+            .section {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 5rem 2.5rem;
+            }
+
+            .section-header {
+                margin-bottom: 3.5rem;
+            }
+
+            .section-eyebrow {
+                font-size: 9.5px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--acc);
+                margin-bottom: 0.75rem;
+            }
+
+            .section-title {
+                font-family: var(--serif);
+                font-size: 2rem;
+                font-weight: 400;
+                color: var(--fg);
+                letter-spacing: -0.01em;
+                line-height: 1.15;
+            }
+
+            .section-title em {
+                font-style: italic;
+                color: var(--fg2);
+            }
+
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0;
+                border: 1px solid var(--border);
+            }
+
+            .feature {
+                padding: 2rem 1.75rem;
+                border-right: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+                transition: background 0.2s;
+            }
+
+            .feature:hover {
+                background: var(--s0);
+            }
+
+            .feature:nth-child(3n) {
+                border-right: none;
+            }
+            .feature:nth-child(n + 4) {
+                border-bottom: none;
+            }
+
+            .feature-icon {
+                font-size: 18px;
+                margin-bottom: 1rem;
+                display: block;
+                opacity: 0.8;
+            }
+
+            .feature-name {
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--fg);
+                margin-bottom: 0.5rem;
+                letter-spacing: 0.02em;
+            }
+
+            .feature-desc {
+                font-size: 11px;
+                color: var(--fg2);
+                line-height: 1.65;
+            }
+
+            /* ── IDE CTA ────────────────────────────────── */
+
+            .ide-section {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2.5rem 6rem;
+            }
+
+            .ide-card {
+                position: relative;
+                border: 1px solid var(--border);
+                overflow: hidden;
+            }
+
+            .ide-card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 20px,
+                    rgba(200, 168, 75, 0.015) 20px,
+                    rgba(200, 168, 75, 0.015) 21px
+                );
+                pointer-events: none;
+            }
+
+            .ide-card-inner {
+                position: relative;
+                z-index: 1;
+                padding: 3rem 2.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 2rem;
+            }
+
+            .ide-card-text {
+            }
+
+            .ide-card-eyebrow {
+                font-size: 9.5px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--acc);
+                margin-bottom: 0.75rem;
+            }
+
+            .ide-card-title {
+                font-family: var(--serif);
+                font-size: 1.8rem;
+                font-weight: 400;
+                color: var(--fg);
+                letter-spacing: -0.01em;
+                line-height: 1.1;
+                margin-bottom: 0.75rem;
+            }
+
+            .ide-card-title em {
+                font-style: italic;
+            }
+
+            .ide-card-desc {
+                font-size: 11.5px;
+                color: var(--fg2);
+                max-width: 360px;
+                line-height: 1.7;
+            }
+
+            .ide-card-action {
+                flex-shrink: 0;
+            }
+
+            .btn-open-ide {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 1.5rem 2rem;
+                border: 1px solid var(--acc-dim);
+                background: rgba(200, 168, 75, 0.04);
+                color: var(--acc);
+                text-decoration: none;
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.06em;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s;
+                cursor: pointer;
+                min-width: 140px;
+            }
+
+            .btn-open-ide:hover {
+                border-color: var(--acc);
+                background: rgba(200, 168, 75, 0.1);
+            }
+
+            .btn-open-ide .ide-icon {
+                font-size: 28px;
+                line-height: 1;
+            }
+
+            /* ── IDE EMBED ──────────────────────────────── */
+
+            .ide-embed {
+                width: 100%;
+                height: 600px;
+                border: none;
+                border-top: 1px solid var(--border);
+                background: var(--s0);
+                display: block;
+            }
+
+            .ide-embed-hidden {
+                display: none;
+            }
+
+            /* ── SYNTAX TABLE ───────────────────────────── */
+
+            .syntax-section {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2.5rem 6rem;
+            }
+
+            .syntax-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1px;
+                background: var(--border);
+                border: 1px solid var(--border);
+            }
+
+            .syntax-cell {
+                background: var(--bg);
+                padding: 1.25rem 1.5rem;
+            }
+
+            .syntax-cell:hover {
+                background: var(--s0);
+            }
+
+            .syntax-cell-label {
+                font-size: 9.5px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--fg3);
+                margin-bottom: 0.6rem;
+            }
+
+            .syntax-code {
+                font-size: 11px;
+                color: var(--fg1);
+                line-height: 1.65;
+            }
+
+            /* ── FOOTER ─────────────────────────────────── */
+
+            footer {
+                border-top: 1px solid var(--border);
+                padding: 2rem 2.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                max-width: 100%;
+            }
+
+            .footer-brand {
+                font-family: var(--serif);
+                font-size: 1rem;
+                color: var(--fg3);
+            }
+
+            .footer-brand em {
+                font-style: italic;
+                color: var(--acc-dim);
+            }
+
+            .footer-links {
+                display: flex;
+                gap: 1.5rem;
+            }
+
+            .footer-links a {
+                font-size: 10px;
+                letter-spacing: 0.06em;
+                color: var(--fg3);
+                text-decoration: none;
+                transition: color 0.15s;
+            }
+
+            .footer-links a:hover {
+                color: var(--fg2);
+            }
+
+            .footer-note {
+                font-size: 10px;
+                color: var(--dim);
+                letter-spacing: 0.04em;
+            }
+
+            /* ── DIVIDER ────────────────────────────────── */
+
+            .divider {
+                border: none;
+                border-top: 1px solid var(--border);
+                max-width: 860px;
+                margin: 0 auto;
+            }
+
+            /* ── ANIMATIONS ─────────────────────────────── */
+
+            @keyframes fadein {
+                from {
+                    opacity: 0;
+                    transform: translateY(12px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes cursor-blink {
+                0%,
+                50% {
+                    opacity: 1;
+                }
+                51%,
+                100% {
+                    opacity: 0;
+                }
+            }
+
+            .cursor {
+                display: inline-block;
+                width: 2px;
+                height: 1em;
+                background: var(--acc);
+                vertical-align: text-bottom;
+                animation: cursor-blink 1s step-end infinite;
+                margin-left: 2px;
+            }
+
+            /* ── RESPONSIVE ─────────────────────────────── */
+
+            @media (max-width: 640px) {
+                nav {
+                    padding: 0 1.25rem;
+                }
+                .nav-links {
+                    display: none;
+                }
+                .hero,
+                .preview-wrap,
+                .section,
+                .ide-section,
+                .syntax-section {
+                    padding-left: 1.25rem;
+                    padding-right: 1.25rem;
+                }
+                h1 {
+                    font-size: 2.8rem;
+                }
+                .features-grid {
+                    grid-template-columns: 1fr;
+                }
+                .feature {
+                    border-right: none !important;
+                }
+                .feature:last-child {
+                    border-bottom: none;
+                }
+                .ide-card-inner {
+                    flex-direction: column;
+                }
+                .syntax-grid {
+                    grid-template-columns: 1fr;
+                }
+                footer {
+                    flex-direction: column;
+                    gap: 1rem;
+                    align-items: flex-start;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- NAV -->
+        <nav>
+            <a class="nav-logo" href="#">k<em>hem</em></a>
+            <div class="nav-links">
+                <a href="#features">features</a>
+                <a href="#syntax">syntax</a>
+                <a href="https://github.com/errgrab/khem" target="_blank"
+                    >github</a
+                >
+                <a href="#ide" class="btn nav-cta">open ide →</a>
+            </div>
+        </nav>
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-eyebrow">a new language for the web</div>
+            <h1>build<br />less,<br /><em>ship</em> more.</h1>
+            <p class="hero-sub">
+                Khem is a minimal language for building websites and apps. Write
+                structure, style, and logic in one spare syntax — it compiles to
+                clean HTML, CSS, and JS.
+            </p>
+            <div class="hero-actions">
+                <a href="#ide" class="btn btn-primary">
+                    <span class="btn-icon">⌥</span> try in browser
+                </a>
+                <a href="https://khem.erikg.org" class="btn" target="_blank">
+                    documentation
+                </a>
+                <a
+                    href="https://github.com/errgrab/khem"
+                    class="btn"
+                    target="_blank"
+                >
+                    github ↗
+                </a>
+            </div>
+        </section>
+
+        <!-- CODE PREVIEW -->
+        <div class="preview-wrap">
+            <div class="preview-bar">
+                <div class="preview-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <span class="preview-filename">index.khem</span>
+                <span class="preview-lang">khem</span>
+            </div>
+            <div class="code-block">
+                <pre><span class="ln">1</span><span class="cm">// define a reusable card component</span>
+<span class="ln">2</span><span class="kw">proc</span> <span class="proc">card</span> {<span class="val">title</span>; <span class="val">desc</span>; <span class="val">href</span>} {
+<span class="ln">3</span>  <span class="tag">a</span> <span class="str">"$href"</span> <span class="str">"tile"</span> {
+<span class="ln">4</span>    <span class="tag">span</span> <span class="str">"name"</span> { <span class="kw">text</span> <span class="str">"$title"</span> }
+<span class="ln">5</span>    <span class="tag">span</span> <span class="str">"desc"</span> { <span class="kw">text</span> <span class="str">"$desc"</span> }
+<span class="ln">6</span>  }
+<span class="ln">7</span>}
+<span class="ln">8</span>
+<span class="ln">9</span><span class="tag">main</span> {
+<span class="ln">10</span>  <span class="tag">h2</span> <span class="str">"section-label"</span> { <span class="kw">text</span> <span class="str">"projects"</span> }
+<span class="ln">11</span>  <span class="tag">div</span> <span class="str">"grid"</span> {
+<span class="ln">12</span>    <span class="proc">card</span> <span class="str">"AI"</span> <span class="str">"manages pages &amp; data"</span> <span class="str">"https://ai.erikg.org"</span>
+<span class="ln">13</span>    <span class="proc">card</span> <span class="str">"Khem"</span> <span class="str">"the language itself"</span> <span class="str">"https://khem.erikg.org"</span>
+<span class="ln">14</span>  }
+<span class="ln">15</span>}<span class="cursor"></span></pre>
+            </div>
+            <div class="output-label">compiled output</div>
+            <div class="output-box">
+                <div class="rendered-card">
+                    <div class="card-label">projects</div>
+                    <div class="card-title">AI</div>
+                    <div class="card-desc">manages pages &amp; data</div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- FEATURES -->
+        <section class="section" id="features">
+            <div class="section-header">
+                <div class="section-eyebrow">why khem</div>
+                <div class="section-title">
+                    a language that<br />gets out of the way.
+                </div>
+            </div>
+            <div class="features-grid">
+                <div class="feature">
+                    <span class="feature-icon">◈</span>
+                    <div class="feature-name">Tcl-inspired syntax</div>
+                    <div class="feature-desc">
+                        Familiar command-and-block structure. No closing tags,
+                        no angle brackets. Structure emerges from indentation
+                        and braces.
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">⬡</span>
+                    <div class="feature-name">Proc system</div>
+                    <div class="feature-desc">
+                        Define reusable components with
+                        <code style="font-size: 10px; color: var(--acc)"
+                            >proc</code
+                        >. Pass arguments, compose freely, build design systems
+                        without a framework.
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">→</span>
+                    <div class="feature-name">Compiles to standard HTML</div>
+                    <div class="feature-desc">
+                        Output is clean, readable HTML/CSS/JS. No runtime. No
+                        virtual DOM. Just files you can open in any browser.
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">⊕</span>
+                    <div class="feature-name">Vite plugin</div>
+                    <div class="feature-desc">
+                        Drop
+                        <code style="font-size: 10px; color: var(--acc)"
+                            >vite-plugin-khem</code
+                        >
+                        into any Vite project. Process
+                        <code style="font-size: 10px; color: var(--acc)"
+                            >type="text/khem"</code
+                        >
+                        script tags at build time.
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">◇</span>
+                    <div class="feature-name">Zero dependencies</div>
+                    <div class="feature-desc">
+                        The compiler is a single module. No heavy toolchain. Add
+                        it to your project in seconds, remove it just as fast.
+                    </div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">⌘</span>
+                    <div class="feature-name">Browser IDE</div>
+                    <div class="feature-desc">
+                        An embedded editor lets you write and preview Khem
+                        instantly. No install needed to explore the language.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SYNTAX REFERENCE -->
+        <section class="syntax-section" id="syntax">
+            <div class="section-header">
+                <div class="section-eyebrow">syntax reference</div>
+                <div class="section-title">
+                    the whole language,<br /><em>on one page.</em>
+                </div>
+            </div>
+            <div class="syntax-grid">
+                <div class="syntax-cell">
+                    <div class="syntax-cell-label">element</div>
+                    <div class="syntax-code">
+                        <span class="tag">div</span>
+                        <span class="str">"classname"</span> {
+                        <span class="kw">text</span>
+                        <span class="str">"hello"</span> }
+                    </div>
+                </div>
+                <div class="syntax-cell">
+                    <div class="syntax-cell-label">renders as</div>
+                    <div class="syntax-code" style="color: var(--fg3)">
+                        &lt;div class="classname"&gt;hello&lt;/div&gt;
+                    </div>
+                </div>
+                <div class="syntax-cell">
+                    <div class="syntax-cell-label">component</div>
+                    <div class="syntax-code">
+                        <span class="kw">proc</span>
+                        <span class="proc">btn</span> {<span class="val"
+                            >label</span
+                        >; <span class="val">href</span>} {<br />
+                        &nbsp;&nbsp;<span class="tag">a</span>
+                        <span class="str">"$href"</span> {
+                        <span class="kw">text</span>
+                        <span class="str">"$label"</span> }<br />
+                        }
+                    </div>
+                </div>
+                <div class="syntax-cell">
+                    <div class="syntax-cell-label">invocation</div>
+                    <div class="syntax-code">
+                        <span class="proc">btn</span>
+                        <span class="str">"get started"</span>
+                        <span class="str">"/"</span>
+                    </div>
+                </div>
+                <div class="syntax-cell">
+                    <div class="syntax-cell-label">anchor with class</div>
+                    <div class="syntax-code">
+                        <span class="tag">a</span>
+                        <span class="str">"https://…"</span>
+                        <span class="str">"tile"</span> { … }
+                    </div>
+                </div>
+                <div class="syntax-cell">
+                    <div class="syntax-cell-label">link with target</div>
+                    <div class="syntax-code" style="color: var(--fg3)">
+                        &lt;a href="…" class="tile"&gt;…&lt;/a&gt;
+                    </div>
+                </div>
+                <div class="syntax-cell">
+                    <div class="syntax-cell-label">comment</div>
+                    <div class="syntax-code">
+                        <span class="cm"># this is a comment</span>
+                    </div>
+                </div>
+                <div class="syntax-cell">
+                    <div class="syntax-cell-label">text node</div>
+                    <div class="syntax-code">
+                        <span class="kw">text</span>
+                        <span class="str">"literal string"</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- IDE CTA -->
+        <div class="ide-section" id="ide">
+            <div class="ide-card">
+                <div class="ide-card-inner">
+                    <div class="ide-card-text">
+                        <div class="ide-card-eyebrow">live editor</div>
+                        <div class="ide-card-title">
+                            Write khem<br /><em>in the browser.</em>
+                        </div>
+                        <p class="ide-card-desc">
+                            The Khem IDE runs entirely in-browser. Write code,
+                            see the compiled HTML in real time. No install, no
+                            account, no friction.
+                        </p>
+                        <div style="margin-top: 1.5rem">
+                            <button
+                                class="btn btn-primary"
+                                onclick="openIDE(this)"
+                                id="ide-toggle-btn"
+                            >
+                                <span class="btn-icon">⌥</span> open ide
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ide-card-action" id="ide-quicklaunch">
+                        <a class="btn-open-ide" href="ide.html" target="_blank">
+                            <span class="ide-icon">⌥</span>
+                            open in new tab
+                        </a>
+                    </div>
+                </div>
+                <iframe
+                    id="ide-frame"
+                    class="ide-embed ide-embed-hidden"
+                    src=""
+                    title="Khem IDE"
+                ></iframe>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-brand">k<em>hem</em></div>
+            <div class="footer-links">
+                <a href="https://khem.erikg.org" target="_blank">docs</a>
+                <a href="https://github.com/errgrab/khem" target="_blank"
+                    >github</a
+                >
+                <a href="https://erikg.org" target="_blank">erikg.org</a>
+            </div>
+            <div class="footer-note">mit license</div>
+        </footer>
+
+        <script>
+            let ideOpen = false;
+
+            function openIDE(btn) {
+                const frame = document.getElementById("ide-frame");
+                const quicklaunch = document.getElementById("ide-quicklaunch");
+                ideOpen = !ideOpen;
+
+                if (ideOpen) {
+                    frame.src = "node_modules/khem/ide.html";
+                    frame.classList.remove("ide-embed-hidden");
+                    quicklaunch.style.display = "none";
+                    btn.innerHTML = '<span class="btn-icon">✕</span> close ide';
+                } else {
+                    frame.classList.add("ide-embed-hidden");
+                    frame.src = "";
+                    quicklaunch.style.display = "";
+                    btn.innerHTML = '<span class="btn-icon">⌥</span> open ide';
+                }
+
+                if (ideOpen) {
+                    setTimeout(() => {
+                        document.getElementById("ide").scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                        });
+                    }, 80);
+                }
+            }
+
+            // smooth scroll for nav links
+            document.querySelectorAll('a[href^="#"]').forEach((a) => {
+                a.addEventListener("click", (e) => {
+                    const target = document.querySelector(
+                        a.getAttribute("href"),
+                    );
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                        });
+                    }
+                });
+            });
+
+            // staggered feature cards animation
+            const features = document.querySelectorAll(".feature");
+            const obs = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry, i) => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.animation = `fadein 0.5s ease ${i * 0.06}s both`;
+                            obs.unobserve(entry.target);
+                        }
+                    });
+                },
+                { threshold: 0.1 },
+            );
+            features.forEach((f) => obs.observe(f));
+        </script>
+    </body>
+</html>
