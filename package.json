@@ -8,6 +8,9 @@
     "predeploy": "mkdir -p dist && cp index.html dist/index.html",
     "deploy": "wrangler deploy"
   },
+  "dependencies": {
+    "khem": "github:errgrab/khem"
+  },
   "devDependencies": {
     "vite": "^6.0.0",
     "wrangler": "^4.76.0"
