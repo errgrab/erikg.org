@@ -131,7 +131,6 @@
                 transform: translateY(0);
             }
 
-            /* Arrow tip pointing to button */
             .theme-dropdown::before {
                 content: "";
                 position: absolute;
@@ -216,7 +215,6 @@
 
                 .theme-dropdown {
                     right: -1rem;
-                    /* push back into screen slightly on mobile */
                 }
 
                 .theme-dropdown::before {
@@ -307,7 +305,6 @@
                 opacity: 0.7;
             }
 
-            /* prev 0.2 */
             .tile.muted .name {
                 opacity: 0.7;
             }
@@ -442,7 +439,6 @@
                 },
             };
 
-            // Default set to classic
             let currentTheme = localStorage.getItem("theme") || "classic";
 
             function applyRootTheme(name) {
@@ -473,23 +469,16 @@
                         stroke-linejoin="round"
                     >
                         <path
-                            class="acc"
                             d="m1 2h1v-1h1v2h-2z"
                             fill="var(--acc)"
                             stroke="var(--acc)"
                         />
-                        <path
-                            class="fg"
-                            d="m0 0h2v2h-2z"
-                            fill="none"
-                            stroke="var(--fg)"
-                        />
+                        <path d="m0 0h2v2h-2z" fill="none" stroke="var(--fg)" />
                     </g>
                 </svg>
                 <h1>Erik<span style="color: var(--acc)">G</span></h1>
             </div>
 
-            <!-- Dropdown Picker -->
             <div class="theme-wrapper" id="themeWrapper">
                 <button
                     class="theme-btn"
@@ -501,69 +490,49 @@
                     <div class="theme-btn-half" id="btnLeft"></div>
                     <div class="theme-btn-half" id="btnRight"></div>
                 </button>
-
-                <div class="theme-dropdown" id="pickerGrid">
-                    <!-- swatches will be inserted here -->
-                </div>
+                <div class="theme-dropdown" id="pickerGrid"></div>
             </div>
         </header>
 
         <hr />
 
-        <main>
-            <h2 class="section-label">projects</h2>
-            <div class="grid">
-                <a class="tile" href="https://ai.erikg.org">
-                    <span class="host">ai.erikg.org</span>
-                    <span class="name">AI</span>
-                    <span class="desc"
-                        >personal AI API. manages pages, notes, persistent
-                        data.</span
-                    >
-                    <span class="tag">live</span>
-                </a>
-
-                <div class="tile muted">
-                    <span class="host">garden.erikg.org</span>
-                    <span class="name">Garden</span>
-                    <span class="desc"
-                        >wiki of small interconnected projects and ideas.</span
-                    >
-                    <span class="tag">in dev</span>
-                </div>
-
-                <div class="tile muted">
-                    <span class="host">leaf.erikg.org</span>
-                    <span class="name">Leaf</span>
-                    <span class="desc"
-                        >markdown editor. backlinks, sync, collaborative
-                        cursors.</span
-                    >
-                    <span class="tag">in dev</span>
-                </div>
-
-                <div class="tile muted">
-                    <span class="host">khem.erikg.org</span>
-                    <span class="name">Khem</span>
-                    <span class="desc"
-                        >language & VM. tcl-flavored, everything is a
-                        string.</span
-                    >
-                    <span class="tag">planned</span>
-                </div>
-            </div>
-        </main>
+        <script type="text/khem">
+            proc card {link; host; name; desc; tag} {
+                a "$link" "tile" {
+                    span "host" { text "$host" }
+                    span "name" { text "$name" }
+                    span "desc" { text "$desc" }
+                    span "tag" { text "$tag" }
+                }
+            }
+            proc muted {host; name; desc; tag} {
+                div "tile muted" {
+                    span "host" { text "$host" }
+                    span "name" { text "$name" }
+                    span "desc" { text "$desc" }
+                    span "tag" { text "$tag" }
+                }
+            }
+            main {
+              h2 "section-label" { text "projects" }
+              div "grid" {
+                card "https://ai.erikg.org" "ai.erikg.org" "AI" "API for AI. it manages pages, notes, persistent data and more, the ai is in control of it." "live"
+                card "https://khem.erikg.org" "khem.erikg.org" "Khem" "a new language inspired by tcl for building websites and apps. compiles to html, css, and js." "live"
+                muted "garden.erikg.org" "Garden" "a personal wiki where the only way to navigating is by following the links." "soon"
+                muted "leaf.erikg.org" "Leaf" "a colaborative note-taking system with no distractions trying to incorporate bullet journal." "soon"
+              }
+            }
+        </script>
 
         <footer>
-            <span>ErikG · go slow and fix things</span>
+            <span>ErikG &middot; go slow and fix things</span>
             <nav>
                 <a href="https://github.com/errgrab/" target="_blank">github</a>
-                <a href="mailto:hi@erikg.org">mail</a>
+                <a href="mailto:contact@erikg.org">mail</a>
             </nav>
         </footer>
 
         <script>
-            // Theme Logic
             function updateThemeUI(name) {
                 const t = themes[name] || themes["classic"];
                 currentTheme = name;
@@ -594,7 +563,6 @@
                 btn.classList.toggle("active");
             }
 
-            // Close dropdown when clicking outside
             document.addEventListener("click", (e) => {
                 const dropdown = document.getElementById("pickerGrid");
                 const btn = document.getElementById("themeBtn");
@@ -607,7 +575,6 @@
                 }
             });
 
-            // Close on Escape
             document.addEventListener("keydown", (e) => {
                 if (e.key === "Escape") {
                     document
