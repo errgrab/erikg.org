@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="icon"
+            href="https://erikg.org/icon.svg"
+            type="image/svg+xml"
+        />
+        <meta property="og:title" content="ErikG" />
+        <meta
+            property="og:description"
+            content="I build tools, languages, and systems from the ground up."
+        />
+        <meta property="og:image" content="https://erikg.org/banner.png" />
+
+        <title>ErikG</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;1,300&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            :root {
+                --bg: #0d0d0d;
+                --sur: #141414;
+                --fg: #e8e6e1;
+                --acc: #c97d2e;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: "DM Mono", monospace;
+                font-weight: 300;
+                background: var(--bg);
+                color: var(--fg);
+                min-height: 100svh;
+                display: flex;
+                flex-direction: column;
+                max-width: 580px;
+                margin: 0 auto;
+                padding: 4rem 2rem;
+                gap: 3.5rem;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* ─── HEADER & THEME ───────────────────────────────────── */
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .header-left {
+                display: flex;
+                flex-direction: row;
+                gap: 0.5rem;
+                align-items: center;
+                text-decoration: none;
+                color: inherit;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+                letter-spacing: 0.1em;
+            }
+
+            .theme-wrapper {
+                position: relative;
+                display: inline-block;
+            }
+
+            .theme-btn {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                border: 2px solid color-mix(in srgb, var(--fg) 20%, transparent);
+                cursor: pointer;
+                padding: 0;
+                overflow: hidden;
+                display: flex;
+                transition:
+                    border-color 0.1s,
+                    transform 0.1s;
+                flex-shrink: 0;
+                background: transparent;
+            }
+
+            .theme-btn:hover,
+            .theme-btn.active {
+                border-color: color-mix(in srgb, var(--fg) 50%, transparent);
+                transform: scale(1.08);
+            }
+
+            .theme-btn-half {
+                width: 50%;
+                height: 100%;
+                pointer-events: none;
+            }
+
+            .theme-dropdown {
+                position: absolute;
+                top: calc(100% + 15px);
+                right: 0;
+                background: var(--sur);
+                border: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+                border-radius: 12px;
+                padding: 1rem;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.5rem;
+                z-index: 100;
+                box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8);
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .theme-dropdown.open {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .theme-dropdown::before {
+                content: "";
+                position: absolute;
+                top: -6px;
+                right: 14px;
+                width: 10px;
+                height: 10px;
+                background: var(--sur);
+                border-top: 1px solid
+                    color-mix(in srgb, var(--fg) 15%, transparent);
+                border-left: 1px solid
+                    color-mix(in srgb, var(--fg) 15%, transparent);
+                transform: rotate(45deg);
+            }
+
+            .swatch {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                cursor: pointer;
+                border: 2px solid transparent;
+                background: transparent;
+                transition:
+                    transform 0.12s,
+                    border-color 0.12s;
+                position: relative;
+                overflow: hidden;
+                flex-shrink: 0;
+            }
+
+            .swatch:hover {
+                transform: scale(1.12);
+                z-index: 10;
+            }
+
+            .swatch.active {
+                border-color: var(--fg);
+            }
+
+            .sh {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 50%;
+                pointer-events: none;
+            }
+
+            .sh.l {
+                left: 0;
+            }
+            .sh.r {
+                right: 0;
+            }
+
+            hr {
+                border: none;
+                border-top: 1px solid var(--fg);
+                opacity: 0.25;
+                margin: -1.5rem 0 -1.5rem 0;
+            }
+
+            /* ─── NAVIGATION ───────────────────────────────────────── */
+            .nav-links {
+                display: flex;
+                gap: 1.25rem;
+                margin-top: -1.5rem;
+                flex-wrap: wrap;
+            }
+
+            .nav-links a {
+                font-size: 0.65rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--fg);
+                opacity: 0.6;
+                text-decoration: none;
+                transition:
+                    opacity 0.2s,
+                    color 0.2s;
+            }
+
+            .nav-links a:hover {
+                opacity: 1;
+                color: var(--acc);
+            }
+
+            /* ─── HERO ─────────────────────────────────────────────── */
+            .hero {
+                display: flex;
+                flex-direction: column;
+                gap: 1.25rem;
+            }
+
+            .hero .eyebrow {
+                font-size: 0.55rem;
+                letter-spacing: 0.28em;
+                text-transform: uppercase;
+                color: var(--acc);
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .hero .eyebrow::before {
+                content: "";
+                display: block;
+                width: 24px;
+                height: 1px;
+                background: var(--acc);
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+                font-weight: 300;
+                line-height: 1.2;
+                letter-spacing: -0.02em;
+            }
+
+            .hero h2 em {
+                color: var(--acc);
+                font-style: italic;
+            }
+
+            .hero p {
+                font-size: 0.85rem;
+                opacity: 0.8;
+                line-height: 1.75;
+            }
+
+            .hero-links {
+                display: flex;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+                margin-top: 0.5rem;
+            }
+
+            /* ─── GRID & TILES ─────────────────────────────────────── */
+            .section-label {
+                font-size: 0.55rem;
+                letter-spacing: 0.28em;
+                text-transform: uppercase;
+                color: var(--fg);
+                margin-bottom: 0.85rem;
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .grid.single {
+                grid-template-columns: 1fr;
+            }
+
+            .tile {
+                background: transparent;
+                border: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+                border-radius: 6px;
+                padding: 1.35rem 1.25rem 1.15rem;
+                display: flex;
+                flex-direction: column;
+                text-decoration: none;
+                color: inherit;
+                transition:
+                    background 0.2s,
+                    border-color 0.2s;
+                height: 100%;
+                position: relative;
+                overflow: hidden;
+            }
+
+            a.tile::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                background: var(--acc);
+                transform: scaleY(0);
+                transform-origin: bottom;
+                transition: transform 0.2s ease;
+            }
+
+            a.tile:hover {
+                background: color-mix(in srgb, var(--fg) 2%, transparent);
+                border-color: color-mix(in srgb, var(--fg) 40%, transparent);
+            }
+
+            a.tile:hover::before {
+                transform: scaleY(1);
+            }
+
+            .tile .host {
+                font-size: 0.55rem;
+                color: var(--acc);
+                letter-spacing: 0.06em;
+                margin-bottom: 0.6rem;
+                text-transform: uppercase;
+            }
+
+            .tile .name {
+                font-size: 0.88rem;
+                color: var(--fg);
+                margin-bottom: 0.5rem;
+                line-height: 1;
+            }
+
+            .tile .desc {
+                font-size: 0.63rem;
+                color: var(--fg);
+                opacity: 0.8;
+                font-style: italic;
+                line-height: 1.65;
+            }
+
+            .tags-row {
+                display: flex;
+                gap: 0.4rem;
+                flex-wrap: wrap;
+                margin-top: 1rem;
+            }
+
+            .tag {
+                font-size: 0.5rem;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--fg);
+                border: 1px solid color-mix(in srgb, var(--fg) 40%, transparent);
+                padding: 0.2rem 0.4rem;
+                border-radius: 3px;
+                text-decoration: none;
+                transition: all 0.2s;
+            }
+
+            a.tag:hover {
+                color: var(--acc);
+                border-color: var(--acc);
+            }
+
+            .tile .tag.live {
+                color: var(--acc);
+                border-color: color-mix(in srgb, var(--acc) 40%, transparent);
+            }
+
+            .tile.muted .host {
+                color: var(--fg);
+                opacity: 0.7;
+            }
+            .tile.muted .name {
+                opacity: 0.7;
+            }
+            .tile.muted .desc {
+                opacity: 0.6;
+            }
+            .tile.muted .tag {
+                opacity: 0.6;
+                border-color: color-mix(in srgb, var(--fg) 40%, transparent);
+            }
+
+            /* Lists inside tiles (Skills) */
+            .tile ul {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 0.4rem;
+                margin-top: 0.25rem;
+            }
+
+            .tile ul li {
+                font-size: 0.7rem;
+                opacity: 0.8;
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+            }
+
+            .tile ul li::before {
+                content: "·";
+                color: var(--acc);
+                font-weight: bold;
+            }
+
+            /* ─── FOOTER ───────────────────────────────────────────── */
+            footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: auto;
+            }
+
+            footer span,
+            footer a {
+                font-size: 0.6rem;
+                color: var(--fg);
+                opacity: 0.6;
+                text-decoration: none;
+            }
+
+            footer a:hover {
+                color: var(--acc);
+                opacity: 0.9;
+            }
+
+            footer nav {
+                display: flex;
+                gap: 1.5rem;
+            }
+
+            @media (max-width: 480px) {
+                .grid {
+                    grid-template-columns: 1fr;
+                }
+                .theme-dropdown {
+                    right: -1rem;
+                }
+                .theme-dropdown::before {
+                    right: 1.5rem;
+                }
+                footer {
+                    flex-direction: column;
+                    gap: 1rem;
+                    align-items: flex-start;
+                }
+            }
+        </style>
+
+        <script>
+            const themes = {
+                BlackG: {
+                    bg: "black",
+                    sur: "black",
+                    fg: "white",
+                    acc: "white",
+                },
+                whiteG: {
+                    bg: "white",
+                    sur: "white",
+                    fg: "black",
+                    acc: "black",
+                },
+                classic: {
+                    bg: "#0d0d0d",
+                    sur: "#141414",
+                    fg: "#e8e6e1",
+                    acc: "#c97d2e",
+                },
+                moss: {
+                    bg: "#080808",
+                    sur: "#111111",
+                    fg: "#f0f0ee",
+                    acc: "#7aaa6a",
+                },
+                forest: {
+                    bg: "#0d0f0e",
+                    sur: "#1a1f1d",
+                    fg: "#ddd9c8",
+                    acc: "#7cfc6e",
+                },
+                espresso: {
+                    bg: "#1c1210",
+                    sur: "#2a1c18",
+                    fg: "#f0dfc8",
+                    acc: "#f59e0b",
+                },
+                void: {
+                    bg: "#080808",
+                    sur: "#141414",
+                    fg: "#eeeeee",
+                    acc: "#ff3c3c",
+                },
+                midnight: {
+                    bg: "#0a0e1a",
+                    sur: "#111827",
+                    fg: "#e2e8f0",
+                    acc: "#38bdf8",
+                },
+                graphite: {
+                    bg: "#1c1c1e",
+                    sur: "#2c2c2e",
+                    fg: "#f0f0f2",
+                    acc: "#ff9f0a",
+                },
+                dusk: {
+                    bg: "#12101a",
+                    sur: "#1e1b2e",
+                    fg: "#eae8f8",
+                    acc: "#d946b4",
+                },
+                chalk: {
+                    bg: "#f2efe6",
+                    sur: "#e8e4d8",
+                    fg: "#1a1e1c",
+                    acc: "#c0392b",
+                },
+                sage: {
+                    bg: "#f0f4f0",
+                    sur: "#e2ebe2",
+                    fg: "#1a2a1a",
+                    acc: "#3a7d44",
+                },
+                cobalt: {
+                    bg: "#eef2f8",
+                    sur: "#dce5f0",
+                    fg: "#0e1830",
+                    acc: "#2563eb",
+                },
+                paper: {
+                    bg: "#f9f6ef",
+                    sur: "#eeeadf",
+                    fg: "#221e1a",
+                    acc: "#7c5c2e",
+                },
+                vapor: {
+                    bg: "#f4f0ff",
+                    sur: "#ece6ff",
+                    fg: "#120630",
+                    acc: "#7c3aed",
+                },
+            };
+
+            let currentTheme = localStorage.getItem("theme") || "classic";
+
+            function applyRootTheme(name) {
+                const t = themes[name] || themes["classic"];
+                const r = document.documentElement.style;
+                r.setProperty("--bg", t.bg);
+                r.setProperty("--sur", t.sur);
+                r.setProperty("--fg", t.fg);
+                r.setProperty("--acc", t.acc);
+            }
+
+            applyRootTheme(currentTheme);
+        </script>
+    </head>
+
+    <body>
+        <header>
+            <a href="https://erikg.org" class="header-left">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="-8 -8 16 16"
+                    width="32"
+                >
+                    <g
+                        transform="scale(3) rotate(45 0 0) translate(-1.5 -1.5)"
+                        stroke-linecap="round"
+                        stroke-width="0.5"
+                        stroke-linejoin="round"
+                    >
+                        <path
+                            d="m1 2h1v-1h1v2h-2z"
+                            fill="var(--acc)"
+                            stroke="var(--acc)"
+                        />
+                        <path d="m0 0h2v2h-2z" fill="none" stroke="var(--fg)" />
+                    </g>
+                </svg>
+                <h1>Erik<span style="color: var(--acc)">G</span></h1>
+            </a>
+
+            <div class="theme-wrapper" id="themeWrapper">
+                <button
+                    class="theme-btn"
+                    id="themeBtn"
+                    aria-label="Change theme"
+                    onclick="togglePicker(event)"
+                    title="change theme"
+                >
+                    <div class="theme-btn-half" id="btnLeft"></div>
+                    <div class="theme-btn-half" id="btnRight"></div>
+                </button>
+                <div class="theme-dropdown" id="pickerGrid"></div>
+            </div>
+        </header>
+
+        <hr />
+
+        <nav class="nav-links">
+            <a href="#projects">projects</a>
+            <a href="#skills">skills</a>
+            <a href="#workflow">workflow</a>
+            <a href="#contact">contact</a>
+        </nav>
+
+        <section class="hero">
+            <div class="eyebrow">open to work · Porto, PT</div>
+            <h2>builder of tools<br /><em>&amp; ecosystems.</em></h2>
+            <p>
+                I build things for the web from first principles. Currently
+                developing Khem, a minimal scripting language that compiles to
+                HTML, CSS, and JS. I care about infrastructure that lasts,
+                systems that compose cleanly, and software with a clear point of
+                view.
+            </p>
+            <div class="hero-links">
+                <a
+                    href="mailto:contact@erikg.org"
+                    class="tag"
+                    style="
+                        color: var(--acc);
+                        border-color: color-mix(
+                            in srgb,
+                            var(--acc) 40%,
+                            transparent
+                        );
+                    "
+                    >contact@erikg.org</a
+                >
+                <a href="https://github.com/errgrab" target="_blank" class="tag"
+                    >github ↗</a
+                >
+            </div>
+        </section>
+
+        <section id="projects">
+            <h3 class="section-label">projects</h3>
+            <div class="grid single">
+                <a class="tile" href="https://khem.erikg.org" target="_blank">
+                    <span class="host">khem.erikg.org</span>
+                    <span class="name">Khem</span>
+                    <span class="desc"
+                        >A minimal homoiconic scripting language for the web,
+                        inspired by Tcl. Compiles to clean HTML/CSS/JS with no
+                        runtime. Ships with a Vite plugin and a browser-based
+                        IDE. Written in pure JavaScript — zero
+                        dependencies.</span
+                    >
+                    <div class="tags-row">
+                        <span class="tag live">live</span>
+                        <span class="tag">compiler</span>
+                        <span class="tag">language design</span>
+                    </div>
+                </a>
+
+                <a class="tile" href="https://ai.erikg.org" target="_blank">
+                    <span class="host">ai.erikg.org</span>
+                    <span class="name">AI-Writable Subdomain</span>
+                    <span class="desc"
+                        >A Cloudflare Worker + KV REST API that lets Claude
+                        write directly to my site. Pages are committed to GitHub
+                        via the API and auto-deployed on every push. A live
+                        experiment in AI-writable infrastructure.</span
+                    >
+                    <div class="tags-row">
+                        <span class="tag live">live</span>
+                        <span class="tag">workers</span>
+                        <span class="tag">api</span>
+                    </div>
+                </a>
+
+                <a class="tile" href="https://erikg.org" target="_blank">
+                    <span class="host">erikg.org</span>
+                    <span class="name">Site Infrastructure</span>
+                    <span class="desc"
+                        >A single Cloudflare Worker routing multiple subdomains
+                        from one GitHub repo. Static assets, a dynamic API, and
+                        GitHub-backed page storage all unified. Built with Vite
+                        and Wrangler.</span
+                    >
+                    <div class="tags-row">
+                        <span class="tag live">live</span>
+                        <span class="tag">devops</span>
+                        <span class="tag">vite</span>
+                    </div>
+                </a>
+
+                <div class="tile muted">
+                    <span class="host">garden.erikg.org</span>
+                    <span class="name">Digital Garden</span>
+                    <span class="desc"
+                        >A personal wiki with bidirectional wikilink support
+                        built on Markdown and a custom Python compiler. Designed
+                        to be rewritten in Khem once the language matures.</span
+                    >
+                    <div class="tags-row">
+                        <span class="tag">in progress</span>
+                        <span class="tag">python</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h3 class="section-label">skills & tools</h3>
+            <div class="grid">
+                <div class="tile">
+                    <span class="host">stack</span>
+                    <span class="name">Languages</span>
+                    <ul>
+                        <li>JavaScript / TypeScript</li>
+                        <li>Python</li>
+                        <li>C / C++ / C#</li>
+                        <li>HTML / CSS</li>
+                        <li>Khem (my own)</li>
+                    </ul>
+                </div>
+                <div class="tile">
+                    <span class="host">ops</span>
+                    <span class="name">Infrastructure</span>
+                    <ul>
+                        <li>Cloudflare Workers + KV</li>
+                        <li>GitHub Actions CI/CD</li>
+                        <li>Vite / Wrangler</li>
+                        <li>REST API design</li>
+                        <li>Git as source of truth</li>
+                    </ul>
+                </div>
+                <div class="tile">
+                    <span class="host">focus</span>
+                    <span class="name">Deep Interests</span>
+                    <ul>
+                        <li>Programming language design</li>
+                        <li>Compiler construction</li>
+                        <li>Minimal tooling</li>
+                        <li>Edge computing</li>
+                    </ul>
+                </div>
+                <div class="tile">
+                    <span class="host">study</span>
+                    <span class="name">Currently Learning</span>
+                    <ul>
+                        <li>C99 — pedantic, zero-leak</li>
+                        <li>WebAssembly targets</li>
+                        <li>Parser theory</li>
+                        <li>Systems programming</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="workflow">
+            <h3 class="section-label">how I work</h3>
+            <div class="grid single">
+                <div class="tile">
+                    <span class="host">principle 01</span>
+                    <span class="name">Consolidate</span>
+                    <span class="desc"
+                        >One repo, one worker, one source of truth. Fewer moving
+                        parts means fewer things that break silently.</span
+                    >
+                </div>
+                <div class="tile">
+                    <span class="host">principle 02</span>
+                    <span class="name">Build to Last</span>
+                    <span class="desc"
+                        >Every infrastructure choice accounts for the long arc.
+                        Today's placeholder is tomorrow's Khem module. I design
+                        for the system I'm building toward.</span
+                    >
+                </div>
+                <div class="tile">
+                    <span class="host">principle 03</span>
+                    <span class="name">Own the Stack</span>
+                    <span class="desc"
+                        >I prefer to understand the systems I use. When
+                        something doesn't exist or doesn't fit well, I build it,
+                        that's how Khem started.</span
+                    >
+                </div>
+                <div class="tile">
+                    <span class="host">principle 04</span>
+                    <span class="name">Ship Early</span>
+                    <span class="desc"
+                        >Building in public, iterating in the open. Done is
+                        better than perfect, the site is live, the language is
+                        live, the garden is growing.</span
+                    >
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h3 class="section-label">get in touch</h3>
+            <div class="grid">
+                <a class="tile" href="mailto:contact@erikg.org">
+                    <span class="host">email</span>
+                    <span class="name" style="color: var(--acc)"
+                        >contact@erikg.org</span
+                    >
+                </a>
+                <a
+                    class="tile"
+                    href="https://github.com/errgrab"
+                    target="_blank"
+                >
+                    <span class="host">github</span>
+                    <span class="name" style="color: var(--acc)"
+                        >github.com/errgrab</span
+                    >
+                </a>
+                <a class="tile" href="https://erikg.org" target="_blank">
+                    <span class="host">root site</span>
+                    <span class="name" style="color: var(--acc)"
+                        >erikg.org</span
+                    >
+                </a>
+                <div class="tile muted">
+                    <span class="host">location</span>
+                    <span class="name">Porto, Portugal</span>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <span>ErikG &middot; go slow and fix things</span>
+            <nav>
+                <a href="https://github.com/errgrab/" target="_blank">github</a>
+                <a href="mailto:contact@erikg.org">mail</a>
+            </nav>
+        </footer>
+
+        <script>
+            function updateThemeUI(name) {
+                const t = themes[name] || themes["classic"];
+                currentTheme = name;
+                localStorage.setItem("theme", name);
+
+                document.getElementById("btnLeft").style.background = t.bg;
+                document.getElementById("btnRight").style.background = t.acc;
+
+                document
+                    .querySelectorAll(".swatch")
+                    .forEach((s) =>
+                        s.classList.toggle("active", s.dataset.theme === name),
+                    );
+            }
+
+            function selectTheme(name) {
+                applyRootTheme(name);
+                updateThemeUI(name);
+                document.getElementById("pickerGrid").classList.remove("open");
+                document.getElementById("themeBtn").classList.remove("active");
+            }
+
+            function togglePicker(e) {
+                e.stopPropagation();
+                const dropdown = document.getElementById("pickerGrid");
+                const btn = document.getElementById("themeBtn");
+                dropdown.classList.toggle("open");
+                btn.classList.toggle("active");
+            }
+
+            document.addEventListener("click", (e) => {
+                const dropdown = document.getElementById("pickerGrid");
+                const btn = document.getElementById("themeBtn");
+                if (
+                    dropdown.classList.contains("open") &&
+                    !e.target.closest("#themeWrapper")
+                ) {
+                    dropdown.classList.remove("open");
+                    btn.classList.remove("active");
+                }
+            });
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") {
+                    document
+                        .getElementById("pickerGrid")
+                        .classList.remove("open");
+                    document
+                        .getElementById("themeBtn")
+                        .classList.remove("active");
+                }
+            });
+
+            function buildPicker() {
+                const grid = document.getElementById("pickerGrid");
+                Object.entries(themes).forEach(([name, t]) => {
+                    const el = document.createElement("button");
+                    el.type = "button";
+                    el.className =
+                        "swatch" + (name === currentTheme ? " active" : "");
+                    el.dataset.theme = name;
+                    el.title = name;
+                    el.ariaLabel = `Select ${name} theme`;
+                    el.innerHTML = `<div class="sh l" style="background:${t.bg}"></div><div class="sh r" style="background:${t.acc}"></div>`;
+                    el.onclick = () => selectTheme(name);
+                    grid.appendChild(el);
+                });
+            }
+
+            buildPicker();
+            updateThemeUI(currentTheme);
+        </script>
+    </body>
+</html>
