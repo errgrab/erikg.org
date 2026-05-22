@@ -496,33 +496,38 @@
 
         <hr />
 
-        <script type="text/khem">
-            proc card {link; host; name; desc; tag} {
-                a "$link" "tile" {
-                    span "host" { text "$host" }
-                    span "name" { text "$name" }
-                    span "desc" { text "$desc" }
-                    span "tag" { text "$tag" }
-                }
-            }
-            proc muted {host; name; desc; tag} {
-                div "tile muted" {
-                    span "host" { text "$host" }
-                    span "name" { text "$name" }
-                    span "desc" { text "$desc" }
-                    span "tag" { text "$tag" }
-                }
-            }
-            main {
-              h2 "section-label" { text "projects" }
-              div "grid" {
-                card "https://ai.erikg.org" "ai.erikg.org" "AI" "API for AI. it manages pages, notes, persistent data and more, the ai is in control of it." "live"
-                card "https://khem.erikg.org" "khem.erikg.org" "Khem" "a new language inspired by tcl for building websites and apps. compiles to html, css, and js." "live"
-                muted "garden.erikg.org" "Garden" "a personal wiki where the only way to navigating is by following the links." "soon"
-                muted "leaf.erikg.org" "Leaf" "a colaborative note-taking system with no distractions trying to incorporate bullet journal." "soon"
-              }
-            }
-        </script>
+        <main>
+            <h2 class="section-label">projects</h2>
+            <div class="grid">
+                <a class="tile" href="https://ai.erikg.org" target="_blank">
+                    <span class="host">ai.erikg.org</span>
+                    <span class="name">AI</span>
+                    <span class="desc"
+                        >API for AI. it manages pages, notes, persistent data and
+                        more, the ai is in control of it.</span
+                    >
+                    <span class="tag">live</span>
+                </a>
+                <div class="tile muted">
+                    <span class="host">garden.erikg.org</span>
+                    <span class="name">Garden</span>
+                    <span class="desc"
+                        >a personal wiki where the only way to navigating is by
+                        following the links.</span
+                    >
+                    <span class="tag">soon</span>
+                </div>
+                <div class="tile muted">
+                    <span class="host">leaf.erikg.org</span>
+                    <span class="name">Leaf</span>
+                    <span class="desc"
+                        >a colaborative note-taking system with no distractions
+                        trying to incorporate bullet journal.</span
+                    >
+                    <span class="tag">soon</span>
+                </div>
+            </div>
+        </main>
 
         <footer>
             <span>ErikG &middot; go slow and fix things</span>

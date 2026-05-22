@@ -7,9 +7,6 @@
     "preview": "vite preview",
     "deploy": "wrangler deploy"
   },
-  "dependencies": {
-    "khem": "github:errgrab/khem"
-  },
   "devDependencies": {
     "vite": "^6.4.1",
     "wrangler": "^4.76.0"
