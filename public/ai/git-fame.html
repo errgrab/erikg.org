@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>git fame — visualizer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:       #0a0a0a;
+    --surface:  #111111;
+    --border:   #222222;
+    --dim:      #4a5240;
+    --acc:      #8a9e6e;
+    --acc2:     #6b7d54;
+    --fg:       #f0f0f0;
+    --muted:    #666;
+    --author-colors: #8a9e6e, #6b8cba, #ba7b6b, #ba9b6b, #9b6bba;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+  }
+
+  header h1 {
+    font-family: 'DM Mono', monospace;
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: var(--acc);
+    letter-spacing: 0.05em;
+  }
+
+  header span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .paste-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
+    padding: 3rem;
+    gap: 2rem;
+  }
+
+  .paste-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  textarea {
+    width: 100%;
+    max-width: 700px;
+    height: 280px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    color: var(--fg);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 300;
+    line-height: 1.7;
+    padding: 1.25rem 1.5rem;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  textarea:focus { border-color: var(--acc); }
+  textarea::placeholder { color: var(--muted); }
+
+  button#parseBtn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: var(--bg);
+    background: var(--acc);
+    border: none;
+    padding: 0.7rem 2.5rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  button#parseBtn:hover { background: var(--acc2); }
+  button#parseBtn:active { transform: scale(0.98); }
+
+  .error {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: #ba6b6b;
+    display: none;
+  }
+
+  /* Dashboard */
+  #dashboard { display: none; padding: 2.5rem 3rem 4rem; }
+
+  .back-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--acc); }
+
+  .totals-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .total-card {
+    background: var(--surface);
+    padding: 1.5rem 2rem;
+  }
+
+  .total-card .lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .total-card .val {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--acc);
+    letter-spacing: -0.02em;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    margin-top: 2.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .chart-cell {
+    background: var(--surface);
+    padding: 1.5rem;
+  }
+
+  .chart-cell .chart-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .chart-wrap { position: relative; width: 100%; height: 220px; }
+
+  .dist-cell {
+    grid-column: 1 / -1;
+    background: var(--surface);
+    padding: 1.5rem;
+  }
+
+  .dist-wrap { position: relative; width: 100%; height: 200px; }
+
+  /* Author table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 300;
+  }
+
+  thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    text-align: left;
+    padding: 0.6rem 1rem;
+    color: var(--dim);
+    font-weight: 400;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #161616;
+    color: var(--fg);
+    font-weight: 300;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tbody tr:hover td { background: #161616; }
+
+  .author-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 0;
+    margin-right: 8px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  .bar-bg {
+    background: #1a1a1a;
+    height: 4px;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .bar-fill {
+    height: 4px;
+    background: var(--acc);
+    transition: width 0.6s ease;
+  }
+
+  .dist-pct {
+    font-size: 0.65rem;
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-sq { width: 8px; height: 8px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>git fame</h1>
+  <span>// repo visualizer</span>
+</header>
+
+<!-- Paste UI -->
+<div class="paste-zone" id="pasteZone">
+  <p class="paste-label">paste git fame output</p>
+  <textarea id="rawInput" placeholder="Total commits: 482
+Total ctimes: 5360
+Total files: 323
+Total loc: 55843
+| Author         | loc   | coms | fils | distribution       |
+|:---------------|------:|-----:|-----:|-------------------:|
+| lvichi         | 29800 |   90 |   95 | 53.4/18.7/29.4     |
+| ErikG          | 15231 |   73 |  183 | 27.3/15.1/31.9     |
+..."></textarea>
+  <p class="error" id="errMsg">could not parse input — make sure it's raw git fame output</p>
+  <button id="parseBtn">visualize →</button>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard">
+  <button class="back-btn" id="backBtn">← paste new output</button>
+
+  <div class="totals-grid" id="totalsGrid"></div>
+
+  <p class="section-label">authors</p>
+  <table id="authorTable">
+    <thead>
+      <tr>
+        <th>author</th>
+        <th style="text-align:right">loc</th>
+        <th style="text-align:right">commits</th>
+        <th style="text-align:right">files</th>
+        <th style="min-width:120px">loc %</th>
+        <th style="min-width:120px">commits %</th>
+        <th style="min-width:120px">files %</th>
+      </tr>
+    </thead>
+    <tbody id="authorBody"></tbody>
+  </table>
+
+  <p class="section-label">charts</p>
+
+  <div class="charts-grid">
+    <div class="chart-cell">
+      <p class="chart-label">lines of code</p>
+      <div class="chart-wrap"><canvas id="locChart"></canvas></div>
+    </div>
+    <div class="chart-cell">
+      <p class="chart-label">commits</p>
+      <div class="chart-wrap"><canvas id="comsChart"></canvas></div>
+    </div>
+    <div class="chart-cell">
+      <p class="chart-label">files touched</p>
+      <div class="chart-wrap"><canvas id="filsChart"></canvas></div>
+    </div>
+    <div class="chart-cell">
+      <p class="chart-label">loc vs commits (bubble = files)</p>
+      <div class="chart-wrap"><canvas id="bubbleChart"></canvas></div>
+    </div>
+    <div class="dist-cell">
+      <div class="legend" id="distLegend"></div>
+      <p class="chart-label">distribution — lines / commits / files %</p>
+      <div class="dist-wrap"><canvas id="distChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PALETTE = ['#8a9e6e','#6b8cba','#ba7b6b','#ba9b6b','#9b6bba','#6bbaba','#ba6b9b','#9bba6b','#6b9bba'];
+
+function getPalette(n) {
+  return PALETTE.slice(0, n);
+}
+
+function fmt(n) {
+  return Number(n).toLocaleString();
+}
+
+function parseFame(raw) {
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+
+  const totals = {};
+  const authors = [];
+
+  for (const line of lines) {
+    const commitMatch = line.match(/^Total commits[:\s]+(\d+)/i);
+    const ctimeMatch  = line.match(/^Total ctimes[:\s]+(\d+)/i);
+    const filesMatch  = line.match(/^Total files[:\s]+(\d+)/i);
+    const locMatch    = line.match(/^Total loc[:\s]+(\d+)/i);
+
+    if (commitMatch) totals.commits = parseInt(commitMatch[1]);
+    if (ctimeMatch)  totals.ctimes  = parseInt(ctimeMatch[1]);
+    if (filesMatch)  totals.files   = parseInt(filesMatch[1]);
+    if (locMatch)    totals.loc     = parseInt(locMatch[1]);
+
+    // table row: | name | loc | coms | fils | dist |
+    const rowMatch = line.match(/^\|(.+?)\|(.+?)\|(.+?)\|(.+?)\|(.+?)\|/);
+    if (rowMatch) {
+      const name = rowMatch[1].trim();
+      if (name.startsWith(':') || name.toLowerCase() === 'author') continue;
+      const loc  = parseInt(rowMatch[2].replace(/,/g, '').trim());
+      const coms = parseInt(rowMatch[3].replace(/,/g, '').trim());
+      const fils = parseInt(rowMatch[4].replace(/,/g, '').trim());
+      const dist = rowMatch[5].trim();
+      if (isNaN(loc)) continue;
+
+      const distParts = dist.split('/').map(Number);
+      authors.push({
+        name,
+        loc,
+        coms,
+        fils,
+        distLoc:  distParts[0] || 0,
+        distComs: distParts[1] || 0,
+        distFils: distParts[2] || 0,
+      });
+    }
+  }
+
+  if (!authors.length) return null;
+
+  // fallback totals
+  if (!totals.loc)     totals.loc     = authors.reduce((s, a) => s + a.loc,  0);
+  if (!totals.commits) totals.commits = authors.reduce((s, a) => s + a.coms, 0);
+  if (!totals.files)   totals.files   = authors.reduce((s, a) => s + a.fils, 0);
+
+  return { totals, authors };
+}
+
+let charts = [];
+
+function destroyCharts() {
+  charts.forEach(c => c.destroy());
+  charts = [];
+}
+
+function chartDefaults() {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#666', font: { family: 'DM Mono', size: 11, weight: '300' } }, grid: { color: '#1a1a1a' }, border: { color: '#222' } },
+      y: { ticks: { color: '#666', font: { family: 'DM Mono', size: 11, weight: '300' } }, grid: { color: '#1a1a1a' }, border: { color: '#222' } }
+    }
+  };
+}
+
+function makeBar(id, labels, data, colors) {
+  const ctx = document.getElementById(id);
+  const c = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{ data, backgroundColor: colors, borderWidth: 0, borderRadius: 0 }]
+    },
+    options: {
+      ...chartDefaults(),
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111',
+          borderColor: '#222',
+          borderWidth: 1,
+          titleColor: '#8a9e6e',
+          bodyColor: '#999',
+          titleFont: { family: 'DM Mono', size: 11 },
+          bodyFont: { family: 'DM Mono', size: 11 },
+          callbacks: { label: c => ' ' + fmt(c.raw) }
+        }
+      }
+    }
+  });
+  charts.push(c);
+}
+
+function render(data) {
+  const { totals, authors } = data;
+  const colors = getPalette(authors.length);
+  const names = authors.map(a => a.name);
+
+  // totals
+  const tg = document.getElementById('totalsGrid');
+  tg.innerHTML = `
+    <div class="total-card"><div class="lbl">commits</div><div class="val">${fmt(totals.commits)}</div></div>
+    <div class="total-card"><div class="lbl">ctimes</div><div class="val">${fmt(totals.ctimes || '—')}</div></div>
+    <div class="total-card"><div class="lbl">files</div><div class="val">${fmt(totals.files)}</div></div>
+    <div class="total-card"><div class="lbl">lines of code</div><div class="val">${fmt(totals.loc)}</div></div>
+  `;
+
+  // author table
+  const maxLoc  = Math.max(...authors.map(a => a.loc));
+  const maxComs = Math.max(...authors.map(a => a.coms));
+  const maxFils = Math.max(...authors.map(a => a.fils));
+
+  const tbody = document.getElementById('authorBody');
+  tbody.innerHTML = authors.map((a, i) => `
+    <tr>
+      <td><span class="author-dot" style="background:${colors[i]}"></span>${a.name}</td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums">${fmt(a.loc)}</td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums">${fmt(a.coms)}</td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums">${fmt(a.fils)}</td>
+      <td>
+        <div class="bar-bg"><div class="bar-fill" style="width:${(a.loc/maxLoc*100).toFixed(1)}%;background:${colors[i]}"></div></div>
+        <span class="dist-pct">${a.distLoc}%</span>
+      </td>
+      <td>
+        <div class="bar-bg"><div class="bar-fill" style="width:${(a.coms/maxComs*100).toFixed(1)}%;background:${colors[i]}"></div></div>
+        <span class="dist-pct">${a.distComs}%</span>
+      </td>
+      <td>
+        <div class="bar-bg"><div class="bar-fill" style="width:${(a.fils/maxFils*100).toFixed(1)}%;background:${colors[i]}"></div></div>
+        <span class="dist-pct">${a.distFils}%</span>
+      </td>
+    </tr>
+  `).join('');
+
+  destroyCharts();
+
+  makeBar('locChart',  names, authors.map(a => a.loc),  colors);
+  makeBar('comsChart', names, authors.map(a => a.coms), colors);
+  makeBar('filsChart', names, authors.map(a => a.fils), colors);
+
+  // bubble
+  const maxFil = Math.max(...authors.map(a => a.fils));
+  const bubbleCtx = document.getElementById('bubbleChart');
+  const bc = new Chart(bubbleCtx, {
+    type: 'bubble',
+    data: {
+      datasets: authors.map((a, i) => ({
+        label: a.name,
+        data: [{ x: a.loc, y: a.coms, r: Math.max(4, Math.round(a.fils / maxFil * 28)) }],
+        backgroundColor: colors[i] + 'cc',
+        borderColor: colors[i],
+        borderWidth: 1,
+      }))
+    },
+    options: {
+      ...chartDefaults(),
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111', borderColor: '#222', borderWidth: 1,
+          titleColor: '#8a9e6e', bodyColor: '#999',
+          titleFont: { family: 'DM Mono', size: 11 },
+          bodyFont: { family: 'DM Mono', size: 11 },
+          callbacks: {
+            title: items => items[0].dataset.label,
+            label: item => [` loc: ${fmt(item.raw.x)}`, ` commits: ${fmt(item.raw.y)}`, ` files: ${fmt(authors[item.datasetIndex].fils)}`]
+          }
+        }
+      },
+      scales: {
+        ...chartDefaults().scales,
+        x: { ...chartDefaults().scales.x, title: { display: true, text: 'loc', color: '#444', font: { family: 'DM Mono', size: 10 } } },
+        y: { ...chartDefaults().scales.y, title: { display: true, text: 'commits', color: '#444', font: { family: 'DM Mono', size: 10 } } }
+      }
+    }
+  });
+  charts.push(bc);
+
+  // dist legend
+  const dl = document.getElementById('distLegend');
+  dl.innerHTML = authors.map((a, i) => `
+    <span class="legend-item">
+      <span class="legend-sq" style="background:${colors[i]}"></span>${a.name}
+    </span>`).join('');
+
+  // stacked dist
+  const dc = new Chart(document.getElementById('distChart'), {
+    type: 'bar',
+    data: {
+      labels: ['lines %', 'commits %', 'files %'],
+      datasets: authors.map((a, i) => ({
+        label: a.name,
+        data: [a.distLoc, a.distComs, a.distFils],
+        backgroundColor: colors[i],
+        borderWidth: 0,
+      }))
+    },
+    options: {
+      ...chartDefaults(),
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111', borderColor: '#222', borderWidth: 1,
+          titleColor: '#8a9e6e', bodyColor: '#999',
+          titleFont: { family: 'DM Mono', size: 11 },
+          bodyFont: { family: 'DM Mono', size: 11 },
+          callbacks: { label: c => ` ${c.dataset.label}: ${c.raw}%` }
+        }
+      },
+      scales: {
+        x: { ...chartDefaults().scales.x, stacked: true },
+        y: { ...chartDefaults().scales.y, stacked: true, max: 100, ticks: { ...chartDefaults().scales.y.ticks, callback: v => v + '%' } }
+      }
+    }
+  });
+  charts.push(dc);
+}
+
+document.getElementById('parseBtn').addEventListener('click', () => {
+  const raw = document.getElementById('rawInput').value;
+  const err = document.getElementById('errMsg');
+  const data = parseFame(raw);
+
+  if (!data) {
+    err.style.display = 'block';
+    return;
+  }
+
+  err.style.display = 'none';
+  render(data);
+
+  document.getElementById('pasteZone').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+});
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('pasteZone').style.display = 'flex';
+});
+</script>
+</body>
+</html>
