@@ -1,0 +1,349 @@
+:root {
+    --bg: #0d0d0d;
+    --sur: #141414;
+    --fg: #e8e6e1;
+    --acc: #c97d2e;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "DM Mono", monospace;
+    font-weight: 300;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    max-width: 580px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    gap: 3.5rem;
+    -webkit-font-smoothing: antialiased;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+}
+
+header .subtitle {
+    font-size: 0.6rem;
+    color: var(--fg);
+    opacity: 0.6;
+    font-style: italic;
+}
+
+.theme-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.theme-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, var(--fg) 20%, transparent);
+    cursor: pointer;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    transition:
+        border-color 0.1s,
+        transform 0.1s;
+    flex-shrink: 0;
+    background: transparent;
+}
+
+.theme-btn:hover,
+.theme-btn.active {
+    border-color: color-mix(in srgb, var(--fg) 50%, transparent);
+    transform: scale(1.08);
+}
+
+.theme-btn-half {
+    width: 50%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.theme-dropdown {
+    position: absolute;
+    top: calc(100% + 15px);
+    right: 0;
+    background: var(--sur);
+    border: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+    border-radius: 12px;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    z-index: 100;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.theme-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.theme-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: 14px;
+    width: 10px;
+    height: 10px;
+    background: var(--sur);
+    border-top: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+    border-left: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+    transform: rotate(45deg);
+}
+
+.swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    background: transparent;
+    transition:
+        transform 0.12s,
+        border-color 0.12s;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.swatch:hover {
+    transform: scale(1.12);
+    z-index: 10;
+}
+
+.swatch.active {
+    border-color: var(--fg);
+}
+
+.sh {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    pointer-events: none;
+}
+
+.sh.l {
+    left: 0;
+}
+
+.sh.r {
+    right: 0;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--fg);
+    opacity: 0.25;
+    margin: -1.5rem 0 -1.5rem 0;
+}
+
+.section-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--fg);
+    margin-bottom: 0.85rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.grid.single {
+    grid-template-columns: 1fr;
+}
+
+.tile {
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
+    border-radius: 6px;
+    padding: 1.35rem 1.25rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition:
+        background 0.2s,
+        border-color 0.2s;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+a.tile::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--acc);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.2s ease;
+}
+
+a.tile:hover {
+    background: color-mix(in srgb, var(--fg) 2%, transparent);
+    border-color: color-mix(in srgb, var(--fg) 40%, transparent);
+}
+
+a.tile:hover::before {
+    transform: scaleY(1);
+}
+
+.tile .host {
+    font-size: 0.55rem;
+    color: var(--acc);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.6rem;
+}
+
+.tile .name {
+    font-size: 0.88rem;
+    color: var(--fg);
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+.tile .desc {
+    font-size: 0.63rem;
+    color: var(--fg);
+    opacity: 0.8;
+    font-style: italic;
+    line-height: 1.65;
+}
+
+.tags-row {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.tag,
+.tile .tag {
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg);
+    border: 1px solid color-mix(in srgb, var(--fg) 40%, transparent);
+    padding: 0.2rem 0.4rem;
+    width: fit-content;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+a.tag:hover {
+    color: var(--acc);
+    border-color: var(--acc);
+}
+
+a.tile .tag,
+.tile .tag.live {
+    color: var(--acc);
+    border-color: color-mix(in srgb, var(--acc) 40%, transparent);
+}
+
+.tile > .tag {
+    margin-top: 1rem;
+}
+
+.tile.muted .host {
+    color: var(--fg);
+    opacity: 0.7;
+}
+
+.tile.muted .name {
+    opacity: 0.7;
+}
+
+.tile.muted .desc {
+    opacity: 0.6;
+}
+
+.tile.muted .tag {
+    opacity: 0.6;
+    border-color: color-mix(in srgb, var(--fg) 40%, transparent);
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+footer span,
+footer a {
+    font-size: 0.6rem;
+    color: var(--fg);
+    opacity: 0.6;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: var(--acc);
+    opacity: 0.9;
+}
+
+footer nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .theme-dropdown {
+        right: -1rem;
+    }
+
+    .theme-dropdown::before {
+        right: 1.5rem;
+    }
+}
