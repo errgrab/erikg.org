@@ -6,6 +6,7 @@
   import { projects } from "./data/projects.js";
   import Me from "./pages/Me.svelte";
   import Gallery from "./pages/Gallery.svelte";
+  import Ai from "./pages/Ai.svelte";
 
   // simple client-side routing by pathname
   let route = window.location.pathname || "/";
@@ -29,6 +30,8 @@
   <Me />
 {:else if route === '/gallery'}
   <Gallery />
+{:else if route === '/ai'}
+  <Ai />
 {:else}
   <main>
     <h2 class="section-label">projects</h2>

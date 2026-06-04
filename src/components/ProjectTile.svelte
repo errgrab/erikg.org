@@ -18,7 +18,7 @@
         return { href: '/gallery', target: undefined, rel: undefined };
       }
       if (url.hostname === 'ai.erikg.org') {
-        return { href: '/', target: undefined, rel: undefined };
+        return { href: '/ai', target: undefined, rel: undefined };
       }
     } catch (e) {
       // ignore invalid URL

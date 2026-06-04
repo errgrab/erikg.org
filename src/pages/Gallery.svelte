@@ -52,6 +52,8 @@
     </p>
   </div>
 
+  <br />
+
   <p class="section-label">gallery</p>
   <div class="icon-grid" id="iconGrid">
     {#each images as img}

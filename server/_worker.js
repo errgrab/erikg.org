@@ -1,16 +1,13 @@
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    const host = url.hostname;
-    const subdomain = host.replace(/\.?erikg\.org$/, "") || "root";
-    const dir = subdomain === "root" || subdomain === "www" ? "" : `${subdomain}/`;
     const pathname = url.pathname === "/" ? "index.html" : url.pathname.replace(/^\//, "");
-    const candidate = `${dir}${pathname}`.replace(/\/+/g, "/");
+    const candidate = pathname.replace(/\/+/g, "/");
 
     const asset = await fetchAsset(env, candidate);
     if (asset) return asset;
 
-    const fallback = await fetchAsset(env, `${dir}index.html`);
+    const fallback = await fetchAsset(env, "index.html");
     if (fallback) return fallback;
 
     return new Response("Not found", { status: 404 });
