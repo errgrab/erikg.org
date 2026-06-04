@@ -23,10 +23,10 @@ body {
     min-height: 100svh;
     display: flex;
     flex-direction: column;
-    max-width: 580px;
+    max-width: 980px;
     margin: 0 auto;
-    padding: 4rem 2rem;
-    gap: 3.5rem;
+    padding: 3rem 2rem 6.5rem;
+    gap: 3rem;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -172,7 +172,7 @@ hr {
     border: none;
     border-top: 1px solid var(--fg);
     opacity: 0.25;
-    margin: -1.5rem 0 -1.5rem 0;
+    margin: 1.25rem 0;
 }
 
 .section-label {
@@ -186,7 +186,7 @@ hr {
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 1.25rem;
     align-items: stretch;
 }
 
@@ -197,8 +197,8 @@ hr {
 .tile {
     background: transparent;
     border: 1px solid color-mix(in srgb, var(--fg) 15%, transparent);
-    border-radius: 6px;
-    padding: 1.35rem 1.25rem 1.15rem;
+    border-radius: 8px;
+    padding: 1.5rem 1.25rem 1.25rem;
     display: flex;
     flex-direction: column;
     text-decoration: none;
@@ -310,10 +310,25 @@ a.tile .tag,
 }
 
 footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+    background: transparent;
+}
+
+.footer-inner {
+    max-width: 980px;
+    width: 100%;
+    padding: 0 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: auto;
 }
 
 footer span,
