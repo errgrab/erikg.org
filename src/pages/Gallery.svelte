@@ -55,7 +55,7 @@
   <p class="section-label">gallery</p>
   <div class="icon-grid" id="iconGrid">
     {#each images as img}
-      <button type="button" class="icon-card" on click={() => openLightbox(img)}>
+      <button type="button" class="icon-card" on:click={() => openLightbox(img)}>
         <div class="icon-frame">
           <img src={`/gallery/${img}`} alt={img} />
         </div>
@@ -67,7 +67,7 @@
     {/each}
   </div>
 
-  <div class={lightboxOpen ? 'lightbox open' : 'lightbox'} role="dialog" tabindex="0" on click={closeLightbox}>
+  <div class={lightboxOpen ? 'lightbox open' : 'lightbox'} role="dialog" tabindex="0" on:click={closeLightbox} on:keydown={(e) => e.key === 'Escape' && closeLightbox()}>
     {#if current}
       <img src={`/gallery/${current}`} alt={current} />
       <div class="lightbox-meta">
