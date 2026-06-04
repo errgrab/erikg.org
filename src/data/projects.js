@@ -4,7 +4,7 @@ export const projects = [
     name: "AI",
     desc: "API for AI. it manages pages, notes, persistent data and more, the ai is in control of it.",
     tag: "live",
-    href: "https://ai.erikg.org",
+    href: "/ai",
   },
   {
     host: "garden.erikg.org",
@@ -25,6 +25,13 @@ export const projects = [
     name: "gallery",
     desc: "a small gallery site for pngs and gifs, built as a quiet place to archive little visual artifacts.",
     tag: "live",
-    href: "https://gallery.erikg.org",
+    href: "/gallery",
+  },
+  {
+    host: "me.erikg.org",
+    name: "me",
+    desc: "personal page with skills, projects, and contact info.",
+    tag: "live",
+    href: "/me",
   },
 ];

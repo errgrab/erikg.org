@@ -20,6 +20,9 @@
       if (url.hostname === 'ai.erikg.org') {
         return { href: '/ai', target: undefined, rel: undefined };
       }
+      if (url.hostname === 'me.erikg.org') {
+        return { href: '/me', target: undefined, rel: undefined };
+      }
     } catch (e) {
       // ignore invalid URL
     }
