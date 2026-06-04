@@ -6,7 +6,17 @@
     'old-icon-fifty.png', 'old-icon-white.png', 'old-icon.png',
     'old-profile-picture.png', 'oldesticon-black.png', 'oldesticon.png',
     'other-eye.png', 'other-mask.png', 'other.png', 'plain-cube.png',
-    'plan9-colors.png', 'planet.png', 'shatter.gif', 'star.png'
+    'plan9-colors.png', 'planet.png', 'shatter.gif', 'star.png',
+    'ascii-art.png', 'better.png', 'circles.gif', 'devine-colors.png',
+    'dot-g.gif', 'effect-nicer.gif', 'effect.gif', 'geometric.png',
+    'golden.png', 'icon-circles.png', 'icon-fdf.png', 'icon-glitch.gif',
+    'icon-nice.png', 'iconbr.png', 'imagebw.png', 'imagewb.png',
+    'lilith-outline.png', 'lilith.png', 'modern.png', 'moon-bw.gif',
+    'moon.gif', 'my-first-icon-ever.png', 'need-fix.gif', 'nicecontrast.png',
+    'nicest.png', 'plain.png', 'strange.png', 'the-white-cube-modern.png',
+    'the-white-cube.png', 'the-white-cube1.png', 'time.gif', 'triangles.gif',
+    'wallpaper-my-favorite-game.png', 'wallpaper-red.png', 'wallpaper.png',
+    'yin.png'
   ];
 
   let lightboxOpen = false;
