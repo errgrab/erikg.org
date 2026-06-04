@@ -1,4 +1,5 @@
 <script>
+  import "./styles/shared.css";
   import ProjectTile from "./components/ProjectTile.svelte";
   import SiteFooter from "./components/SiteFooter.svelte";
   import SiteHeader from "./components/SiteHeader.svelte";
