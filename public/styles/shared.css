@@ -30,49 +30,9 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header-left {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-}
-
-header h1 {
-    font-size: 1.5rem;
-    letter-spacing: 0.1em;
-}
-
-header .subtitle {
-    font-size: 0.6rem;
-    color: var(--fg);
+.tile.muted .desc {
     opacity: 0.6;
-    font-style: italic;
 }
-
-.theme-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.theme-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 2px solid color-mix(in srgb, var(--fg) 20%, transparent);
-    cursor: pointer;
-    padding: 0;
-    overflow: hidden;
-    display: flex;
-    transition:
-        border-color 0.1s,
         transform 0.1s;
     flex-shrink: 0;
     background: transparent;

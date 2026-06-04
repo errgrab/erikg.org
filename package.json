@@ -5,7 +5,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "wrangler deploy"
+    "wrangler:dev": "wrangler dev --assets ./dist",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:preview": "npm run build && wrangler dev --assets ./dist"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.1.2",

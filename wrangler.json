@@ -7,12 +7,6 @@
     "binding": "ASSETS",
     "run_worker_first": true
   },
-  "kv_namespaces": [
-    {
-      "binding": "KV",
-      "id": "eeb6dc2f97ac494faf0493ce249f1c8d"
-    }
-  ],
   "routes": [
     {
       "pattern": "erikg.org/*",
