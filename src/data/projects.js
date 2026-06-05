@@ -2,19 +2,13 @@ export const projects = [
   {
     name: "AI",
     desc: "API for AI. it manages pages, notes, persistent data and more, the ai is in control of it.",
-    tag: "live",
+    tag: "online",
     href: "/ai",
-  },
-  {
-    name: "me",
-    desc: "personal page with skills, projects, and contact info.",
-    tag: "live",
-    href: "/me",
   },
   {
     name: "gallery",
     desc: "a small gallery site for pngs and gifs, built as a quiet place to archive little visual artifacts.",
-    tag: "live",
+    tag: "online",
     href: "/gallery",
   },
   {

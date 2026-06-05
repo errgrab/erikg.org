@@ -1,47 +1,42 @@
 <script>
   let { project } = $props();
 
-  const isDev =
-    typeof window !== 'undefined' &&
-    (window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1' ||
-      window.location.hostname === '0.0.0.0');
+  function getLink(project) {
+    return project.href ?? project.link ?? null;
+  }
+
+  function getDescription(project) {
+    return project.desc ?? project.description ?? "";
+  }
 
   function resolveLink(input) {
-    if (!input || !isDev) {
-      return { href: input, target: '_blank', rel: 'noreferrer' };
+    if (!input) {
+      return { href: null, target: undefined, rel: undefined };
     }
 
-    try {
-      const url = new URL(input);
-      if (url.hostname === 'gallery.erikg.org') {
-        return { href: '/gallery', target: undefined, rel: undefined };
-      }
-      if (url.hostname === 'ai.erikg.org') {
-        return { href: '/ai', target: undefined, rel: undefined };
-      }
-      if (url.hostname === 'me.erikg.org') {
-        return { href: '/me', target: undefined, rel: undefined };
-      }
-    } catch (e) {
-      // ignore invalid URL
+    if (input.startsWith("/")) {
+      return { href: input, target: undefined, rel: undefined };
     }
 
-    return { href: input, target: '_blank', rel: 'noreferrer' };
+    return { href: input, target: "_blank", rel: "noreferrer" };
   }
 </script>
 
-{#if project.href}
-  {@const link = resolveLink(project.href)}
+{#if getLink(project)}
+  {@const link = resolveLink(getLink(project))}
   <a class="tile" href={link.href} target={link.target} rel={link.rel}>
     <span class="name">{project.name}</span>
-    <span class="desc">{project.desc}</span>
-    <span class="tag">{project.tag}</span>
+    <span class="desc">{getDescription(project)}</span>
+    {#if project.tag}
+      <span class="tag">{project.tag}</span>
+    {/if}
   </a>
 {:else}
   <div class="tile muted">
     <span class="name">{project.name}</span>
-    <span class="desc">{project.desc}</span>
-    <span class="tag">{project.tag}</span>
+    <span class="desc">{getDescription(project)}</span>
+    {#if project.tag}
+      <span class="tag">{project.tag}</span>
+    {/if}
   </div>
 {/if}
