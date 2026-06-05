@@ -24,8 +24,10 @@
 </script>
 
 <SiteHeader {navigate} />
+
 <hr />
 
+<main>
 {#if route === '/me'}
   <Me />
 {:else if route === '/gallery'}
@@ -33,14 +35,13 @@
 {:else if route === '/ai'}
   <Ai />
 {:else}
-  <main>
-    <h2 class="section-label">projects</h2>
-    <div class="grid">
-      {#each projects as project}
-        <ProjectTile {project} />
-      {/each}
-    </div>
-  </main>
+  <h2 class="section-label">projects</h2>
+  <div class="grid">
+    {#each projects as project}
+      <ProjectTile {project} />
+    {/each}
+  </div>
 {/if}
+</main>
 
 <SiteFooter />

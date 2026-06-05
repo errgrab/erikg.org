@@ -42,8 +42,6 @@
 </script>
 
 <main>
-  <a class="back" href="/">← erikg.org</a>
-
   <div class="gallery-intro">
     <p class="section-label">about</p>
     <p>
@@ -82,22 +80,6 @@
 
 <style>
 /* Page-specific gallery styles (migrated from public/styles/gallery.css) */
-
-.back {
-  font-size: 0.6rem;
-  color: var(--fg);
-  opacity: 0.6;
-  text-decoration: none;
-  letter-spacing: 0.08em;
-  transition:
-    opacity 0.15s,
-    color 0.15s;
-}
-
-.back:hover {
-  color: var(--acc);
-  opacity: 1;
-}
 
 .gallery-intro {
   display: flex;
@@ -260,6 +242,7 @@
   opacity: 0.6;
   font-style: italic;
 }
+
 @media (max-width: 600px) {
   .icon-grid {
     grid-template-columns: repeat(2, 1fr);

@@ -34,14 +34,12 @@
 {#if project.href}
   {@const link = resolveLink(project.href)}
   <a class="tile" href={link.href} target={link.target} rel={link.rel}>
-    <span class="host">{project.host}</span>
     <span class="name">{project.name}</span>
     <span class="desc">{project.desc}</span>
     <span class="tag">{project.tag}</span>
   </a>
 {:else}
   <div class="tile muted">
-    <span class="host">{project.host}</span>
     <span class="name">{project.name}</span>
     <span class="desc">{project.desc}</span>
     <span class="tag">{project.tag}</span>

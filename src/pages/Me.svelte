@@ -68,6 +68,11 @@
 <!-- keep footer provided by App -->
 
 <style>
+
+section {
+  margin-top: 3rem;
+}
+
 .hero {
   display: flex;
   flex-direction: column;
@@ -142,4 +147,5 @@
   color: var(--acc);
   font-weight: bold;
 }
+
 </style>

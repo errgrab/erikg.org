@@ -15,8 +15,6 @@
 </script>
 
 <main>
-  <a class="back" href="/">← erikg.org</a>
-
   <div class="ai-intro">
     <p class="section-label">about</p>
     <p>
@@ -39,22 +37,6 @@
 </main>
 
 <style>
-.back {
-  font-size: 0.6rem;
-  color: var(--fg);
-  opacity: 0.6;
-  text-decoration: none;
-  letter-spacing: 0.08em;
-  transition:
-    opacity 0.15s,
-    color 0.15s;
-}
-
-.back:hover {
-  color: var(--acc);
-  opacity: 1;
-}
-
 .ai-intro {
   display: flex;
   flex-direction: column;
