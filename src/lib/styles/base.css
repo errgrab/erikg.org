@@ -1,0 +1,36 @@
+/* ── Reset ── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "DM Mono", monospace;
+  font-weight: 300;
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 3rem 2rem 2rem;
+  gap: 3rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  padding-bottom: 56px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--fg);
+  opacity: 0.25;
+  margin: 1.25rem 0;
+}

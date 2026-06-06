@@ -7,10 +7,3 @@
     </nav>
   </div>
 </footer>
-
-<style>
-  .footer-name {
-    color: inherit;
-    text-decoration: none;
-  }
-</style>
