@@ -9,6 +9,7 @@
   align-items: center;
   gap: var(--space-5);
   cursor: zoom-in;
+  border: none;
 }
 
 .icon-frame {

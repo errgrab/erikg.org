@@ -17,8 +17,6 @@
   </p>
 </section>
 
-
-
 <section id="skills">
   <h3 class="section-label">skills & tools</h3>
   <div class="grid">

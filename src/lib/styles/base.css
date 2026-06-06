@@ -39,7 +39,7 @@ hr {
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-7);
+  gap: var(--space-6);
 }
 
 .grid.single {
@@ -51,8 +51,7 @@ hr {
 .tile {
   display: flex;
   flex-direction: column;
-  background: transparent;
-  border: 1px solid var(--border-subtle);
+  background: var(--sur);
   border-radius: var(--radius-md);
   transition: background var(--transition-base), border-color var(--transition-base);
   position: relative;
@@ -86,14 +85,17 @@ a.tile::before {
   transition: transform var(--transition-base);
 }
 
-.card:hover,
-.tile:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-default);
+.tile:not(.muted):hover,
+.card:not(.muted):hover {
+  background: var(--sur-hover);
+  /* border-color: var(--border-default); */
 }
 
-.card-accent:hover::before,
-a.tile:hover::before {
+a.tile:not(.muted):hover::before {
+  transform: scaleY(1);
+}
+
+.card-accent:not(.muted):hover::before {
   transform: scaleY(1);
 }
 
@@ -119,7 +121,7 @@ a.tile:hover::before {
 .tile .desc {
   font-size: 0.63rem;
   color: var(--fg);
-  opacity: 0.8;
+  opacity: 1;
   font-style: italic;
   line-height: 1.65;
 }
@@ -153,7 +155,8 @@ a.tile:hover::before {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--fg);
-  border: 1px solid var(--border-default);
+  /* border: 1px solid var(--border-default); */
+  background: color-mix(in srgb, var(--acc) 10%, transparent);
   padding: 0.2rem 0.4rem;
   width: fit-content;
   border-radius: var(--radius-sm);
@@ -163,7 +166,7 @@ a.tile:hover::before {
 
 a.tag:hover {
   color: var(--acc);
-  border-color: var(--acc);
+  /* border-color: var(--acc); */
 }
 
 .tag-accent,
@@ -171,7 +174,7 @@ a.card .tag,
 a.tile .tag,
 .tile .tag.live {
   color: var(--acc);
-  border-color: var(--border-accent);
+  /* border-color: var(--border-accent); */
 }
 
 .tile > .tag {
@@ -203,7 +206,7 @@ a.tile .tag,
 
 /* ── Muted State ── */
 .muted {
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .muted .card-label,
@@ -212,16 +215,9 @@ a.tile .tag,
   opacity: 0.7;
 }
 
-.muted .card-title,
-.muted .card-desc,
-.muted .tile .name,
-.muted .tile .desc,
 .muted .tag {
-  opacity: 0.6;
-}
-
-.muted .tag {
-  border-color: var(--border-default);
+  /* border-color: color-mix(in srgb, var(--acc) 50%, transparent); */
+  color: var(--acc);
 }
 
 /* ── Responsive ── */

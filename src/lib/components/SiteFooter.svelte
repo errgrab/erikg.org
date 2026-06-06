@@ -1,4 +1,5 @@
 <footer>
+  <hr />
   <div class="footer-inner">
     <span><a href="/me" class="footer-name">ErikG</a> &middot; go slow and fix things</span>
     <nav>
