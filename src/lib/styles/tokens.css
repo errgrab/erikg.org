@@ -5,18 +5,19 @@
 :root {
   /* ── Colors ── */
   --bg: #0d0d0d;
-  --sur: #141414;
+  --sur: #1e1e1e;
   --fg: #e8e6e1;
   --acc: #c97d2e;
+  --mix: #ffffff;
 
   /* ── Border Opacity Levels ── */
-  --border-subtle: color-mix(in srgb, var(--fg) 15%, transparent);
-  --border-default: color-mix(in srgb, var(--fg) 40%, transparent);
-  --border-strong: color-mix(in srgb, var(--fg) 50%, transparent);
+  --border-subtle: color-mix(in srgb, var(--mix) 15%, transparent);
+  --border-default: color-mix(in srgb, var(--mix) 40%, transparent);
+  --border-strong: color-mix(in srgb, var(--mix) 50%, transparent);
   --border-accent: color-mix(in srgb, var(--acc) 40%, transparent);
 
   /* ── Background Opacity Levels ── */
-  --bg-hover: color-mix(in srgb, var(--fg) 2%, transparent);
+  --bg-hover: color-mix(in srgb, var(--mix) 2%, transparent);
   --bg-overlay: color-mix(in srgb, var(--bg) 88%, transparent);
 
   /* ── Typography Scale ── */
