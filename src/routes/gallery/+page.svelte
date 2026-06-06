@@ -41,7 +41,7 @@
   });
 </script>
 
-<div class="gallery-intro">
+<div class="intro-block">
   <p class="section-label">about</p>
   <p>
     A collection of art worth preserving. Wallpapers, ascii art, 3D renders,
@@ -54,7 +54,7 @@
 <p class="section-label">gallery</p>
 <div class="icon-grid" id="iconGrid">
   {#each images as img}
-    <button type="button" class="icon-card" onclick={() => openLightbox(img)}>
+    <button type="button" class="card card-accent icon-card" onclick={() => openLightbox(img)}>
       <div class="icon-frame">
         <img src={`/gallery/${img}`} alt={img} />
       </div>

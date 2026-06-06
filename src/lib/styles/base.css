@@ -34,3 +34,199 @@ hr {
   opacity: 0.25;
   margin: 1.25rem 0;
 }
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-7);
+}
+
+.grid.single {
+  grid-template-columns: 1fr;
+}
+
+/* ── Card / Tile ── */
+.card,
+.tile {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-base), border-color var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.tile {
+  padding: 1.5rem 1.25rem 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+a.card,
+a.tile {
+  cursor: pointer;
+}
+
+/* Accent left border */
+.card-accent::before,
+a.tile::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--acc);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--transition-base);
+}
+
+.card:hover,
+.tile:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+}
+
+.card-accent:hover::before,
+a.tile:hover::before {
+  transform: scaleY(1);
+}
+
+/* Card / Tile text patterns */
+.card-label,
+.tile .host {
+  font-size: var(--text-xs);
+  color: var(--acc);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+}
+
+.card-title,
+.tile .name {
+  font-size: var(--text-lg);
+  color: var(--fg);
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.card-desc,
+.tile .desc {
+  font-size: 0.63rem;
+  color: var(--fg);
+  opacity: 0.8;
+  font-style: italic;
+  line-height: 1.65;
+}
+
+/* Tile list */
+.tile ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.tile ul li {
+  font-size: var(--text-base);
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.tile ul li::before {
+  content: "\00b7";
+  color: var(--acc);
+  font-weight: bold;
+}
+
+/* ── Tag ── */
+.tag {
+  font-size: var(--text-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg);
+  border: 1px solid var(--border-default);
+  padding: 0.2rem 0.4rem;
+  width: fit-content;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+a.tag:hover {
+  color: var(--acc);
+  border-color: var(--acc);
+}
+
+.tag-accent,
+a.card .tag,
+a.tile .tag,
+.tile .tag.live {
+  color: var(--acc);
+  border-color: var(--border-accent);
+}
+
+.tile > .tag {
+  margin-top: 1rem;
+}
+
+/* ── Section Label ── */
+.section-label {
+  font-size: var(--text-xs);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fg);
+  margin-bottom: 0.85rem;
+}
+
+/* ── Intro Block ── */
+.intro-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.intro-block p {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  opacity: 0.75;
+  font-style: italic;
+}
+
+/* ── Muted State ── */
+.muted {
+  opacity: 0.6;
+}
+
+.muted .card-label,
+.muted .tile .host {
+  color: var(--fg);
+  opacity: 0.7;
+}
+
+.muted .card-title,
+.muted .card-desc,
+.muted .tile .name,
+.muted .tile .desc,
+.muted .tag {
+  opacity: 0.6;
+}
+
+.muted .tag {
+  border-color: var(--border-default);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

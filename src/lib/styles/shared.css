@@ -1,11 +1,9 @@
 /* ── Foundation ── */
 @import './tokens.css';
 @import './base.css';
-@import './utilities.css';
 
 /* ── Components ── */
 @import './header.css';
-@import './tiles.css';
 @import './footer.css';
 
 /* ── Pages ── */

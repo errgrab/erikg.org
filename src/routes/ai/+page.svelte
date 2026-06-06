@@ -14,7 +14,7 @@
   ];
 </script>
 
-<div class="ai-intro">
+<div class="intro-block">
   <p class="section-label">about</p>
   <p>
     Pages created with AI assistance. Each links to a static HTML page
@@ -27,7 +27,7 @@
 <p class="section-label">ai pages</p>
 <div class="ai-grid">
   {#each aiPages as page}
-    <a class="ai-card" href={`/ai-pages/${page.file}`}>
+    <a class="card card-accent ai-card" href={`/ai-pages/${page.file}`}>
       <span class="ai-name">{page.name}</span>
       <span class="ai-desc">{page.desc}</span>
     </a>
