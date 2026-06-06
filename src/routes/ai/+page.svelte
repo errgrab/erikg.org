@@ -1,16 +1,16 @@
 <script>
   const aiPages = [
-    { name: 'git fame', file: 'git-fame.html', desc: 'repo visualizer for git fame output' },
-    { name: 'todo', file: 'todo.html', desc: 'todo app' },
-    { name: 'todos', file: 'todos.html', desc: 'todos management' },
-    { name: 'admin', file: 'admin.html', desc: 'admin panel' },
-    { name: 'brand', file: 'brand.html', desc: 'brand guidelines' },
-    { name: 'chatgpt notes', file: 'chatgpt-notes.html', desc: 'notes from chatgpt' },
-    { name: 'escala', file: 'escala.html', desc: 'escala tool' },
-    { name: 'kah', file: 'kah.html', desc: 'kah tool' },
-    { name: 'modern ui guidelines', file: 'modern-ui-guidelines.html', desc: 'modern ui guidelines' },
-    { name: 'pomodoro', file: 'pomodoro.html', desc: 'pomodoro timer' },
-    { name: 'ui guidelines', file: 'ui-guidelines.html', desc: 'ui guidelines' },
+    { name: 'git fame', file: 'git-fame', desc: 'repo visualizer for git fame output' },
+    { name: 'todo', file: 'todo', desc: 'todo app' },
+    { name: 'todos', file: 'todos', desc: 'todos management' },
+    { name: 'admin', file: 'admin', desc: 'admin panel' },
+    { name: 'brand', file: 'brand', desc: 'brand guidelines' },
+    { name: 'chatgpt notes', file: 'chatgpt-notes', desc: 'notes from chatgpt' },
+    { name: 'escala', file: 'escala', desc: 'escala tool' },
+    { name: 'kah', file: 'kah', desc: 'kah tool' },
+    { name: 'modern ui guidelines', file: 'modern-ui-guidelines', desc: 'modern ui guidelines' },
+    { name: 'pomodoro', file: 'pomodoro', desc: 'pomodoro timer' },
+    { name: 'ui guidelines', file: 'ui-guidelines', desc: 'ui guidelines' },
   ];
 </script>
 
@@ -27,7 +27,7 @@
 <p class="section-label">ai pages</p>
 <div class="ai-grid">
   {#each aiPages as page}
-    <a class="ai-card" href={`/ai/${page.file}`}>
+    <a class="ai-card" href={`/ai-pages/${page.file}`}>
       <span class="ai-name">{page.name}</span>
       <span class="ai-desc">{page.desc}</span>
     </a>
