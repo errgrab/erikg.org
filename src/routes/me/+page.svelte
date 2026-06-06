@@ -1,6 +1,6 @@
 <script>
-  import ProjectTile from "../components/ProjectTile.svelte";
-  import { projects } from "../data/projects.js";
+  import ProjectTile from '$lib/components/ProjectTile.svelte';
+  import { projects } from '$lib/data/projects.js';
 </script>
 
 <section class="hero">
@@ -77,8 +77,6 @@
     {/each}
   </div>
 </section>
-
-<!-- keep footer provided by App -->
 
 <style>
 

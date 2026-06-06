@@ -19,8 +19,8 @@
     'yin.png'
   ];
 
-  let lightboxOpen = false;
-  let current = null;
+  let lightboxOpen = $state(false);
+  let current = $state(null);
 
   function openLightbox(src) {
     current = src;
@@ -41,46 +41,42 @@
   });
 </script>
 
-<main>
-  <div class="gallery-intro">
-    <p class="section-label">about</p>
-    <p>
-      A collection of art worth preserving. Wallpapers, ascii art, 3D renders,
-      animated gifs, icons. Not masterpieces, but they deserve a place to live.
-    </p>
-  </div>
+<div class="gallery-intro">
+  <p class="section-label">about</p>
+  <p>
+    A collection of art worth preserving. Wallpapers, ascii art, 3D renders,
+    animated gifs, icons. Not masterpieces, but they deserve a place to live.
+  </p>
+</div>
 
-  <br />
+<br />
 
-  <p class="section-label">gallery</p>
-  <div class="icon-grid" id="iconGrid">
-    {#each images as img}
-      <button type="button" class="icon-card" on:click={() => openLightbox(img)}>
-        <div class="icon-frame">
-          <img src={`/gallery/${img}`} alt={img} />
-        </div>
-        <div class="icon-meta">
-          <span class="icon-name">{img.replace(/[-.]/g, ' ')}</span>
-          <span class="icon-desc"></span>
-        </div>
-      </button>
-    {/each}
-  </div>
-
-  <div class={lightboxOpen ? 'lightbox open' : 'lightbox'} role="dialog" tabindex="0" on:click={closeLightbox} on:keydown={(e) => e.key === 'Escape' && closeLightbox()}>
-    {#if current}
-      <img src={`/gallery/${current}`} alt={current} />
-      <div class="lightbox-meta">
-        <div class="lightbox-name">{current}</div>
-        <div class="lightbox-desc"></div>
+<p class="section-label">gallery</p>
+<div class="icon-grid" id="iconGrid">
+  {#each images as img}
+    <button type="button" class="icon-card" onclick={() => openLightbox(img)}>
+      <div class="icon-frame">
+        <img src={`/gallery/${img}`} alt={img} />
       </div>
-    {/if}
-  </div>
-</main>
+      <div class="icon-meta">
+        <span class="icon-name">{img.replace(/[-.]/g, ' ')}</span>
+        <span class="icon-desc"></span>
+      </div>
+    </button>
+  {/each}
+</div>
+
+<div class={lightboxOpen ? 'lightbox open' : 'lightbox'} role="dialog" tabindex="0" onclick={closeLightbox} onkeydown={(e) => e.key === 'Escape' && closeLightbox()}>
+  {#if current}
+    <img src={`/gallery/${current}`} alt={current} />
+    <div class="lightbox-meta">
+      <div class="lightbox-name">{current}</div>
+      <div class="lightbox-desc"></div>
+    </div>
+  {/if}
+</div>
 
 <style>
-/* Page-specific gallery styles (migrated from public/styles/gallery.css) */
-
 .gallery-intro {
   display: flex;
   flex-direction: column;
@@ -248,5 +244,4 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
 </style>

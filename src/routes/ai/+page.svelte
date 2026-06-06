@@ -14,27 +14,25 @@
   ];
 </script>
 
-<main>
-  <div class="ai-intro">
-    <p class="section-label">about</p>
-    <p>
-      Pages created with AI assistance. Each links to a static HTML page
-      that can be viewed directly.
-    </p>
-  </div>
+<div class="ai-intro">
+  <p class="section-label">about</p>
+  <p>
+    Pages created with AI assistance. Each links to a static HTML page
+    that can be viewed directly.
+  </p>
+</div>
 
-  <br />
+<br />
 
-  <p class="section-label">ai pages</p>
-  <div class="ai-grid">
-    {#each aiPages as page}
-      <a class="ai-card" href={`/ai/${page.file}`}>
-        <span class="ai-name">{page.name}</span>
-        <span class="ai-desc">{page.desc}</span>
-      </a>
-    {/each}
-  </div>
-</main>
+<p class="section-label">ai pages</p>
+<div class="ai-grid">
+  {#each aiPages as page}
+    <a class="ai-card" href={`/ai/${page.file}`}>
+      <span class="ai-name">{page.name}</span>
+      <span class="ai-desc">{page.desc}</span>
+    </a>
+  {/each}
+</div>
 
 <style>
 .ai-intro {

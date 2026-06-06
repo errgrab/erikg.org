@@ -1,29 +1,29 @@
 # erikg.org
 
-Unified Cloudflare Worker powering the entire **erikg.org** domain.
+SvelteKit application powering the entire **erikg.org** domain, deployed on Cloudflare.
 
 ## Architecture
 
 ```
-erikg.org, www.erikg.org   →  dist/index.html  (main portfolio site)
-ai.erikg.org               →  public/ai/        (AI-managed pages)
-  ai.erikg.org/api/*       →  Worker API        (authenticated)
-*.erikg.org                →  public/<subdomain>/
+erikg.org, www.erikg.org   →  SvelteKit app (main portfolio site)
+ai.erikg.org               →  static/ai/    (AI-managed pages)
+  ai.erikg.org/api/*       →  Server routes  (authenticated)
+*.erikg.org                →  static/<subdomain>/
 ```
 
 One repository. One deployment. All subdomains managed here.
 
 ## How AI Pages Work
 
-Your AI assistant talks to the `ai.erikg.org/api/*` REST API using a Bearer token. Instead of storing pages in a database, the Worker commits HTML files directly to `public/ai/` in this repo via the GitHub API. Every AI-created page becomes a real, version-controlled file.
+Your AI assistant talks to the `ai.erikg.org/api/*` REST API using a Bearer token. Instead of storing pages in a database, the API commits HTML files directly to `static/ai/` in this repo via the GitHub API. Every AI-created page becomes a real, version-controlled file.
 
 ```
 AI sends:  PUT ai.erikg.org/api/pages/hello  { html: "..." }
-Worker:    commits public/ai/hello.html to GitHub
+API:       commits static/ai/hello.html to GitHub
 Result:    ai.erikg.org/hello.html is live on the next deploy
 ```
 
-JSON data collections (fast state) are still stored in Cloudflare KV.
+JSON data collections (fast state) are stored in Cloudflare KV.
 
 ## API Reference (`ai.erikg.org/api/*`)
 
@@ -53,14 +53,30 @@ All routes except `/ping` require: `Authorization: Bearer <API_TOKEN>`
 
 ```
 erikg.org/
-├── dist/               # Main portfolio static site (erikg.org)
-│   └── index.html
-├── public/
-│   └── ai/             # AI-managed HTML pages (ai.erikg.org)
-│       └── *.html
-├── server/
-│   └── _worker.js      # Cloudflare Worker router + API logic
-└── wrangler.json       # Cloudflare deployment config
+├── src/
+│   ├── app.html                # HTML shell
+│   ├── lib/
+│   │   ├── components/         # Reusable Svelte components
+│   │   ├── data/projects.js    # Project listings
+│   │   ├── styles/shared.css   # Global styles
+│   │   └── themes.js           # Theme definitions
+│   └── routes/
+│       ├── +layout.svelte      # Shared layout (header, footer, theme)
+│       ├── +page.svelte        # Home (projects grid)
+│       ├── me/+page.svelte     # About page
+│       ├── gallery/+page.svelte# Gallery page
+│       ├── ai/+page.svelte     # AI pages index
+│       └── api/                # Server routes (API)
+│           ├── ping/+server.js
+│           ├── pages/+server.js
+│           ├── pages/[slug]/+server.js
+│           └── data/[collection]/+server.js
+├── static/
+│   ├── ai/                     # AI-managed HTML pages (ai.erikg.org)
+│   └── gallery/                # Gallery images
+├── svelte.config.js            # SvelteKit config (Cloudflare adapter)
+├── vite.config.js              # Vite config (SvelteKit plugin)
+└── wrangler.json               # Cloudflare deployment config
 ```
 
 ## Secrets Setup
@@ -73,10 +89,34 @@ wrangler secret put API_TOKEN      # Bearer token for your AI
 wrangler secret put GITHUB_TOKEN   # Fine-grained PAT: Contents read+write on this repo
 ```
 
+## KV Namespace
+
+Create a KV namespace for data collections:
+```sh
+wrangler kv namespace create DATA
+```
+
+Add the binding to `wrangler.json`:
+```json
+{
+  "kv_namespaces": [
+    { "binding": "KV", "id": "your-namespace-id" }
+  ]
+}
+```
+
+## Development
+
+```sh
+npm run dev       # Start SvelteKit dev server
+npm run build     # Build for production
+npm run preview   # Preview production build locally
+```
+
 ## Deployment
 
 ```sh
-npm run deploy   # wrangler deploy
+npm run deploy   # Build and deploy to Cloudflare
 ```
 
 Routes are configured in `wrangler.json` to cover `erikg.org/*` and `*.erikg.org/*`.
