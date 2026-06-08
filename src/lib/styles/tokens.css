@@ -9,10 +9,22 @@
     --fg: #e8e6e1;
     --acc: #c97d2e;
 
-    /* ── Background Opacity Levels ── */
-    --sur-hover: color-mix(in srgb, var(--sur) 50%, transparent);
-    --bg-hover: color-mix(in srgb, var(--fg) 2%, transparent);
-    --bg-overlay: color-mix(in srgb, var(--bg) 88%, transparent);
+    /* ── fg scale: toward bg ── */
+    --fg-muted: color-mix(in oklab, var(--fg) 65%, var(--bg));
+    --fg-subtle: color-mix(in oklab, var(--fg) 40%, var(--bg));
+    --fg-ghost: color-mix(in oklab, var(--fg) 20%, var(--bg));
+
+    /* ── sur scale: raised = toward fg, sunken = toward bg ── */
+    --sur-raised: color-mix(in oklab, var(--sur) 80%, var(--fg));
+    --sur-hover: color-mix(in oklab, var(--sur) 90%, var(--acc));
+    --sur-sunken: color-mix(in oklab, var(--sur) 80%, var(--bg));
+
+    /* ── acc scale: toward bg for backgrounds/ghosts ── */
+    --acc-dim: color-mix(in oklab, var(--acc) 80%, var(--bg));
+    --acc-ghost: color-mix(in oklab, var(--acc) 15%, var(--bg));
+
+    /* ── overlay: bg with slight fg bleed for glass effects ── */
+    --bg-overlay: color-mix(in oklab, var(--bg) 88%, var(--fg));
 
     /* ── Typography Scale ── */
     --text-xs: 0.5rem;

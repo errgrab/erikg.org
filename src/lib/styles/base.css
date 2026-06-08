@@ -30,8 +30,7 @@ main {
 
 hr {
     border: none;
-    border-top: 1px solid var(--fg);
-    opacity: 0.25;
+    border-top: 1px solid var(--fg-subtle);
     margin: 1.25rem 0;
 }
 
@@ -53,9 +52,7 @@ hr {
     flex-direction: column;
     background: var(--sur);
     border-radius: var(--radius-md);
-    transition:
-        background var(--transition-base),
-        border-color var(--transition-base);
+    transition: background var(--transition-base);
     position: relative;
     overflow: hidden;
 }
@@ -92,7 +89,6 @@ a.card:not(.muted):hover,
 button.tile:not(.muted):hover,
 button.card:not(.muted):hover {
     background: var(--sur-hover);
-    /* border-color: var(--border-default); */
 }
 
 a.tile:not(.muted):hover::before,
@@ -125,8 +121,7 @@ button.tile:not(.muted):hover::before {
 .card-desc,
 .tile .desc {
     font-size: 0.63rem;
-    color: var(--fg);
-    opacity: 1;
+    color: var(--fg-muted);
     font-style: italic;
     line-height: 1.65;
 }
@@ -142,7 +137,7 @@ button.tile:not(.muted):hover::before {
 
 .tile ul li {
     font-size: var(--text-base);
-    opacity: 0.8;
+    color: var(--fg-muted);
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -160,8 +155,7 @@ button.tile:not(.muted):hover::before {
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--fg);
-    /* border: 1px solid var(--border-default); */
-    background: color-mix(in srgb, var(--acc) 10%, transparent);
+    background: var(--acc-ghost);
     padding: 0.2rem 0.4rem;
     width: fit-content;
     border-radius: var(--radius-sm);
@@ -169,17 +163,11 @@ button.tile:not(.muted):hover::before {
     transition: all var(--transition-base);
 }
 
-a.tag:hover {
-    color: var(--acc);
-    /* border-color: var(--acc); */
-}
-
 .tag-accent,
 a.card .tag,
 a.tile .tag,
 .tile .tag.live {
     color: var(--acc);
-    /* border-color: var(--border-accent); */
 }
 
 .tile > .tag {
@@ -191,7 +179,7 @@ a.tile .tag,
     font-size: var(--text-xs);
     letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: var(--fg);
+    color: var(--fg-subtle);
     margin-bottom: 0.85rem;
 }
 
@@ -205,23 +193,17 @@ a.tile .tag,
 .intro-block p {
     font-size: var(--text-base);
     line-height: 1.7;
-    opacity: 0.75;
+    color: var(--fg-muted);
     font-style: italic;
 }
 
 /* ── Muted State ── */
 .muted {
-    opacity: 0.7;
-}
-
-.muted .card-label,
-.muted .tile .host {
-    color: var(--fg);
-    opacity: 0.7;
+    color: var(--fg-muted);
+    opacity: 50%;
 }
 
 .muted .tag {
-    /* border-color: color-mix(in srgb, var(--acc) 50%, transparent); */
     color: var(--acc);
 }
 
