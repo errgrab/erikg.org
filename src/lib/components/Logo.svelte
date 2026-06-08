@@ -26,3 +26,27 @@
         {/if}
     </div>
 </a>
+
+<style>
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: var(--space-5);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .header-left h1 {
+        font:
+            700 var(--text-xl) "DM Mono",
+            monospace;
+        color: var(--fg);
+    }
+
+    .subtitle {
+        margin-top: var(--space-1);
+        font-size: var(--text-base);
+        color: var(--fg);
+        opacity: 0.6;
+    }
+</style>
