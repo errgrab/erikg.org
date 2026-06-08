@@ -87,13 +87,16 @@ a.tile::before {
     transition: transform var(--transition-base);
 }
 
-.tile:not(.muted):hover,
-.card:not(.muted):hover {
+a.tile:not(.muted):hover,
+a.card:not(.muted):hover,
+button.tile:not(.muted):hover,
+button.card:not(.muted):hover {
     background: var(--sur-hover);
     /* border-color: var(--border-default); */
 }
 
-a.tile:not(.muted):hover::before {
+a.tile:not(.muted):hover::before,
+button.tile:not(.muted):hover::before {
     transform: scaleY(1);
 }
 
