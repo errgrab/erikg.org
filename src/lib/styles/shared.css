@@ -1,12 +1,12 @@
 /* ── Foundation ── */
-@import './tokens.css';
-@import './base.css';
+@import "./tokens.css";
+@import "./base.css";
 
 /* ── Components ── */
-@import './header.css';
-@import './footer.css';
+@import "./header.css";
+@import "./footer.css";
 
 /* ── Pages ── */
-@import './pages/ai.css';
-@import './pages/gallery.css';
-@import './pages/me.css';
+@import "./pages/ai.css";
+@import "./pages/gallery.css";
+@import "./pages/me.css";

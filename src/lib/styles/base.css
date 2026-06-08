@@ -1,228 +1,230 @@
 /* ── Reset ── */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 body {
-  font-family: "DM Mono", monospace;
-  font-weight: 300;
-  background: var(--bg);
-  color: var(--fg);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 3rem 2rem 2rem;
-  gap: 3rem;
-  -webkit-font-smoothing: antialiased;
+    font-family: "DM Mono", monospace;
+    font-weight: 300;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 3rem 2rem 2rem;
+    gap: 3rem;
+    -webkit-font-smoothing: antialiased;
 }
 
 main {
-  padding-bottom: 56px;
+    padding-bottom: 56px;
 }
 
 hr {
-  border: none;
-  border-top: 1px solid var(--fg);
-  opacity: 0.25;
-  margin: 1.25rem 0;
+    border: none;
+    border-top: 1px solid var(--fg);
+    opacity: 0.25;
+    margin: 1.25rem 0;
 }
 
 /* ── Grid ── */
 .grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-6);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
 }
 
 .grid.single {
-  grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
 }
 
 /* ── Card / Tile ── */
 .card,
 .tile {
-  display: flex;
-  flex-direction: column;
-  background: var(--sur);
-  border-radius: var(--radius-md);
-  transition: background var(--transition-base), border-color var(--transition-base);
-  position: relative;
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--sur);
+    border-radius: var(--radius-md);
+    transition:
+        background var(--transition-base),
+        border-color var(--transition-base);
+    position: relative;
+    overflow: hidden;
 }
 
 .tile {
-  padding: 1.5rem 1.25rem 1.25rem;
-  text-decoration: none;
-  color: inherit;
-  height: 100%;
+    padding: 1.5rem 1.25rem 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
 }
 
 a.card,
 a.tile {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 /* Accent left border */
 .card-accent::before,
 a.tile::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--acc);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform var(--transition-base);
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--acc);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform var(--transition-base);
 }
 
 .tile:not(.muted):hover,
 .card:not(.muted):hover {
-  background: var(--sur-hover);
-  /* border-color: var(--border-default); */
+    background: var(--sur-hover);
+    /* border-color: var(--border-default); */
 }
 
 a.tile:not(.muted):hover::before {
-  transform: scaleY(1);
+    transform: scaleY(1);
 }
 
 .card-accent:not(.muted):hover::before {
-  transform: scaleY(1);
+    transform: scaleY(1);
 }
 
 /* Card / Tile text patterns */
 .card-label,
 .tile .host {
-  font-size: var(--text-xs);
-  color: var(--acc);
-  letter-spacing: 0.06em;
-  margin-bottom: 0.6rem;
-  text-transform: uppercase;
+    font-size: var(--text-xs);
+    color: var(--acc);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
 }
 
 .card-title,
 .tile .name {
-  font-size: var(--text-lg);
-  color: var(--fg);
-  margin-bottom: 0.5rem;
-  line-height: 1;
+    font-size: var(--text-lg);
+    color: var(--fg);
+    margin-bottom: 0.5rem;
+    line-height: 1;
 }
 
 .card-desc,
 .tile .desc {
-  font-size: 0.63rem;
-  color: var(--fg);
-  opacity: 1;
-  font-style: italic;
-  line-height: 1.65;
+    font-size: 0.63rem;
+    color: var(--fg);
+    opacity: 1;
+    font-style: italic;
+    line-height: 1.65;
 }
 
 /* Tile list */
 .tile ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
 }
 
 .tile ul li {
-  font-size: var(--text-base);
-  opacity: 0.8;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+    font-size: var(--text-base);
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
 }
 
 .tile ul li::before {
-  content: "\00b7";
-  color: var(--acc);
-  font-weight: bold;
+    content: "\00b7";
+    color: var(--acc);
+    font-weight: bold;
 }
 
 /* ── Tag ── */
 .tag {
-  font-size: var(--text-xs);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--fg);
-  /* border: 1px solid var(--border-default); */
-  background: color-mix(in srgb, var(--acc) 10%, transparent);
-  padding: 0.2rem 0.4rem;
-  width: fit-content;
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  transition: all var(--transition-base);
+    font-size: var(--text-xs);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg);
+    /* border: 1px solid var(--border-default); */
+    background: color-mix(in srgb, var(--acc) 10%, transparent);
+    padding: 0.2rem 0.4rem;
+    width: fit-content;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: all var(--transition-base);
 }
 
 a.tag:hover {
-  color: var(--acc);
-  /* border-color: var(--acc); */
+    color: var(--acc);
+    /* border-color: var(--acc); */
 }
 
 .tag-accent,
 a.card .tag,
 a.tile .tag,
 .tile .tag.live {
-  color: var(--acc);
-  /* border-color: var(--border-accent); */
+    color: var(--acc);
+    /* border-color: var(--border-accent); */
 }
 
 .tile > .tag {
-  margin-top: 1rem;
+    margin-top: 1rem;
 }
 
 /* ── Section Label ── */
 .section-label {
-  font-size: var(--text-xs);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--fg);
-  margin-bottom: 0.85rem;
+    font-size: var(--text-xs);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--fg);
+    margin-bottom: 0.85rem;
 }
 
 /* ── Intro Block ── */
 .intro-block {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
 }
 
 .intro-block p {
-  font-size: var(--text-base);
-  line-height: 1.7;
-  opacity: 0.75;
-  font-style: italic;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    opacity: 0.75;
+    font-style: italic;
 }
 
 /* ── Muted State ── */
 .muted {
-  opacity: 0.7;
+    opacity: 0.7;
 }
 
 .muted .card-label,
 .muted .tile .host {
-  color: var(--fg);
-  opacity: 0.7;
+    color: var(--fg);
+    opacity: 0.7;
 }
 
 .muted .tag {
-  /* border-color: color-mix(in srgb, var(--acc) 50%, transparent); */
-  color: var(--acc);
+    /* border-color: color-mix(in srgb, var(--acc) 50%, transparent); */
+    color: var(--acc);
 }
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
+    .grid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -1,8 +1,8 @@
-import { json, error } from '@sveltejs/kit';
+import { json, error } from "@sveltejs/kit";
 
 export async function GET({ params, platform }) {
   // TODO: implement — read JSON collection from KV
-  const data = await platform.env.KV.get(`data:${params.collection}`, 'json');
+  const data = await platform.env.KV.get(`data:${params.collection}`, "json");
   return json(data ?? {});
 }
 

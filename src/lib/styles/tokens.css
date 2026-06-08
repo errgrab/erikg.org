@@ -3,52 +3,52 @@
  * Reusable custom properties for spacing, colors, typography, and effects
  */
 :root {
-  /* ── Colors ── */
-  --bg: #0d0d0d;
-  --sur: #1e1e1e;
-  --fg: #e8e6e1;
-  --acc: #c97d2e;
+    /* ── Colors ── */
+    --bg: #0d0d0d;
+    --sur: #1e1e1e;
+    --fg: #e8e6e1;
+    --acc: #c97d2e;
 
-  /* ── Background Opacity Levels ── */
-  --sur-hover: color-mix(in srgb, var(--sur) 50%, transparent);
-  --bg-hover: color-mix(in srgb, var(--fg) 2%, transparent);
-  --bg-overlay: color-mix(in srgb, var(--bg) 88%, transparent);
+    /* ── Background Opacity Levels ── */
+    --sur-hover: color-mix(in srgb, var(--sur) 50%, transparent);
+    --bg-hover: color-mix(in srgb, var(--fg) 2%, transparent);
+    --bg-overlay: color-mix(in srgb, var(--bg) 88%, transparent);
 
-  /* ── Typography Scale ── */
-  --text-xs: 0.5rem;
-  --text-sm: 0.6rem;
-  --text-base: 0.7rem;
-  --text-md: 0.85rem;
-  --text-lg: 0.88rem;
-  --text-xl: 1.6rem;
-  --text-2xl: 1.8rem;
+    /* ── Typography Scale ── */
+    --text-xs: 0.5rem;
+    --text-sm: 0.6rem;
+    --text-base: 0.7rem;
+    --text-md: 0.85rem;
+    --text-lg: 0.88rem;
+    --text-xl: 1.6rem;
+    --text-2xl: 1.8rem;
 
-  /* ── Spacing Scale ── */
-  --space-1: 0.15rem;
-  --space-2: 0.25rem;
-  --space-3: 0.4rem;
-  --space-4: 0.6rem;
-  --space-5: 0.75rem;
-  --space-6: 1rem;
-  --space-7: 1.25rem;
-  --space-8: 1.5rem;
-  --space-9: 2rem;
-  --space-10: 3rem;
+    /* ── Spacing Scale ── */
+    --space-1: 0.15rem;
+    --space-2: 0.25rem;
+    --space-3: 0.4rem;
+    --space-4: 0.6rem;
+    --space-5: 0.75rem;
+    --space-6: 1rem;
+    --space-7: 1.25rem;
+    --space-8: 1.5rem;
+    --space-9: 2rem;
+    --space-10: 3rem;
 
-  /* ── Border Radius ── */
-  --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --radius-full: 100%;
+    /* ── Border Radius ── */
+    --radius-sm: 3px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-full: 100%;
 
-  /* ── Transitions ── */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-fast: 0.12s ease;
-  --transition-base: 0.2s ease;
-  --transition-smooth: 0.2s var(--ease-out);
+    /* ── Transitions ── */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: 0.12s ease;
+    --transition-base: 0.2s ease;
+    --transition-smooth: 0.2s var(--ease-out);
 
-  /* ── Z-Index Scale ── */
-  --z-dropdown: 100;
-  --z-overlay: 200;
+    /* ── Z-Index Scale ── */
+    --z-dropdown: 100;
+    --z-overlay: 200;
 }

@@ -1,4 +1,4 @@
-import { json, error } from '@sveltejs/kit';
+import { json, error } from "@sveltejs/kit";
 
 export async function GET({ platform }) {
   // TODO: implement — list pages from GitHub

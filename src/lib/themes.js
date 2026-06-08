@@ -5,12 +5,6 @@ export const themes = {
     fg: "white",
     acc: "white",
   },
-  whiteG: {
-    bg: "white",
-    sur: "#eee",
-    fg: "black",
-    acc: "black",
-  },
   classic: {
     bg: "#0d0d0d",
     sur: "#141414",
@@ -88,6 +82,12 @@ export const themes = {
     sur: "#d8d0f0",
     fg: "#120630",
     acc: "#7c3aed",
+  },
+  whiteG: {
+    bg: "white",
+    sur: "#eee",
+    fg: "black",
+    acc: "black",
   },
 };
 

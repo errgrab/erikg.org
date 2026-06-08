@@ -1,8 +1,8 @@
-import { json, error } from '@sveltejs/kit';
+import { json, error } from "@sveltejs/kit";
 
 export async function GET({ params, platform }) {
   // TODO: implement — read page HTML from GitHub
-  return json({ slug: params.slug, html: '' });
+  return json({ slug: params.slug, html: "" });
 }
 
 export async function PUT({ params, request, platform }) {
