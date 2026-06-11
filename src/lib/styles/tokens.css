@@ -16,12 +16,13 @@
 
     /* ── sur scale: raised = toward fg, sunken = toward bg ── */
     --sur-raised: color-mix(in oklab, var(--sur) 80%, var(--fg));
-    --sur-hover: color-mix(in oklab, var(--sur) 90%, var(--acc));
     --sur-sunken: color-mix(in oklab, var(--sur) 80%, var(--bg));
+    --sur-hover: color-mix(in oklab, var(--sur) 95%, var(--acc));
 
     /* ── acc scale: toward bg for backgrounds/ghosts ── */
     --acc-dim: color-mix(in oklab, var(--acc) 80%, var(--bg));
     --acc-ghost: color-mix(in oklab, var(--acc) 15%, var(--bg));
+    --acc-sur: color-mix(in oklab, var(--acc) 20%, var(--sur));
 
     /* ── overlay: bg with slight fg bleed for glass effects ── */
     --bg-overlay: color-mix(in oklab, var(--bg) 88%, var(--fg));

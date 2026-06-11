@@ -154,8 +154,8 @@ button.tile:not(.muted):hover::before {
     font-size: var(--text-xs);
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--fg);
-    background: var(--acc-ghost);
+    color: var(--acc);
+    background: var(--acc-sur);
     padding: 0.2rem 0.4rem;
     width: fit-content;
     border-radius: var(--radius-sm);
@@ -163,14 +163,8 @@ button.tile:not(.muted):hover::before {
     transition: all var(--transition-base);
 }
 
-.tag-accent,
-a.card .tag,
-a.tile .tag,
-.tile .tag.live {
-    color: var(--acc);
-}
 
-.tile > .tag {
+.tile>.tag {
     margin-top: 1rem;
 }
 
