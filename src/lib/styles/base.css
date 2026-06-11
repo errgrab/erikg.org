@@ -204,7 +204,8 @@ a.tile .tag,
 }
 
 .muted .tag {
-    color: var(--acc);
+    color: var(--fg);
+    background-color: var(--fg-ghost);
 }
 
 /* ── Responsive ── */
