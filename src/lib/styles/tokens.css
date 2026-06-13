@@ -21,7 +21,7 @@
 
     /* ── acc scale: toward bg for backgrounds/ghosts ── */
     --acc-dim: color-mix(in oklab, var(--acc) 80%, var(--bg));
-    --acc-ghost: color-mix(in oklab, var(--acc) 15%, var(--bg));
+    --acc-ghost: color-mix(in oklab, var(--acc) 80%, var(--bg));
     --acc-sur: color-mix(in oklab, var(--acc) 20%, var(--sur));
 
     /* ── overlay: bg with slight fg bleed for glass effects ── */

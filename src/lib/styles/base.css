@@ -3,10 +3,16 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--acc-ghost) var(--bg);
 }
 
 html {
     scroll-behavior: smooth;
+}
+
+#app {
+    display: contents;
 }
 
 body {
@@ -14,18 +20,21 @@ body {
     font-weight: 300;
     background: var(--bg);
     color: var(--fg);
-    min-height: 100svh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     max-width: 980px;
     margin: 0 auto;
+    box-sizing: border-box;
     padding: 3rem 2rem 2rem;
-    gap: 3rem;
+    /* gap: 3rem; */
     -webkit-font-smoothing: antialiased;
 }
 
 main {
-    padding-bottom: 56px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 hr {
