@@ -14,8 +14,8 @@ export const projects = [
   {
     name: "Garden",
     desc: "a personal wiki where the only way to navigating is by following the links.",
-    tag: "soon",
-    muted: true,
+    tag: "online",
+    href: "/garden",
   },
   {
     name: "Leaf",
