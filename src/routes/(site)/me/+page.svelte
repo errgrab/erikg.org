@@ -1,6 +1,6 @@
 <script>
-    import ProjectTile from "$lib/components/ProjectTile.svelte";
-    import { projects } from "$lib/data/projects.js";
+    import ProjectTile from "#lib/components/ProjectTile.svelte";
+    import { projects } from "#lib/data/projects.js";
 </script>
 
 <section class="hero">

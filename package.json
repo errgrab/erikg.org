@@ -7,10 +7,14 @@
     "preview": "vite preview",
     "deploy": "npm run build && wrangler pages deploy .svelte-kit/cloudflare --project-name=erikg-cloudflare"
   },
+  "imports": {
+    "#lib": "./src/lib/index.js",
+    "#lib/*": "./src/lib/*"
+  },
   "devDependencies": {
     "@svelte-dev/pretty-code": "^1.0.0",
-    "@sveltejs/adapter-cloudflare": "^7.0.0",
-    "@sveltejs/kit": "^2.0.0",
+    "@sveltejs/adapter-cloudflare": "^8.0.2",
+    "@sveltejs/kit": "^3.1.1",
     "@unocss/reset": "^66.7.0",
     "mdsvex": "^0.12.7",
     "rehype-pretty-code": "^0.14.3",
@@ -21,5 +25,8 @@
     "vite": "^8.0.0",
     "wrangler": "^4.76.0"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "three": "^0.187.0"
+  }
 }
