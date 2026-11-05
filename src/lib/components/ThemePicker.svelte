@@ -1,20 +1,53 @@
 <script>
-    import { onMount } from "svelte";
-    import { applyRootTheme, themes } from "../themes.js";
+    import { onMount, onDestroy } from "svelte";
+    import { applyRootTheme, resolveTheme } from "../themes.js";
 
-    let currentTheme = "classic";
+    let preference = "device"; // "device" | "black" | "white"
+    let currentResolved = "black"; // "black" | "white"
     let pickerOpen = false;
     let wrapper;
+    let removeListener;
 
     onMount(() => {
-        currentTheme = localStorage.getItem("theme") || "classic";
-        applyRootTheme(currentTheme);
+        const saved = localStorage.getItem("theme");
+        preference =
+            saved === "black" || saved === "white" || saved === "device"
+                ? saved
+                : "device";
+        currentResolved = resolveTheme(preference);
+        applyRootTheme(preference);
+
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const handler = (e) => {
+            if (preference === "device") {
+                currentResolved = e.matches ? "black" : "white";
+                applyRootTheme("device");
+            }
+        };
+
+        if (mediaQuery.addEventListener) {
+            mediaQuery.addEventListener("change", handler);
+            removeListener = () =>
+                mediaQuery.removeEventListener("change", handler);
+        } else if (mediaQuery.addListener) {
+            mediaQuery.addListener(handler);
+            removeListener = () => mediaQuery.removeListener(handler);
+        }
     });
 
-    function selectTheme(name) {
-        currentTheme = name;
-        localStorage.setItem("theme", name);
-        applyRootTheme(name);
+    onDestroy(() => {
+        removeListener?.();
+    });
+
+    function selectTheme(pref) {
+        preference = pref;
+        if (pref === "device") {
+            localStorage.removeItem("theme");
+        } else {
+            localStorage.setItem("theme", pref);
+        }
+        currentResolved = resolveTheme(pref);
+        applyRootTheme(pref);
         pickerOpen = false;
     }
 
@@ -36,35 +69,45 @@
 
 <div class="theme-wrapper" id="theme-picker" bind:this={wrapper}>
     <button
-        class:active={pickerOpen}
         class="swatch"
+        class:swatch-device={preference === "device"}
+        class:swatch-black={preference === "black"}
+        class:swatch-white={preference === "white"}
+        class:picker-active={pickerOpen}
         type="button"
-        aria-label="Change theme"
-        title="change theme"
-        style={`--swatch-bg: ${themes[currentTheme]?.acc || themes.classic.acc}`}
+        aria-label={`Change theme (current: ${preference})`}
+        title={`Theme: ${preference}`}
         onclick={() => (pickerOpen = !pickerOpen)}
     >
-        <span
-            class="theme-icon"
-            style={`--swatch-bg: ${themes[currentTheme]?.bg || themes.classic.bg}`}
-        ></span>
     </button>
 
     <div class:open={pickerOpen} class="theme-dropdown">
-        {#each Object.entries(themes) as [name, theme]}
-            <button
-                class:active={name === currentTheme}
-                class="swatch"
-                type="button"
-                title={name}
-                aria-label={`Select ${name} theme`}
-                style={`--swatch-bg: ${theme.acc}`}
-                onclick={() => selectTheme(name)}
-            >
-                <span class="theme-icon" style={`--swatch-bg: ${theme.bg}`}
-                ></span>
-            </button>
-        {/each}
+        <button
+            class="swatch swatch-device"
+            class:active={preference === "device"}
+            type="button"
+            title="Device (auto)"
+            aria-label="Device theme (auto detect)"
+            onclick={() => selectTheme("device")}
+        ></button>
+
+        <button
+            class="swatch swatch-black"
+            class:active={preference === "black"}
+            type="button"
+            title="Black"
+            aria-label="Black theme (black background, white text)"
+            onclick={() => selectTheme("black")}
+        ></button>
+
+        <button
+            class="swatch swatch-white"
+            class:active={preference === "white"}
+            type="button"
+            title="White"
+            aria-label="White theme (white background, black text)"
+            onclick={() => selectTheme("white")}
+        ></button>
     </div>
 </div>
 
@@ -81,15 +124,15 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        background: var(--swatch-bg);
-        border: 2px solid transparent;
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--border-subtle);
         border-radius: 25%;
         cursor: pointer;
+        padding: 0;
         transition:
             transform var(--transition-fast),
-            border-color var(--transition-fast);
+            outline-color var(--transition-fast);
     }
 
     .swatch:hover {
@@ -97,26 +140,26 @@
         transform: scale(1.12);
     }
 
-    .swatch.active::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 20px;
-        height: 20px;
-        background: var(--acc);
-        border-radius: 3px;
-        transform: translate(-50%, -50%);
+    .swatch.picker-active {
+        outline: 2px solid var(--fg);
+        outline-offset: 2px;
     }
 
-    .theme-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        background: var(--swatch-bg);
-        border-radius: 25%;
+    .swatch.active {
+        outline: 2px solid var(--fg);
+        outline-offset: 2px;
+    }
+
+    .swatch-device {
+        background: linear-gradient(135deg, black 50%, white 50%);
+    }
+
+    .swatch-black {
+        background: black;
+    }
+
+    .swatch-white {
+        background: white;
     }
 
     .theme-dropdown {
@@ -124,10 +167,10 @@
         top: calc(100% + 15px);
         right: 0;
         z-index: var(--z-dropdown);
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        display: flex;
+        flex-direction: row;
         gap: var(--space-4);
-        padding: 1rem;
+        padding: 0.85rem;
         background: var(--sur);
         border: 1px solid var(--border-subtle);
         border-radius: var(--radius-xl);
@@ -148,7 +191,7 @@
         content: "";
         position: absolute;
         top: -6px;
-        right: 14px;
+        right: 12px;
         width: 10px;
         height: 10px;
         background: var(--sur);
@@ -159,11 +202,11 @@
 
     @media (max-width: 480px) {
         .theme-dropdown {
-            right: -1rem;
+            right: -0.5rem;
         }
 
         .theme-dropdown::before {
-            right: 1.5rem;
+            right: 1.25rem;
         }
     }
 </style>

@@ -15,6 +15,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
 
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem("theme");
+                var resolved = (stored === "black" || stored === "white")
+                    ? stored
+                    : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "black" : "white");
+                document.documentElement.setAttribute("data-theme", resolved);
+                var s = document.documentElement.style;
+                if (resolved === "white") {
+                    s.setProperty("--bg", "white");
+                    s.setProperty("--sur", "#eeeeee");
+                    s.setProperty("--fg", "black");
+                    s.setProperty("--acc", "black");
+                } else {
+                    s.setProperty("--bg", "black");
+                    s.setProperty("--sur", "#111111");
+                    s.setProperty("--fg", "white");
+                    s.setProperty("--acc", "white");
+                }
+            } catch (e) {}
+        })();
+    </script>
+
     %sveltekit.head%
 </head>
 

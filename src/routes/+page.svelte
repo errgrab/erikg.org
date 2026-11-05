@@ -282,7 +282,6 @@
     padding: 0;
     width: 100%;
     height: 100%;
-    background-color: #000000;
     font-family: 'DM Mono', monospace;
   }
 
@@ -292,8 +291,7 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #000000;
-    color: #ffffff;
+    color: white;
   }
 
   .canvas-container {
@@ -347,7 +345,7 @@
     font-weight: 700;
     margin: 0 0 0.5rem 0;
     letter-spacing: -0.02em;
-    color: #ffffff;
+    color: white;
   }
 
   .content-overlay p {
@@ -355,7 +353,7 @@
     margin: 0;
     opacity: 0.85;
     line-height: 1.5;
-    color: #ffffff;
+    color: white;
   }
 
   .desktop-text {

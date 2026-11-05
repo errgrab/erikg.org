@@ -3,11 +3,11 @@
  * Reusable custom properties for spacing, colors, typography, and effects
  */
 :root {
-    /* ── Colors ── */
-    --bg: #0d0d0d;
-    --sur: #1e1e1e;
-    --fg: #e8e6e1;
-    --acc: #c97d2e;
+    /* ── Colors (Default: Black Theme) ── */
+    --bg: black;
+    --sur: #111111;
+    --fg: white;
+    --acc: white;
 
     /* ── fg scale: toward bg ── */
     --fg-muted: color-mix(in oklab, var(--fg) 65%, var(--bg));
@@ -26,6 +26,9 @@
 
     /* ── overlay: bg with slight fg bleed for glass effects ── */
     --bg-overlay: color-mix(in oklab, var(--bg) 88%, var(--fg));
+
+    /* ── borders ── */
+    --border-subtle: var(--fg-subtle);
 
     /* ── Typography Scale ── */
     --text-xs: 0.5rem;
@@ -64,4 +67,27 @@
     /* ── Z-Index Scale ── */
     --z-dropdown: 100;
     --z-overlay: 200;
+}
+
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="black"]) {
+        --bg: white;
+        --sur: #eeeeee;
+        --fg: black;
+        --acc: black;
+    }
+}
+
+:root[data-theme="white"] {
+    --bg: white;
+    --sur: #eeeeee;
+    --fg: black;
+    --acc: black;
+}
+
+:root[data-theme="black"] {
+    --bg: black;
+    --sur: #111111;
+    --fg: white;
+    --acc: white;
 }

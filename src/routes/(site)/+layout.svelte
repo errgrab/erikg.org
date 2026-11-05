@@ -7,7 +7,7 @@
     import { applyRootTheme } from "#lib/themes.js";
 
     if (browser) {
-        const theme = localStorage.getItem("theme") || "classic";
+        const theme = localStorage.getItem("theme") || "device";
         applyRootTheme(theme);
     }
 </script>
