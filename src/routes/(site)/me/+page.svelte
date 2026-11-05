@@ -94,8 +94,7 @@
         font-size: var(--text-xs);
         letter-spacing: 0.28em;
         text-transform: uppercase;
-        color: var(--fg);
-        opacity: 0.6;
+        color: var(--fg-subtle);
         display: flex;
         align-items: center;
         gap: var(--space-5);
@@ -106,8 +105,7 @@
         display: block;
         width: 24px;
         height: 1px;
-        background: var(--fg);
-        opacity: 0.6;
+        background: var(--fg-subtle);
     }
 
     .hero h2 {
@@ -123,7 +121,7 @@
 
     .hero p {
         font-size: var(--text-md);
-        opacity: 0.8;
+        color: var(--fg-muted);
         line-height: var(--leading-relaxed-xl);
     }
 </style>

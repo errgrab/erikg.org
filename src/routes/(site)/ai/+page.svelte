@@ -67,8 +67,7 @@
 
     .ai-desc {
         font-size: var(--text-sm);
-        color: var(--fg);
-        opacity: 0.6;
+        color: var(--fg-subtle);
         font-style: italic;
     }
 

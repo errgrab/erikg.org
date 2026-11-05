@@ -175,14 +175,12 @@
         border: 1px solid var(--fg);
         border-radius: var(--radius-xl);
         box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8);
-        opacity: 1;
         visibility: hidden;
         transform: translateY(-10px);
         transition: all var(--transition-smooth);
     }
 
     .theme-dropdown.open {
-        opacity: 1;
         visibility: visible;
         transform: translateY(0);
     }

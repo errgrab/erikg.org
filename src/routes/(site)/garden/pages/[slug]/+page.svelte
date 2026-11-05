@@ -13,13 +13,12 @@
         display: inline-block;
         font-size: 0.8rem;
         margin-bottom: 1rem;
-        color: var(--fg);
-        opacity: 0.7;
+        color: var(--fg-muted);
         text-decoration: none;
     }
     .back-link:hover {
         text-decoration: underline;
-        opacity: 1;
+        color: var(--fg);
     }
     .prose :global(h1) {
         font-size: 1.8rem;
@@ -66,7 +65,7 @@
         border-left: 3px solid var(--fg);
         padding-left: 1rem;
         margin-block: 0.75rem;
-        opacity: 0.85;
+        color: var(--fg-muted);
     }
     .prose :global(strong) {
         font-weight: 700;

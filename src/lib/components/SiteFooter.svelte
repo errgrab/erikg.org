@@ -34,14 +34,12 @@
     footer span,
     footer a {
         font-size: var(--text-sm);
-        color: var(--fg);
-        opacity: 0.8;
+        color: var(--fg-muted);
         text-decoration: none;
     }
 
     footer a:hover {
         color: var(--fg);
-        opacity: 1;
     }
 
     footer nav {

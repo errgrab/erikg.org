@@ -327,7 +327,6 @@
     color: white;
     cursor: pointer;
     user-select: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
 	padding: 2rem 3rem;
 	border: 2px solid white;
 	letter-spacing: 4px;
@@ -351,9 +350,8 @@
   .content-overlay p {
     font-size: clamp(0.9rem, 2.5vw, 1.15rem);
     margin: 0;
-    opacity: 0.85;
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.5;
-    color: white;
   }
 
   .desktop-text {

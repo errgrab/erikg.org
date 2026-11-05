@@ -8,6 +8,17 @@
     --sur: #111111;
     --fg: white;
 
+    /* ── Derived Scales (Solid Colors from Base 3) ── */
+    --fg-muted: color-mix(in oklab, var(--fg) 70%, var(--bg));
+    --fg-subtle: color-mix(in oklab, var(--fg) 48%, var(--bg));
+    --fg-ghost: color-mix(in oklab, var(--fg) 25%, var(--bg));
+
+    --sur-raised: color-mix(in oklab, var(--sur) 82%, var(--fg));
+    --sur-sunken: color-mix(in oklab, var(--sur) 82%, var(--bg));
+    --sur-hover: color-mix(in oklab, var(--sur) 88%, var(--fg));
+
+    --border-subtle: color-mix(in oklab, var(--fg) 20%, var(--bg));
+
     /* ── Typography Scale ── */
     --text-xs: 0.5rem;
     --text-sm: 0.6rem;

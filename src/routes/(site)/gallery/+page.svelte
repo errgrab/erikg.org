@@ -177,8 +177,7 @@
 
     .icon-desc {
         font-size: var(--text-xs);
-        color: var(--fg);
-        opacity: 0.65;
+        color: var(--fg-muted);
         font-style: italic;
         line-height: 1.55;
     }
@@ -242,8 +241,7 @@
 
     .lightbox-desc {
         font-size: var(--text-sm);
-        color: var(--fg);
-        opacity: 0.6;
+        color: var(--fg-subtle);
         font-style: italic;
     }
 

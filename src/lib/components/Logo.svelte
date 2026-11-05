@@ -46,7 +46,6 @@
     .subtitle {
         margin-top: var(--space-1);
         font-size: var(--text-base);
-        color: var(--fg);
-        opacity: 0.6;
+        color: var(--fg-subtle);
     }
 </style>
