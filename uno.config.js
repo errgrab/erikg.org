@@ -10,17 +10,6 @@ export default defineConfig({
             bg: 'var(--bg)',
             sur: 'var(--sur)',
             fg: 'var(--fg)',
-            acc: 'var(--acc)',
-            'fg-muted': 'var(--fg-muted)',
-            'fg-subtle': 'var(--fg-subtle)',
-            'fg-ghost': 'var(--fg-ghost)',
-            'sur-raised': 'var(--sur-raised)',
-            'sur-hover': 'var(--sur-hover)',
-            'sur-sunken': 'var(--sur-sunken)',
-            'acc-dim': 'var(--acc-dim)',
-            'acc-ghost': 'var(--acc-ghost)',
-            'acc-sur': 'var(--acc-sur)',
-            'bg-overlay': 'var(--bg-overlay)',
         },
         fontFamily: {
             mono: ['"DM Mono"', 'monospace'],
@@ -81,28 +70,27 @@ export default defineConfig({
         'grid-single': 'grid grid-cols-1 gap-1',
 
         // ── Section label ──
-        'section-label': 'fs-0.5 tracking-0.28 uppercase text-fg-subtle mb-[0.85rem]',
+        'section-label': 'fs-0.5 tracking-0.28 uppercase text-fg opacity-50 mb-[0.85rem]',
 
         // ── Tag ──
-        'tag': 'fs-0.5 tracking-0.2 uppercase text-fg bg-acc-sur px-[0.4rem] py-[0.2rem] w-fit rounded-3 no-underline transition-all duration-base',
+        'tag': 'fs-0.5 tracking-0.2 uppercase text-fg bg-bg px-[0.4rem] py-[0.2rem] w-fit rounded-3 no-underline transition-all duration-base',
         'tile-tag': 'mt-1 tag',
-        'tag-accent': 'tag text-acc',
+        'tag-accent': 'tag',
 
         // ── Tile / Card ──
         'tile-base': 'flex flex-col bg-sur rounded-6 relative overflow-hidden p-[1.5rem_1.25rem_1.25rem] transition-colors duration-base',
-        'tile': 'tile-base cursor-pointer hover:bg-sur-hover',
+        'tile': 'tile-base cursor-pointer hover:opacity-85',
         'tile-muted': 'tile-base opacity-50',
-        'tile-host': 'fs-0.5 text-acc tracking-0.06 uppercase mb-[0.6rem]',
+        'tile-host': 'fs-0.5 text-fg opacity-60 tracking-0.06 uppercase mb-[0.6rem]',
         'tile-name': 'fs-0.88 text-fg mb-[0.5rem] leading-none',
-        'tile-desc': 'fs-[0.63rem] text-fg-muted italic leading-[1.65]',
+        'tile-desc': 'fs-[0.63rem] text-fg opacity-70 italic leading-[1.65]',
 
         // ── Intro block ──
         'intro-block': 'flex flex-col gap-0.6',
-        'intro-text': 'fs-0.7 leading-1.7 text-fg-muted italic',
+        'intro-text': 'fs-0.7 leading-1.7 text-fg opacity-70 italic',
 
         // ── Muted ──
-        'muted': 'text-fg-muted opacity-50',
+        'muted': 'text-fg opacity-50',
+        'muted-tag': 'text-fg bg-sur opacity-40',
     },
-
-    safelist: [],
 });

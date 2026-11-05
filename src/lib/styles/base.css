@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
     scrollbar-width: thin;
-    scrollbar-color: var(--acc-ghost) var(--bg);
+    scrollbar-color: var(--sur) var(--bg);
 }
 
 html {
@@ -27,7 +27,6 @@ body {
     margin: 0 auto;
     box-sizing: border-box;
     padding: 3rem 2rem 2rem;
-    /* gap: 3rem; */
     -webkit-font-smoothing: antialiased;
 }
 
@@ -39,7 +38,7 @@ main {
 
 hr {
     border: none;
-    border-top: 1px solid var(--fg-subtle);
+    border-top: 1px solid var(--sur);
     margin: 1.25rem 0;
 }
 
@@ -61,7 +60,7 @@ hr {
     flex-direction: column;
     background: var(--sur);
     border-radius: var(--radius-md);
-    transition: background var(--transition-base);
+    transition: background var(--transition-base), opacity var(--transition-base);
     position: relative;
     overflow: hidden;
 }
@@ -87,7 +86,7 @@ a.tile::before {
     top: 0;
     bottom: 0;
     width: 3px;
-    background: var(--acc);
+    background: var(--fg);
     transform: scaleY(0);
     transform-origin: bottom;
     transition: transform var(--transition-base);
@@ -97,7 +96,7 @@ a.tile:not(.muted):hover,
 a.card:not(.muted):hover,
 button.tile:not(.muted):hover,
 button.card:not(.muted):hover {
-    background: var(--sur-hover);
+    opacity: 0.85;
 }
 
 a.tile:not(.muted):hover::before,
@@ -113,7 +112,8 @@ button.tile:not(.muted):hover::before {
 .card-label,
 .tile .host {
     font-size: var(--text-xs);
-    color: var(--acc);
+    color: var(--fg);
+    opacity: 0.6;
     letter-spacing: 0.06em;
     margin-bottom: 0.6rem;
     text-transform: uppercase;
@@ -130,7 +130,8 @@ button.tile:not(.muted):hover::before {
 .card-desc,
 .tile .desc {
     font-size: 0.63rem;
-    color: var(--fg-muted);
+    color: var(--fg);
+    opacity: 0.7;
     font-style: italic;
     line-height: 1.65;
 }
@@ -146,7 +147,8 @@ button.tile:not(.muted):hover::before {
 
 .tile ul li {
     font-size: var(--text-base);
-    color: var(--fg-muted);
+    color: var(--fg);
+    opacity: 0.7;
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -154,7 +156,7 @@ button.tile:not(.muted):hover::before {
 
 .tile ul li::before {
     content: "\00b7";
-    color: var(--acc);
+    color: var(--fg);
     font-weight: bold;
 }
 
@@ -163,15 +165,14 @@ button.tile:not(.muted):hover::before {
     font-size: var(--text-xs);
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--acc);
-    background: var(--acc-sur);
+    color: var(--fg);
+    background: var(--bg);
     padding: 0.2rem 0.4rem;
     width: fit-content;
     border-radius: var(--radius-sm);
     text-decoration: none;
     transition: all var(--transition-base);
 }
-
 
 .tile>.tag {
     margin-top: 1rem;
@@ -182,7 +183,8 @@ button.tile:not(.muted):hover::before {
     font-size: var(--text-xs);
     letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: var(--fg-subtle);
+    color: var(--fg);
+    opacity: 0.5;
     margin-bottom: 0.85rem;
 }
 
@@ -196,19 +198,21 @@ button.tile:not(.muted):hover::before {
 .intro-block p {
     font-size: var(--text-base);
     line-height: 1.7;
-    color: var(--fg-muted);
+    color: var(--fg);
+    opacity: 0.7;
     font-style: italic;
 }
 
 /* ── Muted State ── */
 .muted {
-    color: var(--fg-muted);
-    opacity: 50%;
+    color: var(--fg);
+    opacity: 0.4;
 }
 
 .muted .tag {
     color: var(--fg);
-    background-color: var(--fg-ghost);
+    background-color: var(--sur);
+    opacity: 0.4;
 }
 
 /* ── Responsive ── */

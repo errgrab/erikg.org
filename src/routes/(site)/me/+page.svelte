@@ -53,14 +53,11 @@
     <div class="grid">
         <a class="tile" href="mailto:contact@erikg.org">
             <span class="host">email</span>
-            <span class="name" style="color: var(--acc)">contact@erikg.org</span
-            >
+            <span class="name">contact@erikg.org</span>
         </a>
         <a class="tile" href="https://github.com/errgrab" target="_blank">
             <span class="host">github</span>
-            <span class="name" style="color: var(--acc)"
-                >github.com/errgrab</span
-            >
+            <span class="name">github.com/errgrab</span>
         </a>
     </div>
 </section>
@@ -97,7 +94,8 @@
         font-size: var(--text-xs);
         letter-spacing: 0.28em;
         text-transform: uppercase;
-        color: var(--acc);
+        color: var(--fg);
+        opacity: 0.6;
         display: flex;
         align-items: center;
         gap: var(--space-5);
@@ -108,7 +106,8 @@
         display: block;
         width: 24px;
         height: 1px;
-        background: var(--acc);
+        background: var(--fg);
+        opacity: 0.6;
     }
 
     .hero h2 {
@@ -119,7 +118,6 @@
     }
 
     .hero h2 em {
-        color: var(--acc);
         font-style: italic;
     }
 

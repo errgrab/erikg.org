@@ -40,8 +40,8 @@
     }
 
     footer a:hover {
-        color: var(--acc);
-        opacity: 0.9;
+        color: var(--fg);
+        opacity: 1;
     }
 
     footer nav {

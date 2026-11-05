@@ -15,12 +15,12 @@
             stroke-width="0.5"
             stroke-linejoin="round"
         >
-            <path d="m1 2h1v-1h1v2h-2z" fill="var(--acc)" stroke="var(--acc)" />
+            <path d="m1 2h1v-1h1v2h-2z" fill="var(--fg)" stroke="var(--fg)" />
             <path d="m0 0h2v2h-2z" fill="none" stroke="var(--fg)" />
         </g>
     </svg>
     <div>
-        <h1>{title}<span style="color: var(--acc)">{accent}</span></h1>
+        <h1>{title}<span>{accent}</span></h1>
         {#if subtitle}
             <p class="subtitle">{subtitle}</p>
         {/if}

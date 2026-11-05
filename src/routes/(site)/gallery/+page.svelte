@@ -193,7 +193,7 @@
         justify-content: center;
         flex-direction: column;
         gap: var(--space-8);
-        background: var(--bg-overlay);
+        background: var(--bg);
         backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
         opacity: 0;
@@ -214,7 +214,7 @@
         max-height: 60vh;
         object-fit: contain;
         image-rendering: pixelated;
-        border: 1px solid color-mix(in srgb, var(--fg) 20%, transparent);
+        border: 1px solid var(--sur);
         border-radius: var(--radius-md);
         transform: scale(0.92);
         transition: transform var(--transition-smooth);

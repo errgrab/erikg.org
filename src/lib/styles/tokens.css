@@ -1,34 +1,12 @@
 /*
  * Design Tokens
- * Reusable custom properties for spacing, colors, typography, and effects
+ * Reusable custom properties for spacing, typography, and effects
  */
 :root {
-    /* ── Colors (Default: Black Theme) ── */
+    /* ── Only 3 Colors ── */
     --bg: black;
     --sur: #111111;
     --fg: white;
-    --acc: white;
-
-    /* ── fg scale: toward bg ── */
-    --fg-muted: color-mix(in oklab, var(--fg) 65%, var(--bg));
-    --fg-subtle: color-mix(in oklab, var(--fg) 40%, var(--bg));
-    --fg-ghost: color-mix(in oklab, var(--fg) 20%, var(--bg));
-
-    /* ── sur scale: raised = toward fg, sunken = toward bg ── */
-    --sur-raised: color-mix(in oklab, var(--sur) 80%, var(--fg));
-    --sur-sunken: color-mix(in oklab, var(--sur) 80%, var(--bg));
-    --sur-hover: color-mix(in oklab, var(--sur) 95%, var(--acc));
-
-    /* ── acc scale: toward bg for backgrounds/ghosts ── */
-    --acc-dim: color-mix(in oklab, var(--acc) 80%, var(--bg));
-    --acc-ghost: color-mix(in oklab, var(--acc) 80%, var(--bg));
-    --acc-sur: color-mix(in oklab, var(--acc) 20%, var(--sur));
-
-    /* ── overlay: bg with slight fg bleed for glass effects ── */
-    --bg-overlay: color-mix(in oklab, var(--bg) 88%, var(--fg));
-
-    /* ── borders ── */
-    --border-subtle: var(--fg-subtle);
 
     /* ── Typography Scale ── */
     --text-xs: 0.5rem;
@@ -74,7 +52,6 @@
         --bg: white;
         --sur: #eeeeee;
         --fg: black;
-        --acc: black;
     }
 }
 
@@ -82,12 +59,10 @@
     --bg: white;
     --sur: #eeeeee;
     --fg: black;
-    --acc: black;
 }
 
 :root[data-theme="black"] {
     --bg: black;
     --sur: #111111;
     --fg: white;
-    --acc: white;
 }

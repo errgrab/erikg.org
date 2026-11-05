@@ -3,13 +3,11 @@ export const themes = {
     bg: "black",
     sur: "#111111",
     fg: "white",
-    acc: "white",
   },
   white: {
     bg: "white",
     sur: "#eeeeee",
     fg: "black",
-    acc: "black",
   },
 };
 
@@ -32,6 +30,5 @@ export function applyRootTheme(name) {
   root.setProperty("--bg", theme.bg);
   root.setProperty("--sur", theme.sur);
   root.setProperty("--fg", theme.fg);
-  root.setProperty("--acc", theme.acc);
   document.documentElement.setAttribute("data-theme", resolved);
 }

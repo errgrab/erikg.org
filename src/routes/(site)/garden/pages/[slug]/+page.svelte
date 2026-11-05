@@ -13,12 +13,13 @@
         display: inline-block;
         font-size: 0.8rem;
         margin-bottom: 1rem;
-        color: var(--fg-muted);
+        color: var(--fg);
+        opacity: 0.7;
         text-decoration: none;
     }
     .back-link:hover {
         text-decoration: underline;
-        color: var(--acc);
+        opacity: 1;
     }
     .prose :global(h1) {
         font-size: 1.8rem;
@@ -45,7 +46,7 @@
         margin-block: 0.25rem;
     }
     .prose :global(a) {
-        color: var(--acc);
+        color: var(--fg);
         text-decoration: underline;
     }
     .prose :global(code) {
@@ -62,7 +63,7 @@
         overflow-x: auto;
     }
     .prose :global(blockquote) {
-        border-left: 3px solid var(--acc);
+        border-left: 3px solid var(--fg);
         padding-left: 1rem;
         margin-block: 0.75rem;
         opacity: 0.85;

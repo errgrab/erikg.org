@@ -126,7 +126,7 @@
         justify-content: center;
         width: 32px;
         height: 32px;
-        border: 1px solid var(--border-subtle);
+        border: 1px solid var(--fg);
         border-radius: 25%;
         cursor: pointer;
         padding: 0;
@@ -172,10 +172,10 @@
         gap: var(--space-4);
         padding: 0.85rem;
         background: var(--sur);
-        border: 1px solid var(--border-subtle);
+        border: 1px solid var(--fg);
         border-radius: var(--radius-xl);
         box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8);
-        opacity: 0;
+        opacity: 1;
         visibility: hidden;
         transform: translateY(-10px);
         transition: all var(--transition-smooth);
@@ -195,8 +195,8 @@
         width: 10px;
         height: 10px;
         background: var(--sur);
-        border-top: 1px solid var(--border-subtle);
-        border-left: 1px solid var(--border-subtle);
+        border-top: 1px solid var(--fg);
+        border-left: 1px solid var(--fg);
         transform: rotate(45deg);
     }
 
