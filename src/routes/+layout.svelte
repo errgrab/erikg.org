@@ -3,21 +3,27 @@
     import "#lib/styles/shared.css";
     import SiteHeader from "#lib/components/SiteHeader.svelte";
     import SiteFooter from "#lib/components/SiteFooter.svelte";
-    import { browser } from "$app/environment";
-    import { applyRootTheme } from "#lib/themes.js";
+    import { browser } from "$app/env";
+    import { page } from "$app/state";
+    let { children } = $props();
+    let isNotRoot = $derived(page.url.pathname !== '/')
 
     if (browser) {
         const theme = localStorage.getItem("theme") || "device";
-        applyRootTheme(theme);
     }
+
 </script>
 
+{#if isNotRoot}
 <SiteHeader />
+{/if}
 
 <hr />
 
 <main>
-    <slot />
+    {@render children()}
 </main>
 
+{#if isNotRoot}
 <SiteFooter />
+{/if}
