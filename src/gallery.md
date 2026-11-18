@@ -72,7 +72,7 @@ images:
 <div class="icon-grid" id="iconGrid">
 {% for image in images %}
     <button type="button" class="card card-accent icon-card">
-        <div class="icon-frame"><img src="/gallery/{{ image }}" alt="{{ image }}" /></div>
+        <div class="icon-frame"><img loading="lazy" src="/gallery/{{ image }}" alt="{{ image }}" /></div>
         <div class="icon-meta"><span class="icon-name">{{ image | replace('-', ' ') | replace('.', ' ') }}</span><span class="icon-desc"></span></div>
     </button>
 {% endfor %}
