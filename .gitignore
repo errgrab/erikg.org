@@ -92,6 +92,8 @@ build/Release
 
 # Dependency directories
 node_modules/
+_site/
+src/assets/js/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)

@@ -2,27 +2,20 @@
   "name": "erikg.org",
   "private": true,
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview",
-    "deploy": "npm run build && wrangler pages deploy .svelte-kit/cloudflare --project-name=erikg-cloudflare"
-  },
-  "imports": {
-    "#lib": "./src/lib/index.js",
-    "#lib/*": "./src/lib/*"
+    "dev": "npm run build:client && eleventy --serve",
+    "build": "npm run build:client && eleventy",
+    "build:client": "esbuild src/_scripts/home.js --bundle --format=esm --outfile=src/assets/js/home.js && cp src/_scripts/gallery.js src/assets/js/gallery.js",
+    "preview": "wrangler pages dev _site",
+    "deploy": "npm run build && wrangler pages deploy _site --project-name=erikg-cloudflare --functions=functions"
   },
   "devDependencies": {
-    "@svelte-dev/pretty-code": "^1.0.0",
-    "@sveltejs/adapter-cloudflare": "^8.0.2",
-    "@sveltejs/kit": "^3.1.1",
-    "@unocss/reset": "^66.7.0",
-    "mdsvex": "^0.12.7",
-    "svelte": "^5.56.1",
-    "vite": "^8.0.0",
+    "@11ty/eleventy": "^3.1.2",
+    "esbuild": "^0.28.2",
     "wrangler": "^4.76.0"
   },
   "type": "module",
   "dependencies": {
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
     "three": "^0.187.0"
   }
 }

@@ -1,0 +1,49 @@
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.site-header .header-left {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.site-header .header-left h1 {
+    font: 700 1.6rem "DM Mono", monospace;
+    padding: 0 5px;
+}
+
+.site-header .header-left:hover path {
+    fill: Canvas;
+    stroke: Canvas;
+}
+
+.site-header .header-left:hover path:last-child {
+    fill: none;
+}
+
+.site-footer .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-footer span,
+.site-footer a {
+    font-size: 12px;
+    text-decoration: none;
+    padding: 2px 4px;
+}
+
+.site-footer a:hover {
+    color: #000;
+    background-color: #d71920;
+}
+
+.site-footer nav {
+    display: flex;
+    gap: 1.5rem;
+}

@@ -3,7 +3,3 @@
 
 # Bearer token your AI uses to authenticate against /api/* endpoints
 API_TOKEN=your-secret-token-here
-
-# Fine-grained GitHub Personal Access Token
-# Permissions needed: Contents (read + write) on errgrab/erikg.org
-GITHUB_TOKEN=github_pat_xxxxxx

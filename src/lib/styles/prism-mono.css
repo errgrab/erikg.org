@@ -1,0 +1,42 @@
+/* prism-mono.css */
+
+:root {
+  --fg:   #333;
+  --dim:  #888;
+  --rule: #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg:   #ccc;
+    --dim:  #777;
+    --rule: #333;
+  }
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: var(--fg);
+  background: transparent;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  line-height: 1.6;
+  white-space: pre;
+  tab-size: 2;
+}
+
+pre[class*="language-"] {
+  padding: 1em;
+  margin: 1em 0;
+  overflow: auto;
+  border: 1px solid var(--rule);
+}
+
+/* dim: comments, punctuation, operators */
+.token.comment,
+.token.punctuation,
+.token.operator { color: var(--dim); }
+
+/* bold: keywords, markdown headings, bold text */
+.token.keyword,
+.token.title,
+.token.bold { font-weight: bold; }
