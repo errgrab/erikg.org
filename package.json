@@ -2,14 +2,14 @@
   "name": "erikg.org",
   "private": true,
   "scripts": {
-    "dev": "npm run build:client && eleventy --serve",
-    "build": "npm run build:client && eleventy",
+    "dev": "npm run build:client && buildawesome --serve",
+    "build": "npm run build:client && buildawesome",
     "build:client": "esbuild src/_scripts/home.js --bundle --format=esm --outfile=src/assets/js/home.js && cp src/_scripts/gallery.js src/assets/js/gallery.js",
     "preview": "wrangler pages dev _site",
     "deploy": "npm run build && wrangler pages deploy _site --project-name=erikg-cloudflare --functions=functions"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^3.1.2",
+    "@awesome.me/buildawesome": "4.0.0-alpha.10",
     "esbuild": "^0.28.2",
     "wrangler": "^4.76.0"
   },
