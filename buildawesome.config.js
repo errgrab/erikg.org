@@ -3,7 +3,7 @@ import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 export default function (eleventyConfig) {
     eleventyConfig.addPlugin(syntaxHighlight);
 
-    eleventyConfig.addPassthroughCopy({ "src/lib/styles": "styles" });
+    eleventyConfig.addPassthroughCopy({ "src/styles": "styles" });
     eleventyConfig.addPassthroughCopy({ "src/assets": "." });
 
     return {
