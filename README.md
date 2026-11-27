@@ -8,7 +8,7 @@ Eleventy application powering the main **erikg.org** site, deployed on Cloudflar
 erikg.org/
 ├── src/
 │   ├── _includes/              # Nunjucks layouts and shared partials
-│   ├── _scripts/               # Browser-only source modules
+│   ├── scripts/                # Browser-only source modules
 │   ├── assets/                 # Static media and generated browser bundles
 │   ├── lib/styles/             # Shared CSS foundation
 │   ├── gallery.md              # Gallery page and image inventory

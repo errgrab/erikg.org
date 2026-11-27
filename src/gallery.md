@@ -1,5 +1,5 @@
 ---
-layout: layouts/base.njk
+layout: layouts/base.html
 title: Gallery
 permalink: /gallery/
 script: /js/gallery.js
@@ -73,7 +73,7 @@ images:
 {% for image in images %}
     <button type="button" class="card card-accent icon-card">
         <div class="icon-frame"><img loading="lazy" src="/gallery/{{ image }}" alt="{{ image }}" /></div>
-        <div class="icon-meta"><span class="icon-name">{{ image | replace('-', ' ') | replace('.', ' ') }}</span><span class="icon-desc"></span></div>
+        <div class="icon-meta"><span class="icon-name">{{ image | replace: '-', ' ' | replace: '.', ' ' | capitalize }}</span><span class="icon-desc"></span></div>
     </button>
 {% endfor %}
 </div>

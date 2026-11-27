@@ -4,9 +4,9 @@
   "scripts": {
     "dev": "npm run build:client && buildawesome --serve",
     "build": "npm run build:client && buildawesome",
-    "build:client": "esbuild src/_scripts/home.js --bundle --format=esm --outfile=src/assets/js/home.js && cp src/_scripts/gallery.js src/assets/js/gallery.js",
-    "preview": "wrangler pages dev _site",
-    "deploy": "npm run build && wrangler pages deploy _site --project-name=erikg-cloudflare --functions=functions"
+    "build:client": "esbuild src/scripts/home.js --bundle --format=esm --outfile=src/assets/js/home.js && cp src/scripts/gallery.js src/assets/js/gallery.js",
+    "preview": "wrangler pages dev out",
+    "deploy": "npm run build && wrangler pages deploy out --project-name=erikg-cloudflare --functions=functions"
   },
   "devDependencies": {
     "@awesome.me/buildawesome": "4.0.0-alpha.10",

@@ -1,0 +1,49 @@
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.header-left h1 {
+    font: 700 1.6rem "DM Mono", monospace;
+    padding: 0 5px;
+}
+
+.header-left:hover path {
+    fill: Canvas;
+    stroke: Canvas;
+}
+
+.header-left:hover path:last-child {
+    fill: none;
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer span,
+footer a {
+    font-size: 12px;
+    text-decoration: none;
+    padding: 2px 4px;
+}
+
+footer a:hover {
+    color: #000;
+    background-color: #d71920;
+}
+
+footer nav {
+    display: flex;
+    gap: 1.5rem;
+}

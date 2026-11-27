@@ -1,12 +1,15 @@
 ---
-layout: layouts/base.njk
+layout: layouts/base.html
 title: Me
 permalink: /me/
+eyebrow: "open to work &bull; São Paulo, SP, Brasil"
 ---
 
-<p class="eyebrow">open to work - São Paulo, SP, Brazil</p>
+{% if eyebrow %}
+	{{ eyebrow | prepend: '<p class="eyebrow">' | append: '</p>' }}
+{% endif %}
 
-## Developer _& artist_
+## Developer </br> _& artist_
 
 I like to build things from scratch. Learning, understanding, creating and finally sharing with the world. Sometimes I don't fully know where my creations are going or whether they're a good idea. But that uncertainty and willingness to fail is part of what makes it enjoyable.
 
@@ -14,8 +17,8 @@ I like low-level, game-dev, VR, compilers, virtual machines, programming languag
 
 ## skills & tools
 
-<div class="cols">
-<div>
+{% slot "cols" %}
+{% slot %}
 
 ### Languages
 
@@ -25,10 +28,9 @@ I like low-level, game-dev, VR, compilers, virtual machines, programming languag
 - Rust
 - Lua
 - HTML / CSS
+{% endslot %}
 
-</div>
-<div>
-
+{% slot %}
 ### Environments
 
 - Bash / Zsh / Fish / PowerShell
@@ -37,9 +39,8 @@ I like low-level, game-dev, VR, compilers, virtual machines, programming languag
 - VSCode / NeoVim / Emacs
 - Arch / Void / NixOS / MacOS
 - Godot / Unity
-
-</div>
-</div>
+{% endslot %}
+{% endslot %}
 
 ## get in touch
 
@@ -48,8 +49,7 @@ I like low-level, game-dev, VR, compilers, virtual machines, programming languag
 - [linkedin.com/in/errgrab](https://linkedin.com/in/errgrab)
 
 <style>
-/* body > *, main > *, section > * { margin-bottom: 30px; } */
 .eyebrow { padding: 5px 0; font-size: 12px; letter-spacing: .28em; text-transform: uppercase; }
 .cols { display: flex; flex-wrap: wrap; gap: 30px; }
-.cols > * { flex: 1 1 200px; }
+.cols > * { flex: 1 1 270px; }
 </style>
